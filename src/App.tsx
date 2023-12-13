@@ -1,11 +1,21 @@
-import { BrowserRouter } from "react-router-dom";
-import AppRouter from "./router";
+import { ConfigProvider } from "antd";
+import Login from "./pages/Login/Login";
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppRouter />
-    </BrowserRouter>
+    <>
+      <div className="w-screen h-screen flex items-center justify-center bg-light-gray">
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#3498DB",
+            },
+          }}
+        >
+          <Login />
+        </ConfigProvider>
+      </div>
+    </>
   );
 }
 
