@@ -1,21 +1,16 @@
-import { ConfigProvider } from "antd";
 import AppRouter from "./router";
 import { BrowserRouter } from "react-router-dom";
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
 
 function App() {
   return (
     <>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: "#3498DB",
-          },
-        }}
-      >
+      <MantineProvider>
         <BrowserRouter>
           <AppRouter />
         </BrowserRouter>
-      </ConfigProvider>
+      </MantineProvider>
     </>
   );
 }
