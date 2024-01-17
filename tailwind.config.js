@@ -5,12 +5,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: { DEFAULT: "#3498DB", active: "#0B7FCD" },
-        "light-gray": "#ECF0F1",
+        primary: "#99896B",
+        dark: "#171717",
+        gray: {
+          200: "#D9D9D9",
+          500: "#424242",
+          900: "#252525",
+        },
       },
       boxShadow: {
         base: "0px 6px 16px 0px rgba(0, 0, 0, 0.25)",
       },
+      screens: {
+        "xs":"36rem"
+      }
     },
   },
   plugins: [],
