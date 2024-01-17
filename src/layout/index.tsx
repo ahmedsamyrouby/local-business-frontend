@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-light-gray">
+    <div className="flex-center min-h-screen overflow-x-hidden bg-gray-900 md:bg-dark md:p-8">
       <Outlet />
     </div>
   );
