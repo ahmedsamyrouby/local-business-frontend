@@ -2,6 +2,7 @@ import { Button, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Link } from "react-router-dom";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
+import loginArt from "../../../assets/images/login-art.jpg";
 
 const Login = () => {
   const form = useForm({
@@ -18,7 +19,7 @@ const Login = () => {
   });
 
   return (
-    <AuthenticationLayout>
+    <AuthenticationLayout img={loginArt}>
       <div>
         <Title className="text-white">Login</Title>
         <Text className="text-gray-200">
