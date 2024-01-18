@@ -1,6 +1,6 @@
 import AppRouter from "./router";
 import { BrowserRouter } from "react-router-dom";
-import "@mantine/core/styles.css";
+import { Notifications } from "@mantine/notifications";
 import { MantineProvider } from "@mantine/core";
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
     <>
       <MantineProvider>
         <BrowserRouter>
+          <Notifications />
           <AppRouter />
         </BrowserRouter>
       </MantineProvider>
