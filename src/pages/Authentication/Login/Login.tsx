@@ -1,8 +1,16 @@
 import { Button, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
 import loginArt from "../../../assets/images/login-art.jpg";
+import axios from "axios";
+import { setLocalStorage } from "../../../services/LocalStorageService";
+import { notifications } from "@mantine/notifications";
+import {
+  IconAlertSquare,
+  IconSquareCheck,
+} from "@tabler/icons-react";
+import { useState } from "react";
 
 const Login = () => {
   const form = useForm({
@@ -14,9 +22,47 @@ const Login = () => {
     validate: {
       email: (value) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? null : "Invalid email",
-      password: (value) => (value.length < 6 ? "Too short" : null),
     },
   });
+
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  type FormValues = typeof form.values;
+
+  const handleLogin = (values: FormValues) => {
+    setIsLoading(true);
+    axios
+      .post("http://localhost:3011/auth/login", values)
+      .then((res) => {
+        setLocalStorage("user", res.data.token);
+        navigate("/homepage");
+        setIsLoading(false);
+        notifications.show({
+          message: "Login Successful",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500"
+          }
+        });
+      })
+      .catch((err) => {
+        notifications.show({
+          message:
+            err.response.data.message ||
+            err.response.data.errors[0].msg ||
+            "Something went wrong",
+          color: "red",
+          autoClose: 2000,
+          icon: <IconAlertSquare />,
+          classNames: {
+            icon: "bg-transparent text-red-500"
+          }
+        });
+        setIsLoading(false);
+      });
+  };
 
   return (
     <AuthenticationLayout img={loginArt}>
@@ -29,10 +75,11 @@ const Login = () => {
       <div className="w-full">
         <form
           className="space-y-4 md:space-y-8"
-          onSubmit={form.onSubmit((values) => console.log(values))}
+          onSubmit={form.onSubmit((values) => handleLogin(values))}
         >
           <TextInput
             withAsterisk
+            autoComplete="email"
             label="Email"
             placeholder="your@email.com"
             className="text-start"
@@ -62,7 +109,11 @@ const Login = () => {
           </div>
 
           <div className="space-y-2">
-            <Button className="bg-primary w-full text-base" type="submit">
+            <Button
+              className="bg-primary w-full text-base"
+              type="submit"
+              loading={isLoading}
+            >
               {"Login".toUpperCase()}
             </Button>
             <Link
