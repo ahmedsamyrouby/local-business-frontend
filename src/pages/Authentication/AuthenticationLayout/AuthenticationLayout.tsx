@@ -1,5 +1,4 @@
 import { Image } from "@mantine/core";
-import loginArt from "../../../assets/images/login-art.jpg";
 
 const AuthenticationLayout = ({
   img,
@@ -13,7 +12,7 @@ const AuthenticationLayout = ({
       <div className="w-screen md:w-[45%]">
         <Image className="w-full h-full object-cover" src={img} />
       </div>
-      <div className="flex flex-col justify-center items-center gap-4 text-center py-8 px-6 md:w-[55%] md:gap-8 md:py-14 md:px-12">
+      <div className="flex flex-col justify-center items-center grow gap-4 text-center py-8 px-6 md:w-[55%] md:gap-8 md:py-14 md:px-12">
         {children}
       </div>
     </div>

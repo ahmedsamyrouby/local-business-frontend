@@ -1,4 +1,4 @@
-import { Title, TextInput, Button } from "@mantine/core";
+import { Title, Text, TextInput, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
 import forgotPasswordArt from "../../../assets/images/forgot-password-art.jpg";
@@ -13,13 +13,17 @@ const ForgotPassword = () => {
   });
   return (
     <AuthenticationLayout img={forgotPasswordArt}>
-      <div>
+      <div className="mb-8">
         <Title className="text-white">Forgot your password?</Title>
+        <Text className="text-gray-200">
+          Enter you email address and we'll send you an OTP to reset your
+          password.
+        </Text>
       </div>
 
       <div className="w-full">
         <form
-          className="space-y-4 md:space-y-8"
+          className="space-y-8 md:space-y-10 h-full flex flex-col"
           onSubmit={form.onSubmit((values) => console.log(values))}
         >
           <TextInput

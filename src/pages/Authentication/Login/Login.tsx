@@ -1,4 +1,4 @@
-import { Button, Text, TextInput, Title } from "@mantine/core";
+import { Button, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Link } from "react-router-dom";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
@@ -42,11 +42,10 @@ const Login = () => {
             {...form.getInputProps("email")}
           />
           <div className="space-y-2">
-            <TextInput
+            <PasswordInput
               withAsterisk
               label="Password"
               placeholder="••••••••"
-              type="password"
               className="text-start"
               classNames={{
                 label: "text-white",
