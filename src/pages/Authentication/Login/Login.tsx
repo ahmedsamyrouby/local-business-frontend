@@ -6,11 +6,9 @@ import loginArt from "../../../assets/images/login-art.jpg";
 import axios from "axios";
 import { setLocalStorage } from "../../../services/LocalStorageService";
 import { notifications } from "@mantine/notifications";
-import {
-  IconAlertSquare,
-  IconSquareCheck,
-} from "@tabler/icons-react";
+import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
 import { useState } from "react";
+import { BASE_URL } from "../../../constants";
 
 const Login = () => {
   const form = useForm({
@@ -33,9 +31,10 @@ const Login = () => {
   const handleLogin = (values: FormValues) => {
     setIsLoading(true);
     axios
-      .post("http://localhost:3011/auth/login", values)
+      .post(BASE_URL + "/auth/login", values)
       .then((res) => {
-        setLocalStorage("user", res.data.token);
+        setLocalStorage("userToken", res.data.token);
+        setLocalStorage("role", res.data.data.role);
         navigate("/homepage");
         setIsLoading(false);
         notifications.show({
@@ -43,8 +42,8 @@ const Login = () => {
           autoClose: 2000,
           icon: <IconSquareCheck />,
           classNames: {
-            icon: "bg-transparent text-green-500"
-          }
+            icon: "bg-transparent text-green-500",
+          },
         });
       })
       .catch((err) => {
@@ -57,9 +56,11 @@ const Login = () => {
           autoClose: 2000,
           icon: <IconAlertSquare />,
           classNames: {
-            icon: "bg-transparent text-red-500"
-          }
+            icon: "bg-transparent text-red-500",
+          },
         });
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };
