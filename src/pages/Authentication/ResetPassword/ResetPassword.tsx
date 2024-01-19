@@ -3,6 +3,12 @@ import { useForm, zodResolver } from "@mantine/form";
 import z from "zod";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
 import forgotPasswordArt from "../../../assets/images/forgot-password-art.jpg";
+import axios from "axios";
+import { BASE_URL } from "../../../constants";
+import { notifications } from "@mantine/notifications";
+import { IconSquareCheck } from "@tabler/icons-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = z
   .object({
@@ -15,6 +21,8 @@ const validationSchema = z
   });
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
+
   const form = useForm({
     initialValues: {
       password: "",
@@ -23,6 +31,37 @@ const ResetPassword = () => {
     validate: zodResolver(validationSchema),
     validateInputOnBlur: true,
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  type FormValues = typeof form.values;
+
+  const handleResetPassword = (values: FormValues) => {
+    setIsLoading(true);
+    axios
+      .put(BASE_URL + "/auth/resetPassword", {
+        email: localStorage.getItem("email"),
+        newPassword: values.password,
+      })
+      .then((res) => {
+        console.log(res);
+        navigate("/login");
+        notifications.show({
+          message: "Password reset successfully",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false)
+      });
+  };
 
   return (
     <AuthenticationLayout img={forgotPasswordArt}>
@@ -36,7 +75,7 @@ const ResetPassword = () => {
       <div className="w-full">
         <form
           className="h-full flex flex-col gap-4 md:gap-8"
-          onSubmit={form.onSubmit((values) => console.log(values))}
+          onSubmit={form.onSubmit((values) => handleResetPassword(values))}
         >
           <PasswordInput
             placeholder="Enter new password"
@@ -56,7 +95,11 @@ const ResetPassword = () => {
             }}
             {...form.getInputProps("confirmPassword")}
           />
-          <Button className="bg-primary w-full text-base" type="submit">
+          <Button
+            className="bg-primary w-full text-base"
+            type="submit"
+            loading={isLoading}
+          >
             {"Reset password".toUpperCase()}
           </Button>
         </form>
