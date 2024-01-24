@@ -1,4 +1,3 @@
-// import { Button, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
 import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
@@ -17,23 +16,16 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-// import axios from "axios";
-// import { setLocalStorage } from "../../../services/LocalStorageService";
-// import { notifications } from "@mantine/notifications";
-// import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
 import { setLocalStorage } from "../../../services/LocalStorageService";
-// import { set } from "zod";
-// import { BASE_URL } from "../../../constants";
 
 const SignUp = () => {
   const icon = <IconCalendar className="cursor-pointer" stroke={1.5} />;
   const [activeMale, setActiveMale] = useState(false);
   const [activeFemale, setActiveFemale] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm({
@@ -89,7 +81,6 @@ const SignUp = () => {
       },
     })
       .then((res) => {
-        setError(false);
         setLocalStorage("userToken", res.data.token);
         navigate("/homepage");
         setIsLoading(false);
@@ -103,7 +94,6 @@ const SignUp = () => {
         });
       })
       .catch((err) => {
-        setError(true);
         notifications.show({
           message:
             err.response.data.message ||
@@ -178,7 +168,6 @@ const SignUp = () => {
               classNames={{
                 label: "text-white",
               }}
-              error={error ? "E-mail already exist" : null}
               {...form.getInputProps("email")}
             />
 
@@ -205,6 +194,7 @@ const SignUp = () => {
             />
 
             <InputBase
+              withAsterisk
               label="Your phone"
               className="text-start text-white col-span-1"
               component={IMaskInput}
