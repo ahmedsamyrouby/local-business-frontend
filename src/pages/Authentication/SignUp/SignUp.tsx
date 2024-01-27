@@ -1,10 +1,13 @@
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
+import "@mantine/dates/styles.css";
 import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
 import { IMaskInput } from "react-imask";
 import { DatePickerInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
+import { zodResolver } from "mantine-form-zod-resolver";
+import { z } from "zod";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
 import signUpArt from "../../../assets/images/signup-art.jpg";
 import {
@@ -15,56 +18,63 @@ import {
   TextInput,
   Title,
   Text,
+  Radio,
+  Group,
 } from "@mantine/core";
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
-import { setLocalStorage } from "../../../services/LocalStorageService";
 
 const SignUp = () => {
-  const icon = <IconCalendar className="cursor-pointer" stroke={1.5} />;
-  const [activeMale, setActiveMale] = useState(false);
-  const [activeFemale, setActiveFemale] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const signUpSchema = z
+    .object({
+      name: z.string(),
+      firstName: z.string(),
+      secondName: z.string(),
+      email: z.string().email("Invalid E-mail"),
+      password: z.string().min(8, "Password must be at least 8 characters"),
+      confirmPassword: z.string(),
+      number: z.string().length(15, "must be 11 number"),
+      birthday: z.date(),
+      gender: z.string(),
+      userType: z.string(),
+    })
+    .refine((data) => /(?=.*[A-Z])/.test(data.password) == true, {
+      message: "must contain at least one uppercase letter",
+      path: ["password"],
+    })
+    .refine((data) => /(?=.*[a-z])/.test(data.password) == true, {
+      message: "must contain at least one lowercase letter",
+      path: ["password"],
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords must match",
+      path: ["confirmPassword"],
+    });
 
   const form = useForm({
     initialValues: {
       name: "",
-      firstname: "",
-      secondname: "",
+      firstName: "",
+      secondName: "",
       email: "",
       password: "",
       confirmPassword: "",
       number: "",
       birthday: "",
       gender: "",
-      usertype: "",
+      userType: "",
     },
-    // transformValues: (values) => {
-    //   name: `${values.firstname} + ${values.secondname}`;
-    // },
-
-    validate: {
-      email: (value) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? null : "Invalid email",
-
-      password: (value) =>
-        !/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(value)
-          ? "Password must contain at least one digit, one lowercase letter, one uppercase letter, and be at least 8 characters long"
-          : null,
-
-      confirmPassword: (value, values) =>
-        value == values.password ? null : "Password must matching",
-
-      number: (value) => (value.length == 15 ? null : "must 11 Number"),
-    },
+    validate: zodResolver(signUpSchema),
   });
 
   type FormValues = typeof form.values;
 
   const handelForm = async (values: FormValues) => {
-    values.name = `${values.firstname} ${values.secondname}`;
+    values.name = `${values.firstName} ${values.secondName}`;
     console.log(values);
     setIsLoading(true);
     await axios({
@@ -75,14 +85,13 @@ const SignUp = () => {
         email: values.email,
         password: values.password,
         passwordConfirm: values.confirmPassword,
-        role: values.usertype,
+        role: values.userType.toLowerCase(),
         birthday: values.birthday,
         phone: values.number,
       },
     })
-      .then((res) => {
-        setLocalStorage("userToken", res.data.token);
-        navigate("/homepage");
+      .then(() => {
+        navigate("/login");
         setIsLoading(false);
         notifications.show({
           message: "Registration Successful",
@@ -108,21 +117,6 @@ const SignUp = () => {
         });
       })
       .finally(() => setIsLoading(false));
-
-    // setTimeout(() => {
-    //   console.log(values);
-    //   setIsLoading(false);
-    // }, 3000);
-  };
-
-  const handelgender = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    active1: boolean,
-    active2: boolean
-  ) => {
-    form.setFieldValue("gender", event.currentTarget.name);
-    setActiveMale(!active1);
-    setActiveFemale(!active2);
   };
 
   return (
@@ -131,9 +125,10 @@ const SignUp = () => {
         <Title className="text-white">SignUp</Title>
         <Text className="text-gray-200">Welcome to Local Business</Text>
       </div>
-      <div>
+
+      <div className="">
         <form onSubmit={form.onSubmit((values) => handelForm(values))}>
-          <div className="grid grid-cols-1 ">
+          <div className="md:grid grid-cols-2 gap-1.5">
             <TextInput
               required
               withAsterisk
@@ -143,7 +138,7 @@ const SignUp = () => {
               classNames={{
                 label: "text-white",
               }}
-              {...form.getInputProps("firstname")}
+              {...form.getInputProps("firstName")}
             />
 
             <TextInput
@@ -151,11 +146,11 @@ const SignUp = () => {
               withAsterisk
               autoComplete="secondname"
               label="second name"
-              className="text-start col-span-1 space-x-2.5"
+              className="text-start col-span-1 "
               classNames={{
-                label: "text-white ml-2.5",
+                label: "text-white",
               }}
-              {...form.getInputProps("secondname")}
+              {...form.getInputProps("secondName")}
             />
 
             <TextInput
@@ -177,18 +172,18 @@ const SignUp = () => {
               label="Password"
               placeholder="••••••••"
               classNames={{
-                label: "text-white mr-21",
+                label: "text-white ",
               }}
               {...form.getInputProps("password")}
             />
 
             <PasswordInput
               withAsterisk
-              className="col-span-1 space-x-2.5 text-start"
+              className="col-span-1 text-start"
               label="Confirm password"
               placeholder="••••••••"
               classNames={{
-                label: "text-white ml-2.5 ",
+                label: "text-white ",
               }}
               {...form.getInputProps("confirmPassword")}
             />
@@ -204,58 +199,53 @@ const SignUp = () => {
             />
 
             <DatePickerInput
-              className="text-start text-white col-span-1 space-x-2.5 cursor-pointer"
+              className="text-start text-white col-span-1"
               valueFormat="YYYY MMM DD"
-              leftSection={icon}
+              leftSection={
+                <IconCalendar className="cursor-pointer" stroke={1.5} />
+              }
               leftSectionPointerEvents="none"
               label="Birthday :"
               placeholder="Pick date"
-              classNames={{
-                label: " ml-2.5 ",
-              }}
               {...form.getInputProps("birthday")}
             />
 
-            <div className="md:col-span-1 sm:mt-6 ">
-              <span className="mr-2 text-white">Gender:</span>
-              <Button
-                className={`p-2 border-primary text-white hover:bg-primary ${
-                  activeMale ? "bg-primary" : ""
-                }`}
-                variant="outline"
-                value="male"
-                name="male"
-                onClick={(event) => {
-                  handelgender(event, false, true);
-                }}
+            <div>
+              <Radio.Group
+                name="favoriteFramework"
+                label="Gender: "
+                className="text-start text-white"
               >
-                Male
-              </Button>
-              <Button
-                className={`p-1 border-primary text-white hover:bg-primary ${
-                  activeFemale ? "bg-primary" : ""
-                }`}
-                variant="outline"
-                type="button"
-                value="female"
-                name="female"
-                onClick={(event) => {
-                  handelgender(event, true, false);
-                }}
-              >
-                Female
-              </Button>
+                <Group mt="xs" className="text-white">
+                  <Radio
+                    value="male"
+                    label="Male"
+                    classNames={{ label: "pl-1 " }}
+                    onClick={(e) => {
+                      form.setFieldValue("gender", e.currentTarget.value);
+                    }}
+                  />
+                  <Radio
+                    value="female"
+                    label="Female"
+                    classNames={{ label: "pl-1" }}
+                    onClick={(e) => {
+                      form.setFieldValue("gender", e.currentTarget.value);
+                    }}
+                  />
+                </Group>
+              </Radio.Group>
             </div>
+
             <div className="col-span-1 ">
               <Select
                 required
                 withAsterisk
-                className="ml-2 text-start text-white"
+                className="text-start text-white"
                 label="UserType"
                 placeholder="User Type"
-                data={["customer", "businessOwner"]}
-                // onChange={(e) => UserType(e)}
-                {...form.getInputProps("usertype")}
+                data={["Customer", "BusinessOwner"]}
+                {...form.getInputProps("userType")}
               />
             </div>
           </div>
@@ -267,6 +257,7 @@ const SignUp = () => {
           >
             {"SignUp".toUpperCase()}
           </Button>
+
           <Link
             className="text-primary block w-full text-center text-base mt-4"
             to="/login"
