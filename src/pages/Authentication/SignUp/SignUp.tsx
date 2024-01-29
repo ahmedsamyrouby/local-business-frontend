@@ -19,6 +19,7 @@ import {
   Title,
   Text,
   Radio,
+  Group,
 } from "@mantine/core";
 import { useState } from "react";
 import axios from "axios";
@@ -126,16 +127,11 @@ const SignUp = () => {
     <AuthenticationLayout img={signUpArt}>
       <div>
         <Title className="text-white">Sign Up</Title>
-        <Text className="text-gray-200">
-          Please fill in the form below to create your account.
-        </Text>
+        <Text className="text-gray-200">Please fill in the form below to create your account.</Text>
       </div>
 
       <div className="w-full">
-        <form
-          className=""
-          onSubmit={form.onSubmit((values) => handelForm(values))}
-        >
+        <form className="" onSubmit={form.onSubmit((values) => handelForm(values))}>
           <div className="md:grid grid-cols-2 gap-1.5">
             <TextInput
               required
@@ -222,24 +218,26 @@ const SignUp = () => {
               <Radio.Group
                 name="favoriteFramework"
                 label="Gender: "
-                className="text-start text-white"
+                className="text-start text-white "
               >
-                <Radio
-                  value="male"
-                  label="Male"
-                  classNames={{ label: "pl-1 " }}
-                  onClick={(e) => {
-                    form.setFieldValue("gender", e.currentTarget.value);
-                  }}
-                />
-                <Radio
-                  value="female"
-                  label="Female"
-                  classNames={{ label: "pl-1" }}
-                  onClick={(e) => {
-                    form.setFieldValue("gender", e.currentTarget.value);
-                  }}
-                />
+                <Group mt="xs" className="text-white">
+                  <Radio
+                    value="male"
+                    label="Male"
+                    classNames={{ label: "pl-1 " }}
+                    onClick={(e) => {
+                      form.setFieldValue("gender", e.currentTarget.value);
+                    }}
+                  />
+                  <Radio
+                    value="female"
+                    label="Female"
+                    classNames={{ label: "pl-1" }}
+                    onClick={(e) => {
+                      form.setFieldValue("gender", e.currentTarget.value);
+                    }}
+                  />
+                </Group>
               </Radio.Group>
             </div>
 
@@ -265,10 +263,7 @@ const SignUp = () => {
           </Button>
 
           <p className="text-white w-full text-start text-base mt-1">
-            Already have an account?{" "}
-            <Link className="text-primary" to="/login">
-              Login
-            </Link>
+            Already have an account? <Link className="text-primary" to="/login">Login</Link>
           </p>
         </form>
       </div>
