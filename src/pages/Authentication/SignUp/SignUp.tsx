@@ -29,35 +29,39 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const signUpSchema = z
+  const validationSchema = z
     .object({
-      name: z.string(),
-      firstName: z.string(),
-      secondName: z.string(),
-      email: z.string().email("Invalid E-mail"),
-      password: z.string().min(8, "Password must be at least 8 characters"),
-      confirmPassword: z.string(),
-      number: z.string().length(15, "must be 11 number"),
-      birthday: z.date(),
-      gender: z.string(),
-      userType: z.string(),
-    })
-    .refine((data) => /(?=.*[A-Z])/.test(data.password) == true, {
-      message: "must contain at least one uppercase letter",
-      path: ["password"],
-    })
-    .refine((data) => /(?=.*[a-z])/.test(data.password) == true, {
-      message: "must contain at least one lowercase letter",
-      path: ["password"],
+      password: z
+        .string()
+        .min(1, "Password is required")
+        .refine(
+          (value) => /.{8,}/.test(value),
+          "Password must be at least 8 characters long"
+        )
+        .refine(
+          (value) => /(?=.*\d)/.test(value),
+          "Password must contain at least one digit"
+        )
+        .refine(
+          (value) => /(?=.*[a-z])/.test(value),
+          "Password must contain at least one lowercase letter"
+        )
+        .refine(
+          (value) => /(?=.*[A-Z])/.test(value),
+          "Password must contain at least one uppercase letter"
+        ),
+      confirmPassword: z.string().min(1, "Confirm Password is required"),
+      userType: z.string().min(1, "User Type is required"),
+      email: z.string().email("Please enter a valid email"),
+      number: z.string().length(16, "Please enter a valid phone number"), // +20 000 000 0000
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords must match",
-      path: ["confirmPassword"],
+      path: ["confirmPassword"], // field which will receive the error message
     });
 
   const form = useForm({
     initialValues: {
-      name: "",
       firstName: "",
       secondName: "",
       email: "",
@@ -68,20 +72,20 @@ const SignUp = () => {
       gender: "",
       userType: "",
     },
-    validate: zodResolver(signUpSchema),
+    validate: zodResolver(validationSchema),
   });
 
   type FormValues = typeof form.values;
 
   const handelForm = async (values: FormValues) => {
-    values.name = `${values.firstName} ${values.secondName}`;
+    const name = `${values.firstName} ${values.secondName}`;
     console.log(values);
     setIsLoading(true);
     await axios({
       method: "post",
       url: `${BASE_URL}/auth/signup`,
       data: {
-        name: values.name,
+        name: name,
         email: values.email,
         password: values.password,
         passwordConfirm: values.confirmPassword,
@@ -132,8 +136,8 @@ const SignUp = () => {
             <TextInput
               required
               withAsterisk
-              autoComplete="firstname"
-              label="First name"
+              autoComplete="firstName"
+              label="First Name"
               className="text-start col-span-1"
               classNames={{
                 label: "text-white",
@@ -144,8 +148,8 @@ const SignUp = () => {
             <TextInput
               required
               withAsterisk
-              autoComplete="secondname"
-              label="second name"
+              autoComplete="secondName"
+              label="Second Name"
               className="text-start col-span-1 "
               classNames={{
                 label: "text-white",
@@ -180,7 +184,7 @@ const SignUp = () => {
             <PasswordInput
               withAsterisk
               className="col-span-1 text-start"
-              label="Confirm password"
+              label="Confirm Password"
               placeholder="••••••••"
               classNames={{
                 label: "text-white ",
@@ -190,11 +194,11 @@ const SignUp = () => {
 
             <InputBase
               withAsterisk
-              label="Your phone"
+              label="Mobile Number"
               className="text-start text-white col-span-1"
               component={IMaskInput}
-              mask="+20 00000000000"
-              placeholder="Your phone"
+              mask="+20 000 000 0000"
+              placeholder="+20 XXX XXX XXXX"
               {...form.getInputProps("number")}
             />
 
@@ -242,8 +246,8 @@ const SignUp = () => {
                 required
                 withAsterisk
                 className="text-start text-white"
-                label="UserType"
-                placeholder="User Type"
+                label="User Type"
+                placeholder="Select User Type"
                 data={["Customer", "BusinessOwner"]}
                 {...form.getInputProps("userType")}
               />
