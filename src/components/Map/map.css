@@ -1,0 +1,13 @@
+.centerMarker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: -12.5px;
+  margin-top: -40px;
+  background-image: url("https://cdn0.iconfinder.com/data/icons/20-flat-icons/128/location-pointer.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 1000;
+}
