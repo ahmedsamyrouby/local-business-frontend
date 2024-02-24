@@ -1,6 +1,5 @@
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
-import "@mantine/dates/styles.css";
 import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
 import { IMaskInput } from "react-imask";
 import { DatePickerInput } from "@mantine/dates";
@@ -73,7 +72,7 @@ const SignUp = () => {
       password: "",
       confirmPassword: "",
       number: "",
-      birthday: "",
+      birthday: null,
       gender: "",
       userType: "",
     },
@@ -148,9 +147,9 @@ const SignUp = () => {
           backgroundOpacity: 0.55,
           blur: 3,
         }}
-        closeOnClickOutside={false}
-        closeOnEscape={false}
-        withCloseButton={false}
+        // closeOnClickOutside={false}
+        // closeOnEscape={false}
+        // withCloseButton={false}
         centered={true}
       >
         <BusinessForm onClose={close} />
@@ -174,7 +173,7 @@ const SignUp = () => {
                 withAsterisk
                 autoComplete="firstName"
                 label="First Name"
-                className="text-start col-span-1"
+                className="text-start col-span-1 mt-3 md:mt-1"
                 classNames={{
                   label: "text-white",
                 }}
@@ -186,7 +185,7 @@ const SignUp = () => {
                 withAsterisk
                 autoComplete="secondName"
                 label="Second Name"
-                className="text-start col-span-1"
+                className="text-start col-span-1 mt-3 md:mt-1"
                 classNames={{
                   label: "text-white",
                 }}
@@ -199,7 +198,7 @@ const SignUp = () => {
                 autoComplete="email"
                 label="Email"
                 placeholder="your@email.com"
-                className="text-start col-span-2"
+                className="text-start col-span-2 mt-3 md:mt-1"
                 classNames={{
                   label: "text-white",
                 }}
@@ -208,7 +207,7 @@ const SignUp = () => {
 
               <PasswordInput
                 withAsterisk
-                className="col-span-1 text-start"
+                className="col-span-1 text-start mt-3 md:mt-1"
                 label="Password"
                 placeholder="••••••••"
                 classNames={{
@@ -219,7 +218,7 @@ const SignUp = () => {
 
               <PasswordInput
                 withAsterisk
-                className="col-span-1 text-start"
+                className="col-span-1 text-start mt-3 md:mt-1"
                 label="Confirm Password"
                 placeholder="••••••••"
                 classNames={{
@@ -231,7 +230,7 @@ const SignUp = () => {
               <InputBase
                 withAsterisk
                 label="Mobile Number"
-                className="text-start text-white col-span-1"
+                className="text-start text-white col-span-1 mt-3 md:mt-1"
                 component={IMaskInput}
                 mask="+20 000 000 0000"
                 placeholder="+20 XXX XXX XXXX"
@@ -239,14 +238,18 @@ const SignUp = () => {
               />
 
               <DatePickerInput
-                className="text-start text-white col-span-1"
-                valueFormat="YYYY MMM DD"
+                className="text-start text-white col-span-1 mt-3 md:mt-1"
+                classNames={{
+                  day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
+                }}
+                valueFormat="DD MMM YYYY"
                 leftSection={
                   <IconCalendar className="cursor-pointer" stroke={1.5} />
                 }
                 leftSectionPointerEvents="none"
                 label="Birthday :"
                 placeholder="Pick date"
+                maxDate={new Date()}
                 {...form.getInputProps("birthday")}
               />
 
@@ -254,12 +257,16 @@ const SignUp = () => {
                 <Radio.Group
                   name="favoriteFramework"
                   label="Gender: "
-                  className="text-start text-white "
+                  className="text-start text-white  mt-3 md:mt-1"
                 >
-                  <Group mt="xs" className="text-white">
+                  <Group
+                    mt="xs"
+                    className="text-white flex-col md:flex-row items-start"
+                  >
                     <Radio
                       value="male"
                       label="Male"
+                      className=""
                       color="#99896B"
                       classNames={{ label: "pl-1 " }}
                       onClick={(e) => {
@@ -279,7 +286,7 @@ const SignUp = () => {
                 </Radio.Group>
               </div>
 
-              <div className="col-span-1 ">
+              <div className="col-span-1  mt-3 md:mt-1">
                 <Select
                   required
                   withAsterisk
@@ -293,7 +300,7 @@ const SignUp = () => {
             </div>
 
             <Button
-              className="bg-primary w-full text-base mt-3"
+              className="bg-primary w-full text-base mt-12 md:mt-3"
               type="submit"
               loading={isLoading}
               // onClick={handelModal}
