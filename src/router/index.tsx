@@ -6,6 +6,7 @@ import OTP from "../pages/Authentication/OTP/OTP";
 import ResetPassword from "../pages/Authentication/ResetPassword/ResetPassword";
 import HomePage from "../pages/HomePage/HomePage";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
+import OwnerProfile from "../pages/OwnerProfile/Owner";
 
 export default function AppRouter() {
   return (
@@ -17,6 +18,7 @@ export default function AppRouter() {
         <Route path="/otp" element={<OTP />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/homepage" element={<HomePage />} />
+        <Route path="/ownerprofile" element={<OwnerProfile />} />
       </Route>
     </Routes>
   );
