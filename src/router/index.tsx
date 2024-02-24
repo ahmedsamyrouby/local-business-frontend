@@ -7,6 +7,8 @@ import ResetPassword from "../pages/Authentication/ResetPassword/ResetPassword";
 import HomePage from "../pages/HomePage/HomePage";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
 import OwnerProfile from "../pages/OwnerProfile/Owner";
+import SetupOwnerInfo from "../pages/SetupProfile/SetUpOwnerInfo";
+import ChangePassword from "../pages/ChangePassword/ChangePassword";
 
 export default function AppRouter() {
   return (
@@ -19,6 +21,8 @@ export default function AppRouter() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/ownerprofile" element={<OwnerProfile />} />
+        <Route path="/setupProfile" element={<SetupOwnerInfo />} />
+        <Route path="/changePassword" element={<ChangePassword />} />
       </Route>
     </Routes>
   );

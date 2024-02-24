@@ -14,6 +14,7 @@ import { Modal } from "@mantine/core";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import ChangeImage from "./ChangeImage";
 import { convertStringToImageFile } from "../../services/ConvertStringToFile";
+import { useNavigate } from "react-router-dom";
 function OwnerInfo({
   isSmall,
   isIpadHeight,
@@ -24,10 +25,10 @@ function OwnerInfo({
   isIphoneHeight?: boolean;
 }) {
   const userId = getLocalStorage("userId");
+  const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
   const [file, setFile] = useState<Blob | null>();
   const [success, setSuccess] = useState(false);
-  // const [isImage, setIsImage] = useState(false);
   const [data, setData] = useState({
     _id: "",
     name: "",
@@ -52,9 +53,7 @@ function OwnerInfo({
   useEffect(() => {
     getOwnerInfo();
   }, []);
-  function handelImportImage() {
-    open();
-  }
+
   return (
     <>
       <Modal
@@ -133,7 +132,7 @@ function OwnerInfo({
             style={{
               marginTop: isIpadHeight ? "-90px" : "-70px",
             }}
-            onClick={handelImportImage}
+            onClick={open}
           />
           {file == null && (
             <FaPlus
@@ -332,6 +331,7 @@ function OwnerInfo({
                 ? "text-gray-300 text-xl"
                 : "text-gray-300 "
             }
+            onClick={() => navigate("/changePassword")}
           >
             Change Password
           </Anchor>
@@ -343,6 +343,7 @@ function OwnerInfo({
                 ? "text-gray-300 text-xl"
                 : "text-gray-300"
             }
+            onClick={() => navigate("/setupProfile")}
           >
             Setup Profile
           </Anchor>
@@ -354,7 +355,6 @@ function OwnerInfo({
                 ? "text-gray-300 hover:text-red-600 text-xl"
                 : "text-gray-300 hover:text-red-600"
             }
-            onClick={() => console.log(file)}
           >
             Log Out
           </Anchor>
