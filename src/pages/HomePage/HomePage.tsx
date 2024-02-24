@@ -3,7 +3,7 @@ import Map from "../../components/Map/Map";
 const HomePage = () => {
   return (
     <div>
-      <Map />
+      <h1 className="text-white">HOMEPAGE</h1>
     </div>
   );
 };

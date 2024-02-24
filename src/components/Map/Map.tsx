@@ -3,9 +3,12 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import "./map.css";
 
-function Map() {
-  const [center, setCenter] = useState<LatLngExpression>();
+type MapProps = {
+  setLocation: (location: LatLngExpression) => void;
+  location: LatLngExpression;
+};
 
+function Map({ setLocation: setCenter, location: center }: MapProps) {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -44,12 +47,8 @@ function Map() {
   if (!center) return null;
 
   return (
-    <div>
-      <MapContainer
-        center={center}
-        zoom={17}
-        style={{ height: "700px", width: "500px" }}
-      >
+    <div className="relative h-80 w-full">
+      <MapContainer center={center} zoom={17} className="w-full h-full">
         <TileLayer
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"

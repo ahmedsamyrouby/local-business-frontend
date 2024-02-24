@@ -9,6 +9,7 @@ import {
   rem,
   Text,
   Button,
+  InputLabel,
 } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import { TimeInput } from "@mantine/dates";
@@ -16,10 +17,13 @@ import { useForm } from "@mantine/form";
 import { useMemo, useState } from "react";
 import countryList from "react-select-country-list";
 import { FaFileImage } from "react-icons/fa6";
+import Map from "../../../components/Map/Map";
+import { LatLngExpression } from "leaflet";
 function BusinessForm({ onClose }: { onClose: () => void }) {
   const options = useMemo(() => countryList().getData(), []);
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [location, setLocation] = useState<LatLngExpression>();
 
   const businessForm = useForm({
     initialValues: {
@@ -38,6 +42,7 @@ function BusinessForm({ onClose }: { onClose: () => void }) {
 
   const handelBusinessForm = (values: FormValues) => {
     console.log(values);
+    console.log(location);
     setIsLoading(true);
     setIsSubmit(true);
     setTimeout(() => {
@@ -174,6 +179,12 @@ function BusinessForm({ onClose }: { onClose: () => void }) {
             label="Discription"
             placeholder="Your discription about your business"
           />
+
+          <div className="mt-3">
+            <InputLabel>Business Location</InputLabel>
+            <Map setLocation={setLocation} location={location!} />
+          </div>
+
           <Button
             className="bg-primary w-full text-base mt-3 rounded py-1 text-white"
             type="submit"
