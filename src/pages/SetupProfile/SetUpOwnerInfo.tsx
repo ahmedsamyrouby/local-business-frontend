@@ -1,19 +1,28 @@
 import { Button, InputBase, TextInput, Title, rem } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { IconAt, IconCalendar } from "@tabler/icons-react";
+import { IconAt, IconCalendar, IconSquareCheck } from "@tabler/icons-react";
 import { IMaskInput } from "react-imask";
 import AuthenticationLayout from "../Authentication/AuthenticationLayout/AuthenticationLayout";
 import signUpArt from "../../assets/images/signup-art.jpg";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
+import axios from "axios";
+import { BASE_URL } from "../../constants";
+import { getLocalStorage } from "../../services/LocalStorageService";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 
 function SetupOwnerInfo() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const userId = getLocalStorage("userId");
   const validationSchema = z.object({
     firstName: z.string(),
     secondName: z.string(),
     email: z.string().email("Please enter a valid email"),
-    number: z.string().length(16, "Please enter a valid phone number"), // +20 000 000 0000
+    number: z.string().length(17, "Please enter a valid phone number"), // +20 000 000 0000
   });
   const form = useForm({
     initialValues: {
@@ -26,8 +35,30 @@ function SetupOwnerInfo() {
     validate: zodResolver(validationSchema),
   });
   type FormValues = typeof form.values;
-  function handelForm(values: FormValues) {
+  async function handelForm(values: FormValues) {
     console.log(values);
+    const name: string = `${values.firstName} ${values.secondName}`;
+    await axios({
+      method: "put",
+      url: `${BASE_URL}/auth/updateUserData/${userId}`,
+      data: {
+        name: name,
+        email: values.email,
+        phone: values.number,
+        birthday: values.birthday,
+      },
+    }).then(() => {
+      navigate("/ownerprofile");
+      setIsLoading(false);
+      notifications.show({
+        message: "Registration Successful",
+        autoClose: 3000,
+        icon: <IconSquareCheck />,
+        classNames: {
+          icon: "bg-transparent text-green-500",
+        },
+      });
+    });
   }
   return (
     <AuthenticationLayout img={signUpArt}>
@@ -79,14 +110,14 @@ function SetupOwnerInfo() {
             label="Mobile Number"
             className="text-start text-white col-span-1"
             component={IMaskInput}
-            mask="+20 000 000 0000"
+            mask="+20 0000 000 0000"
             placeholder="+20 XXX XXX XXXX"
             {...form.getInputProps("number")}
           />
           <Button
             className="bg-primary w-full text-base mt-3 rounded py-1 text-white"
             type="submit"
-            // loading={isLoading}
+            loading={isLoading}
           >
             {"submitt".toUpperCase()}
           </Button>
