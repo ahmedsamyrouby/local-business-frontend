@@ -19,18 +19,15 @@ import {
   Text,
   Radio,
   Group,
-  Modal,
-  ScrollArea,
 } from "@mantine/core";
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
-import BusinessForm from "./BusinessForm";
-import { useDisclosure } from "@mantine/hooks";
+
+import { setLocalStorage } from "../../../services/LocalStorageService";
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
 
   const validationSchema = z
@@ -103,8 +100,9 @@ const SignUp = () => {
         phone: values.number,
       },
     })
-      .then(() => {
-        navigate("/login");
+      .then((res) => {
+        setLocalStorage("userId", res.data.data._id);
+        navigate("/businessform");
         setIsLoading(false);
         notifications.show({
           message: "Registration Successful",
@@ -133,191 +131,169 @@ const SignUp = () => {
   };
 
   return (
-    <>
-      <Modal
-        opened={opened}
-        onClose={close}
-        scrollAreaComponent={ScrollArea.Autosize}
-        transitionProps={{
-          transition: "fade",
-          duration: 600,
-          timingFunction: "linear",
-        }}
-        overlayProps={{
-          backgroundOpacity: 0.55,
-          blur: 3,
-        }}
-        // closeOnClickOutside={false}
-        // closeOnEscape={false}
-        // withCloseButton={false}
-        centered={true}
-      >
-        <BusinessForm onClose={close} />
-      </Modal>
-      <AuthenticationLayout img={signUpArt}>
-        <div>
-          <Title className="text-white">Sign Up</Title>
-          <Text className="text-gray-200">
-            Please fill in the form below to create your account.
-          </Text>
-        </div>
+    <AuthenticationLayout img={signUpArt}>
+      <div>
+        <Title className="text-white">Sign Up</Title>
+        <Text className="text-gray-200">
+          Please fill in the form below to create your account.
+        </Text>
+      </div>
 
-        <div className="w-full">
-          <form
-            className=""
-            onSubmit={form.onSubmit((values) => handelForm(values))}
-          >
-            <div className="md:grid grid-cols-2 gap-1.5">
-              <TextInput
-                required
-                withAsterisk
-                autoComplete="firstName"
-                label="First Name"
-                className="text-start col-span-1 mt-3 md:mt-1"
-                classNames={{
-                  label: "text-white",
-                }}
-                {...form.getInputProps("firstName")}
-              />
+      <div className="w-full">
+        <form
+          className=""
+          onSubmit={form.onSubmit((values) => handelForm(values))}
+        >
+          <div className="md:grid grid-cols-2 gap-1.5">
+            <TextInput
+              required
+              withAsterisk
+              autoComplete="firstName"
+              label="First Name"
+              className="text-start col-span-1 mt-3 md:mt-1"
+              classNames={{
+                label: "text-white",
+              }}
+              {...form.getInputProps("firstName")}
+            />
 
-              <TextInput
-                required
-                withAsterisk
-                autoComplete="secondName"
-                label="Second Name"
-                className="text-start col-span-1 mt-3 md:mt-1"
-                classNames={{
-                  label: "text-white",
-                }}
-                {...form.getInputProps("secondName")}
-              />
+            <TextInput
+              required
+              withAsterisk
+              autoComplete="secondName"
+              label="Second Name"
+              className="text-start col-span-1 mt-3 md:mt-1"
+              classNames={{
+                label: "text-white",
+              }}
+              {...form.getInputProps("secondName")}
+            />
 
-              <TextInput
-                required
-                withAsterisk
-                autoComplete="email"
-                label="Email"
-                placeholder="your@email.com"
-                className="text-start col-span-2 mt-3 md:mt-1"
-                classNames={{
-                  label: "text-white",
-                }}
-                {...form.getInputProps("email")}
-              />
+            <TextInput
+              required
+              withAsterisk
+              autoComplete="email"
+              label="Email"
+              placeholder="your@email.com"
+              className="text-start col-span-2 mt-3 md:mt-1"
+              classNames={{
+                label: "text-white",
+              }}
+              {...form.getInputProps("email")}
+            />
 
-              <PasswordInput
-                withAsterisk
-                className="col-span-1 text-start mt-3 md:mt-1"
-                label="Password"
-                placeholder="••••••••"
-                classNames={{
-                  label: "text-white ",
-                }}
-                {...form.getInputProps("password")}
-              />
+            <PasswordInput
+              withAsterisk
+              className="col-span-1 text-start mt-3 md:mt-1"
+              label="Password"
+              placeholder="••••••••"
+              classNames={{
+                label: "text-white ",
+              }}
+              {...form.getInputProps("password")}
+            />
 
-              <PasswordInput
-                withAsterisk
-                className="col-span-1 text-start mt-3 md:mt-1"
-                label="Confirm Password"
-                placeholder="••••••••"
-                classNames={{
-                  label: "text-white ",
-                }}
-                {...form.getInputProps("confirmPassword")}
-              />
+            <PasswordInput
+              withAsterisk
+              className="col-span-1 text-start mt-3 md:mt-1"
+              label="Confirm Password"
+              placeholder="••••••••"
+              classNames={{
+                label: "text-white ",
+              }}
+              {...form.getInputProps("confirmPassword")}
+            />
 
-              <InputBase
-                withAsterisk
-                label="Mobile Number"
-                className="text-start text-white col-span-1 mt-3 md:mt-1"
-                component={IMaskInput}
-                mask="+20 000 000 0000"
-                placeholder="+20 XXX XXX XXXX"
-                {...form.getInputProps("number")}
-              />
+            <InputBase
+              withAsterisk
+              label="Mobile Number"
+              className="text-start text-white col-span-1 mt-3 md:mt-1"
+              component={IMaskInput}
+              mask="+20 000 000 0000"
+              placeholder="+20 XXX XXX XXXX"
+              {...form.getInputProps("number")}
+            />
 
-              <DatePickerInput
-                className="text-start text-white col-span-1 mt-3 md:mt-1"
-                classNames={{
-                  day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
-                }}
-                valueFormat="DD MMM YYYY"
-                leftSection={
-                  <IconCalendar className="cursor-pointer" stroke={1.5} />
-                }
-                leftSectionPointerEvents="none"
-                label="Birthday :"
-                placeholder="Pick date"
-                maxDate={new Date()}
-                {...form.getInputProps("birthday")}
-              />
+            <DatePickerInput
+              className="text-start text-white col-span-1 mt-3 md:mt-1"
+              classNames={{
+                day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
+              }}
+              valueFormat="DD MMM YYYY"
+              leftSection={
+                <IconCalendar className="cursor-pointer" stroke={1.5} />
+              }
+              leftSectionPointerEvents="none"
+              label="Birthday :"
+              placeholder="Pick date"
+              maxDate={new Date()}
+              {...form.getInputProps("birthday")}
+            />
 
-              <div>
-                <Radio.Group
-                  name="favoriteFramework"
-                  label="Gender: "
-                  className="text-start text-white  mt-3 md:mt-1"
+            <div>
+              <Radio.Group
+                name="favoriteFramework"
+                label="Gender: "
+                className="text-start text-white  mt-3 md:mt-1"
+              >
+                <Group
+                  mt="xs"
+                  className="text-white flex-col md:flex-row items-start"
                 >
-                  <Group
-                    mt="xs"
-                    className="text-white flex-col md:flex-row items-start"
-                  >
-                    <Radio
-                      value="male"
-                      label="Male"
-                      className=""
-                      color="#99896B"
-                      classNames={{ label: "pl-1 " }}
-                      onClick={(e) => {
-                        form.setFieldValue("gender", e.currentTarget.value);
-                      }}
-                    />
-                    <Radio
-                      value="female"
-                      label="Female"
-                      color="#99896B"
-                      classNames={{ label: "pl-1" }}
-                      onClick={(e) => {
-                        form.setFieldValue("gender", e.currentTarget.value);
-                      }}
-                    />
-                  </Group>
-                </Radio.Group>
-              </div>
-
-              <div className="col-span-1  mt-3 md:mt-1">
-                <Select
-                  required
-                  withAsterisk
-                  className="text-start text-white"
-                  label="User Type"
-                  placeholder="Select User Type"
-                  data={["Customer", "BusinessOwner"]}
-                  {...form.getInputProps("userType")}
-                />
-              </div>
+                  <Radio
+                    value="male"
+                    label="Male"
+                    className=""
+                    color="#99896B"
+                    classNames={{ label: "pl-1 " }}
+                    onClick={(e) => {
+                      form.setFieldValue("gender", e.currentTarget.value);
+                    }}
+                  />
+                  <Radio
+                    value="female"
+                    label="Female"
+                    color="#99896B"
+                    classNames={{ label: "pl-1" }}
+                    onClick={(e) => {
+                      form.setFieldValue("gender", e.currentTarget.value);
+                    }}
+                  />
+                </Group>
+              </Radio.Group>
             </div>
 
-            <Button
-              className="bg-primary w-full text-base mt-12 md:mt-3"
-              type="submit"
-              loading={isLoading}
-              // onClick={handelModal}
-            >
-              {"SignUp".toUpperCase()}
-            </Button>
+            <div className="col-span-1  mt-3 md:mt-1">
+              <Select
+                required
+                withAsterisk
+                className="text-start text-white"
+                label="User Type"
+                placeholder="Select User Type"
+                data={["Customer", "BusinessOwner"]}
+                {...form.getInputProps("userType")}
+              />
+            </div>
+          </div>
 
-            <p className="text-white w-full text-start text-base mt-1">
-              Already have an account?{" "}
-              <Link className="text-primary" to="/login">
-                Login
-              </Link>
-            </p>
-          </form>
-        </div>
-      </AuthenticationLayout>
-    </>
+          <Button
+            className="bg-primary w-full text-base mt-12 md:mt-3"
+            type="submit"
+            loading={isLoading}
+            // onClick={handelModal}
+          >
+            {"SignUp".toUpperCase()}
+          </Button>
+
+          <p className="text-white w-full text-start text-base mt-1">
+            Already have an account?{" "}
+            <Link className="text-primary" to="/login">
+              Login
+            </Link>
+          </p>
+        </form>
+      </div>
+    </AuthenticationLayout>
   );
 };
 export default SignUp;
