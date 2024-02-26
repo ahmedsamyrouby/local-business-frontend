@@ -1,14 +1,27 @@
 import { Title, PasswordInput, Button, rem } from "@mantine/core";
-import { IconLock } from "@tabler/icons-react";
+import {
+  IconAlertSquare,
+  IconLock,
+  IconSquareCheck,
+} from "@tabler/icons-react";
 import AuthenticationLayout from "../Authentication/AuthenticationLayout/AuthenticationLayout";
 import signUpArt from "../../assets/images/signup-art.jpg";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
 import { z } from "zod";
-// import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+} from "../../services/LocalStorageService";
+import { BASE_URL } from "../../constants";
+import { notifications } from "@mantine/notifications";
 function ChangePassword() {
-  // const navigate = useNavigate();
-
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const userId = getLocalStorage("userId");
   const validationSchema = z
     .object({
       newPassword: z
@@ -47,8 +60,42 @@ function ChangePassword() {
   });
 
   type FormValues = typeof form.values;
-  function handelForm(values: FormValues) {
+  async function handelForm(values: FormValues) {
     console.log(values);
+    await axios({
+      method: "patch",
+      url: `${BASE_URL}/auth/changePassword/${userId}`,
+      data: {
+        oldPassword: values.currentPassword,
+        newPassword: values.newPassword,
+        passwordConfirm: values.confirmPassword,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        navigate("/login");
+        removeLocalStorage("userId");
+        setIsLoading(false);
+        notifications.show({
+          message: res.data.message,
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      })
+      .catch((err) => {
+        notifications.show({
+          message: err.response.data.message,
+          autoClose: 2000,
+          icon: <IconAlertSquare />,
+          classNames: {
+            icon: "bg-transparent text-red-500",
+          },
+        });
+      })
+      .finally(() => setIsLoading(false));
   }
   return (
     <AuthenticationLayout img={signUpArt}>
@@ -96,7 +143,7 @@ function ChangePassword() {
           <Button
             className="bg-primary w-full text-base mt-3 rounded py-1 text-white"
             type="submit"
-            // loading={isLoading}
+            loading={isLoading}
           >
             {"submitt".toUpperCase()}
           </Button>

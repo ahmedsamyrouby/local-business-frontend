@@ -13,6 +13,7 @@ import { getLocalStorage } from "../../services/LocalStorageService";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
+import { FaPhoneAlt } from "react-icons/fa";
 
 function SetupOwnerInfo() {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ function SetupOwnerInfo() {
       navigate("/ownerprofile");
       setIsLoading(false);
       notifications.show({
-        message: "Registration Successful",
+        message: "Update Successful",
         autoClose: 3000,
         icon: <IconSquareCheck />,
         classNames: {
@@ -74,14 +75,12 @@ function SetupOwnerInfo() {
             <TextInput
               className="text-start text-white w-full"
               label="Firts Name"
-              placeholder="you Name"
               classNames={{ label: "text-white font-bold" }}
               {...form.getInputProps("firstName")}
             />
             <TextInput
               className="text-start text-white w-full"
               label="Second Name"
-              placeholder="you Name"
               classNames={{ label: "text-white font-bold" }}
               {...form.getInputProps("secondName")}
             />
@@ -91,7 +90,7 @@ function SetupOwnerInfo() {
             leftSectionPointerEvents="none"
             leftSection={<IconAt style={{ width: rem(16), height: rem(16) }} />}
             label="E-mail"
-            placeholder="Your email"
+            placeholder="email"
             classNames={{ label: "text-white font-bold" }}
             {...form.getInputProps("email")}
           />
@@ -112,6 +111,9 @@ function SetupOwnerInfo() {
             component={IMaskInput}
             mask="+20 0000 000 0000"
             placeholder="+20 XXX XXX XXXX"
+            leftSection={
+              <FaPhoneAlt style={{ width: rem(16), height: rem(16) }} />
+            }
             {...form.getInputProps("number")}
           />
           <Button
