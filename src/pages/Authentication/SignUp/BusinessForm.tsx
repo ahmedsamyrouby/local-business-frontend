@@ -7,76 +7,194 @@ import {
   Textarea,
   Title,
   rem,
-  Text,
   Button,
+  InputLabel,
 } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import { IconClock, IconSquareCheck } from "@tabler/icons-react";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useMemo, useState } from "react";
 import countryList from "react-select-country-list";
 import { FaFileImage } from "react-icons/fa6";
-function BusinessForm({ onClose }: { onClose: () => void }) {
+import Map from "../../../components/Map/Map";
+import { LatLngExpression } from "leaflet";
+import axios from "axios";
+import { BASE_URL } from "../../../constants";
+import { getLocalStorage } from "../../../services/LocalStorageService";
+import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
+import image from "../../../assets/images/forgot-password-art.jpg";
+import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
+function BusinessForm() {
+  const navigate = useNavigate();
   const options = useMemo(() => countryList().getData(), []);
-  const [isSubmit, setIsSubmit] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [location, setLocation] = useState<LatLngExpression>();
+  const userId: string | null = getLocalStorage("userId");
+  const Categories: readonly string[] = [
+    "Restaurants and Cafés",
+    "Retail Stores",
+    "Health and Beauty Services",
+    "Medical and Healthcare Services",
+    "Tourism and Hospitality",
+    "Education and Training Centers:",
+    "Real Estate and Construction",
+    "Arts and Entertainment",
+    "Home Services",
+    "Auto Services",
+    "Other",
+  ];
 
   const businessForm = useForm({
     initialValues: {
       businessName: "",
       country: "Egypt",
+      category: "",
       timeActive: "",
       activeFrom: "",
       activeTo: "",
-      // location: [],
       businessPhoto: "",
       businessLicense: "",
+      description: "",
+      address: "",
     },
   });
 
   type FormValues = typeof businessForm.values;
 
-  const handelBusinessForm = (values: FormValues) => {
+  const handelBusinessForm = async (values: FormValues) => {
+    const coordinates: [number, number] = Object.values(location);
+    if (values.timeActive == "24hour") {
+      businessForm.setFieldValue("activeFrom", "24hour");
+    }
     console.log(values);
+    console.log(coordinates);
     setIsLoading(true);
-    setIsSubmit(true);
-    setTimeout(() => {
+    await axios({
+      method: "put",
+      url: `${BASE_URL}/businessOwner/updateMyBusinessInfo/${userId}`,
+      data: {
+        station: {
+          type: "Point",
+          coordinates: [coordinates[0], coordinates[1]],
+        },
+        workTime: { startTime: values.activeFrom, endTime: values.activeTo },
+        businessName: values.businessName,
+        Country: values.country,
+        category: values.category,
+        description: values.description,
+        address: values.address,
+      },
+    }).then((res) => {
+      console.log(res);
       setIsLoading(false);
-      onClose();
-    }, 6000);
+      navigate("/ownerprofile");
+      notifications.show({
+        message: "Wating for Respnse...",
+        autoClose: 2000,
+        icon: <IconSquareCheck />,
+        classNames: {
+          icon: "bg-transparent text-green-500",
+        },
+      });
+    });
+    // await axios({
+    //   method: "patch",
+    //   url: `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${userId}`,
+    //   data: { attachment: values.businessLicense },
+    // })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const handelRadio = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     businessForm.setFieldValue("timeActive", e.currentTarget.value);
   };
 
-  if (isSubmit) {
-    return <Text>Waiting for an email with response...</Text>;
-  } else {
-    return (
+  return (
+    <AuthenticationLayout img={image}>
       <form
         onSubmit={businessForm.onSubmit((values) => handelBusinessForm(values))}
+        className="w-full"
       >
         <div className="text-center mb-4">
-          <Title className="text-xl">Business Informations</Title>
+          <Title className="text-xl text-white">Business Informations</Title>
         </div>
-        <div className="flex-1 justify-center">
-          <TextInput
+        <div className="flex flex-col gap-y-2.5 justify-center">
+          <div className="flex gap-x-1">
+            <TextInput
+              required
+              withAsterisk
+              label="Business name"
+              placeholder="Your business name"
+              className="text-start text-white w-full"
+              {...businessForm.getInputProps("businessName")}
+            />
+            <TextInput
+              label="Address"
+              placeholder="Business's Address"
+              className="text-start text-white w-full"
+              {...businessForm.getInputProps("address")}
+            />
+          </div>
+          <div className="flex gap-x-1">
+            {" "}
+            <Select
+              label="Category"
+              placeholder="Business Category"
+              data={Categories}
+              maxDropdownHeight={200}
+              className="text-start text-white"
+              {...businessForm.getInputProps("category")}
+            />
+            <Select
+              data={options}
+              label="Country"
+              placeholder="Your business name"
+              className="text-start text-white"
+              {...businessForm.getInputProps("country")}
+            />
+          </div>
+          {/* <div className="flex gap-x-1 ">
+            <FileInput
+              rightSection={
+                <FaFileImage
+                  style={{ width: rem(18), height: rem(18), color: "#99896B" }}
+                  stroke="1.5"
+                />
+              }
+              description="Logo of your Business"
+              className="w-full text-start text-white"
+              label="Business's Photo"
+              placeholder="Your business's Photo"
+              {...businessForm.getInputProps("businessPhoto")}
+            /> */}
+          <FileInput
+            rightSection={
+              <FaFileImage
+                style={{ width: rem(18), height: rem(18), color: "#99896B" }}
+                stroke="1.5"
+              />
+            }
+            className="w-full text-start text-white"
             required
+            description="only one license"
+            label="Business's license"
+            placeholder="Your business's license"
+            {...businessForm.getInputProps("businessLicense")}
+          />
+          {/* </div> */}
+          <Radio.Group
             withAsterisk
-            label="Business name"
-            placeholder="Your business name"
-            className="text-start pb-2"
-            {...businessForm.getInputProps("businessName")}
-          />
-          <Select
-            data={options}
-            label="Country"
-            placeholder="Your business name"
-            className="text-start pb-2"
-            {...businessForm.getInputProps("country")}
-          />
-          <Radio.Group withAsterisk required label="Active" className="pb-3">
+            required
+            label="Active"
+            className="text-start text-white"
+          >
             <Group mt="xs">
               <Radio
                 required
@@ -104,11 +222,11 @@ function BusinessForm({ onClose }: { onClose: () => void }) {
           {/* if specific time is selected */}
 
           {businessForm.values.timeActive == "specifictime" ? (
-            <div className="grid grid-cols-2 gap-1.5 pb-2">
+            <div className="grid grid-cols-2 gap-x-1.5">
               <TimeInput
                 required
                 label="Active From"
-                className="col-span-1"
+                className="col-span-1 text-start text-white"
                 leftSection={
                   <IconClock
                     style={{ width: rem(16), height: rem(16) }}
@@ -120,7 +238,7 @@ function BusinessForm({ onClose }: { onClose: () => void }) {
               <TimeInput
                 required
                 label="Active To"
-                className="col-span-1"
+                className="col-span-1 text-start text-white"
                 leftSection={
                   <IconClock
                     style={{ width: rem(16), height: rem(16) }}
@@ -133,47 +251,20 @@ function BusinessForm({ onClose }: { onClose: () => void }) {
           ) : null}
           {/* if specific time is selected */}
 
-          {/* <TextInput
-          label="Buisness's location"
-          description="click on the button to get the current location"
-          placeholder="Your business location"
-          className="flex-initial"
-          {...businessForm.getInputProps("location")}
-        />
-        <button className="bg-primary rounded text-white py-1 px-3 my-1 text-sm">
-          {"Get Location"}
-        </button> */}
-          <FileInput
-            rightSection={
-              <FaFileImage
-                style={{ width: rem(18), height: rem(18), color: "#99896B" }}
-                stroke="1.5"
-              />
-            }
-            label="Business's Photo"
-            placeholder="Your business's Photo"
-            className="pb-2"
-            {...businessForm.getInputProps("businessPhoto")}
-          />
-          <FileInput
-            rightSection={
-              <FaFileImage
-                style={{ width: rem(18), height: rem(18), color: "#99896B" }}
-                stroke="1.5"
-              />
-            }
-            required
-            description="only one license"
-            label="Business's license"
-            placeholder="Your business's license"
-            className="pb-2"
-            {...businessForm.getInputProps("businessLicense")}
-          />
+          <div className="mt-3">
+            <InputLabel className="text-white font-bold">
+              Business Location
+            </InputLabel>
+            <Map setLocation={setLocation} location={location!} />
+          </div>
           <Textarea
+            className="text-start text-white"
             size="vertical"
             label="Discription"
             placeholder="Your discription about your business"
+            {...businessForm.getInputProps("description")}
           />
+
           <Button
             className="bg-primary w-full text-base mt-3 rounded py-1 text-white"
             type="submit"
@@ -183,7 +274,8 @@ function BusinessForm({ onClose }: { onClose: () => void }) {
           </Button>
         </div>
       </form>
-    );
-  }
+    </AuthenticationLayout>
+  );
 }
+
 export default BusinessForm;
