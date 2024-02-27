@@ -68,6 +68,7 @@ function BusinessForm() {
     if (values.timeActive == "24hour") {
       businessForm.setFieldValue("activeFrom", "24hour");
     }
+    console.log(values);
     console.log(coordinates);
     setIsLoading(true);
     await axios({
@@ -85,7 +86,8 @@ function BusinessForm() {
         description: values.description,
         address: values.address,
       },
-    }).then(() => {
+    }).then((res) => {
+      console.log(res);
       setIsLoading(false);
       navigate("/ownerprofile");
       notifications.show({
@@ -97,15 +99,23 @@ function BusinessForm() {
         },
       });
     });
+    // await axios({
+    //   method: "patch",
+    //   url: `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${userId}`,
+    //   data: { attachment: values.businessLicense },
+    // })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const handelRadio = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     businessForm.setFieldValue("timeActive", e.currentTarget.value);
   };
 
-  // if (isSubmit) {
-  //   return <Text>Waiting for an email with response...</Text>;
-  // } else {
   return (
     <AuthenticationLayout img={image}>
       <form
@@ -150,6 +160,35 @@ function BusinessForm() {
               {...businessForm.getInputProps("country")}
             />
           </div>
+          {/* <div className="flex gap-x-1 ">
+            <FileInput
+              rightSection={
+                <FaFileImage
+                  style={{ width: rem(18), height: rem(18), color: "#99896B" }}
+                  stroke="1.5"
+                />
+              }
+              description="Logo of your Business"
+              className="w-full text-start text-white"
+              label="Business's Photo"
+              placeholder="Your business's Photo"
+              {...businessForm.getInputProps("businessPhoto")}
+            /> */}
+          <FileInput
+            rightSection={
+              <FaFileImage
+                style={{ width: rem(18), height: rem(18), color: "#99896B" }}
+                stroke="1.5"
+              />
+            }
+            className="w-full text-start text-white"
+            required
+            description="only one license"
+            label="Business's license"
+            placeholder="Your business's license"
+            {...businessForm.getInputProps("businessLicense")}
+          />
+          {/* </div> */}
           <Radio.Group
             withAsterisk
             required
@@ -187,7 +226,7 @@ function BusinessForm() {
               <TimeInput
                 required
                 label="Active From"
-                className="col-span-1"
+                className="col-span-1 text-start text-white"
                 leftSection={
                   <IconClock
                     style={{ width: rem(16), height: rem(16) }}
@@ -199,7 +238,7 @@ function BusinessForm() {
               <TimeInput
                 required
                 label="Active To"
-                className="col-span-1"
+                className="col-span-1 text-start text-white"
                 leftSection={
                   <IconClock
                     style={{ width: rem(16), height: rem(16) }}
@@ -211,35 +250,7 @@ function BusinessForm() {
             </div>
           ) : null}
           {/* if specific time is selected */}
-          <div className="flex gap-x-1 ">
-            <FileInput
-              rightSection={
-                <FaFileImage
-                  style={{ width: rem(18), height: rem(18), color: "#99896B" }}
-                  stroke="1.5"
-                />
-              }
-              description="Logo of your Business"
-              className="w-full text-start text-white"
-              label="Business's Photo"
-              placeholder="Your business's Photo"
-              {...businessForm.getInputProps("businessPhoto")}
-            />
-            <FileInput
-              rightSection={
-                <FaFileImage
-                  style={{ width: rem(18), height: rem(18), color: "#99896B" }}
-                  stroke="1.5"
-                />
-              }
-              className="w-full text-start text-white"
-              required
-              description="only one license"
-              label="Business's license"
-              placeholder="Your business's license"
-              {...businessForm.getInputProps("businessLicense")}
-            />
-          </div>
+
           <div className="mt-3">
             <InputLabel className="text-white font-bold">
               Business Location
@@ -247,6 +258,7 @@ function BusinessForm() {
             <Map setLocation={setLocation} location={location!} />
           </div>
           <Textarea
+            className="text-start text-white"
             size="vertical"
             label="Discription"
             placeholder="Your discription about your business"

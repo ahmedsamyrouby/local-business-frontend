@@ -18,7 +18,7 @@ export default function AppRouter() {
         <Route path="/otp" element={<OTP />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/homepage" element={<HomePage />} />
-        <Route path="/businessform" element={<BusinessForm />} />
+        <Route path="/business-form" element={<BusinessForm />} />
       </Route>
     </Routes>
   );

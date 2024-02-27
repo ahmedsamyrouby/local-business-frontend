@@ -78,12 +78,7 @@ const SignUp = () => {
 
   type FormValues = typeof form.values;
 
-  function handelModal() {
-    if (form.values.userType.toLowerCase() == "businessowner") open();
-  }
-
   const handelForm = async (values: FormValues) => {
-    handelModal();
     const name = `${values.firstName} ${values.secondName}`;
     console.log(values);
     setIsLoading(true);
@@ -95,14 +90,14 @@ const SignUp = () => {
         email: values.email,
         password: values.password,
         passwordConfirm: values.confirmPassword,
-        role: values.userType.toLowerCase(),
+        role: values.userType,
         birthday: values.birthday,
         phone: values.number,
       },
     })
       .then((res) => {
         setLocalStorage("userId", res.data.data._id);
-        navigate("/businessform");
+        navigate("/business-form");
         setIsLoading(false);
         notifications.show({
           message: "Registration Successful",
@@ -270,7 +265,7 @@ const SignUp = () => {
                 className="text-start text-white"
                 label="User Type"
                 placeholder="Select User Type"
-                data={["Customer", "BusinessOwner"]}
+                data={["Customer", "businessOwner"]}
                 {...form.getInputProps("userType")}
               />
             </div>
@@ -280,7 +275,6 @@ const SignUp = () => {
             className="bg-primary w-full text-base mt-12 md:mt-3"
             type="submit"
             loading={isLoading}
-            // onClick={handelModal}
           >
             {"SignUp".toUpperCase()}
           </Button>
