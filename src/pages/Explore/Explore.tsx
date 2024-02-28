@@ -6,7 +6,12 @@ import {
   Drawer,
   Select,
 } from "@mantine/core";
-import { IconCircleXFilled, IconFilter, IconMoodSad, IconSearch } from "@tabler/icons-react";
+import {
+  IconCircleXFilled,
+  IconFilter,
+  IconMoodSad,
+  IconSearch,
+} from "@tabler/icons-react";
 import { BASE_URL, BUSINESS_CATEGORIES } from "./../../constants/index";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -107,8 +112,10 @@ const Explore = () => {
             root: "w-full border-none",
             input: "text-white bg-gray-500",
           }}
-          rightSection={ searchQuery ? <IconCircleXFilled /> : <IconSearch />}
-          rightSectionProps={searchQuery ? { onClick: () => setSearchQuery("") } : {}}
+          rightSection={searchQuery ? <IconCircleXFilled /> : <IconSearch />}
+          rightSectionProps={
+            searchQuery ? { onClick: () => setSearchQuery("") } : {}
+          }
           placeholder="Search for a business..."
           size="lg"
         />
@@ -158,7 +165,7 @@ const Explore = () => {
               <h1 className="text-xl font-semibold">No businesses found</h1>
             </div>
           ) : (
-            <div className="pb-4 flex gap-2 flex-wrap">
+            <div className="pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {businesses.map((business: Business) => (
                 <BusinessCard key={business._id} business={business} />
               ))}

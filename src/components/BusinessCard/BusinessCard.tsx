@@ -2,6 +2,7 @@ import { ActionIcon, Badge, Image, Rating } from "@mantine/core";
 import { IconBookmark, IconMapPin, IconShare } from "@tabler/icons-react";
 
 import Spinneys from "../../assets/images/spinneys-logo.jpg";
+import { useMediaQuery } from "@mantine/hooks";
 
 export type Business = {
   _id: string;
@@ -15,6 +16,67 @@ interface BusinessCardProps {
 }
 
 const BusinessCard = ({ business }: BusinessCardProps) => {
+  const isMobile = useMediaQuery("(max-width: 48em)");
+  return isMobile ? (
+    <MobileBusinessCard business={business} />
+  ) : (
+    <DesktopBusinessCard business={business} />
+  );
+};
+
+const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
+  return (
+    <article
+      key={business._id}
+      className="bg-white rounded-md shadow-lg overflow-hidden"
+    >
+      <div className="relative">
+        <Image
+          src={Spinneys}
+          alt={business.businessName}
+          className="w-full h-64 object-cover"
+        />
+      </div>
+      <div className="p-4">
+        <h1 className="text-2xl font-bold">{business.businessName}</h1>
+        <div className="flex items-center mb-2">
+          <IconMapPin size={"18px"} />
+          <p className="text-gray-600 ml-2">{business.Country}</p>
+        </div>
+        <div className="flex items-center mb-2">
+          <Rating value={3} size={"md"} />
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <ActionIcon size={32} className="bg-transparent text-primary mr-2">
+              <IconBookmark />
+            </ActionIcon>
+            <ActionIcon size={32} className="bg-transparent text-primary">
+              <IconShare />
+            </ActionIcon>
+          </div>
+          <Badge
+            radius={"sm"}
+            className="z-2 text-md border border-primary max-w-40"
+            variant="light"
+            size="lg"
+          >
+            {business.category}
+          </Badge>
+          {/* Show different badge for open/closed */}
+          {/* <Badge
+      radius={"sm"}
+      className="text-xs bg-red-700 ml-2 px-2 py-1"
+    >
+      Closed
+    </Badge> */}
+        </div>
+      </div>
+    </article>
+  );
+};
+
+const MobileBusinessCard = ({ business }: BusinessCardProps) => {
   return (
     <article
       key={business._id}
