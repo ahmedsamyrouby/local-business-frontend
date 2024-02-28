@@ -34,8 +34,9 @@ const Login = () => {
       .post(BASE_URL + "/auth/login", values)
       .then((res) => {
         setLocalStorage("userToken", res.data.token);
+        setLocalStorage("userId", res.data.data._id);
         setLocalStorage("role", res.data.data.role);
-        navigate("/homepage");
+        navigate("/ownerprofile");
         setIsLoading(false);
         notifications.show({
           message: "Login Successful",
