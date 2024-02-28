@@ -33,7 +33,7 @@ function OwnerBuisness({
       method: "delete",
       url: `${BASE_URL}/businessOwner/deleteBusiness/${_id}`,
     }).then((res) => {
-      setData(data);
+      getBusinesses();
       notifications.show({
         message: res.data.message,
         autoClose: 2000,
@@ -47,10 +47,10 @@ function OwnerBuisness({
   const getBusinesses = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/businessOwner/getAllUserBusinesses/65ddb5d2c4f2c31d6819b84b`
+        `${BASE_URL}/businessOwner/getAllUserBusinesses/65de844b1604b9dc1c42d7fd`
       );
       setData(response.data.data.businesses);
-      console.log(data);
+      console.log(response.data);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -199,23 +199,27 @@ function Content({
           </Text>
         </div>
       ) : null}
-      <div className="flex gap-2">
-        <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-          <IoTimeOutline className="mr-1 mt-0.5" />
-          Active From :
-        </Text>
-        <Text className="font-bold text-center text-gray-300 text-md">
-          {content.workTime.startTime}
-        </Text>
-      </div>
-      <div className="flex gap-2">
-        <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-          <IoTimeOutline className="mr-1 mt-0.5" /> Active To :
-        </Text>
-        <Text className="font-bold text-center text-gray-300 text-md">
-          {content.workTime.endTime}
-        </Text>
-      </div>
+      {content.workTime.startTime && (
+        <div className="flex gap-2">
+          <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
+            <IoTimeOutline className="mr-1 mt-0.5" />
+            Active From :
+          </Text>
+          <Text className="font-bold text-center text-gray-300 text-md">
+            {content.workTime.startTime}
+          </Text>
+        </div>
+      )}
+      {content.workTime.endTime && (
+        <div className="flex gap-2">
+          <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
+            <IoTimeOutline className="mr-1 mt-0.5" /> Active To :
+          </Text>
+          <Text className="font-bold text-center text-gray-300 text-md">
+            {content.workTime.endTime}
+          </Text>
+        </div>
+      )}
       <div className="flex gap-2">
         <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
           Addres :
