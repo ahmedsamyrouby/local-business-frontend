@@ -1,9 +1,9 @@
-import Map from "../../components/Map/Map";
+import Explore from "../Explore/Explore";
 
 const HomePage = () => {
   return (
     <div>
-      <h1 className="text-white">HOMEPAGE</h1>
+      <Explore />
     </div>
   );
 };
