@@ -16,8 +16,8 @@ export default function AppRouter() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<OTP />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/homepage" element={<HomePage />} />
       </Route>
+      <Route path="/homepage" element={<HomePage />} />
     </Routes>
   );
 }
