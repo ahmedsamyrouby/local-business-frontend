@@ -17,8 +17,8 @@ export interface businessContent {
   description: string;
   address: string;
   workTime: {
-    startTime: string;
-    endTime: string;
+    startTime: string | undefined;
+    endTime: string | undefined;
   };
   _id: string;
   messages: [];

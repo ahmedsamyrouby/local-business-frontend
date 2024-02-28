@@ -121,7 +121,8 @@ function OwnerInfo({
         {/* //Image */}
         <div className="flex px-6 pb-2">
           <Image
-            src={file == null ? photo : URL.createObjectURL(file)}
+            // src={file == null ? photo : URL.createObjectURL(file)}
+            src={photo}
             className={
               isIpadHeight
                 ? "flex-none rounded-full h-48 w-48 p-1 bg-gray-900 cursor-pointer"

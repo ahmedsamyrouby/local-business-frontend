@@ -14,6 +14,7 @@ import { getLocalStorage } from "../../services/LocalStorageService";
 import { businessContent } from "../../services/ConvertStringToFile";
 import { notifications } from "@mantine/notifications";
 import { IconSquareCheck } from "@tabler/icons-react";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 function OwnerBuisness({
   isIpadHeight,
@@ -23,6 +24,7 @@ function OwnerBuisness({
   isIphoneHeight?: boolean;
 }) {
   const isLarge = useMediaQuery({ query: "(min-width: 1024px)" });
+  const navigate = useNavigate();
   const [isContent, setIsContent] = useState("");
   const [onClose, setOnClose] = useState(false);
   // const [content, setContent] = useState(0);
@@ -47,7 +49,7 @@ function OwnerBuisness({
   const getBusinesses = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/businessOwner/getAllUserBusinesses/65de844b1604b9dc1c42d7fd`
+        `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
       );
       setData(response.data.data.businesses);
       console.log(response.data);
@@ -90,6 +92,7 @@ function OwnerBuisness({
                 businesses={business}
                 onClose={onClose}
                 setOnClose={setOnClose}
+                onNavigate={navigate}
               />
             ))}
           </div>
@@ -104,6 +107,14 @@ function OwnerBuisness({
               ? "flex w-full h-16 bg-primary"
               : "flex w-full h-12 bg-primary"
           }
+          onClick={() => {
+            navigate("/business-form", {
+              state: {
+                method: "post",
+                api: `${BASE_URL}/businessOwner/addMultipleBusinesses/${userId}`,
+              },
+            });
+          }}
         >
           <Text
             className={
@@ -128,6 +139,7 @@ function Business({
   onClose,
   setOnClose,
   onDelete,
+  onNavigate,
   businesses,
 }: {
   isContent: string;
@@ -135,6 +147,7 @@ function Business({
   onClose: boolean;
   setOnClose: (value: boolean) => void;
   onDelete: (value: string) => void;
+  onNavigate: NavigateFunction;
   businesses: businessContent;
 }) {
   function handelOpenImage() {
@@ -157,7 +170,11 @@ function Business({
         onClick={handelOpenImage}
       />
       {isContent == businesses._id && onClose ? (
-        <Content content={businesses} onDelete={onDelete} />
+        <Content
+          content={businesses}
+          onDelete={onDelete}
+          onNavigate={onNavigate}
+        />
       ) : null}
     </div>
   );
@@ -166,9 +183,11 @@ function Business({
 function Content({
   content,
   onDelete,
+  onNavigate,
 }: {
   content: businessContent;
   onDelete: (value: string) => void;
+  onNavigate: NavigateFunction;
 }) {
   return (
     <div className="flex grid grid-cols-2 gap-y-1.5 p-2.5">
@@ -245,7 +264,17 @@ function Content({
         </Text>
       </div>
       <div className=" flex justify-end col-span-2 gap-x-0.5 mt-1">
-        <Button className="h-7 w-18 pb-1 hover:opacity-90 bg-green-500 text-center">
+        <Button
+          className="h-7 w-18 pb-1 hover:opacity-90 bg-green-500 text-center"
+          onClick={() => {
+            onNavigate("/business-form", {
+              state: {
+                method: "put",
+                api: `${BASE_URL}/businessOwner/updateMyBusinessInfo/${content._id}`,
+              },
+            });
+          }}
+        >
           <MdCloudUpload className="w-5 h-5 mr-1" /> Update
         </Button>
         <Button

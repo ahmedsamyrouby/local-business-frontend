@@ -13,7 +13,7 @@ import {
 import { IconClock, IconSquareCheck } from "@tabler/icons-react";
 import { TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import countryList from "react-select-country-list";
 import { FaFileImage } from "react-icons/fa6";
 import Map from "../../../components/Map/Map";
@@ -23,14 +23,16 @@ import { BASE_URL } from "../../../constants";
 import { getLocalStorage } from "../../../services/LocalStorageService";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
 import image from "../../../assets/images/forgot-password-art.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 function BusinessForm() {
   const navigate = useNavigate();
   const options = useMemo(() => countryList().getData(), []);
-
+  const locationData = useLocation();
+  const comingData = locationData.state;
   const [isLoading, setIsLoading] = useState(false);
   const [location, setLocation] = useState<LatLngExpression>();
+  const [data, setData] = useState([]);
   const userId: string | null = getLocalStorage("userId");
   const Categories: readonly string[] = [
     "Restaurants and Cafés",
@@ -60,6 +62,20 @@ function BusinessForm() {
       address: "",
     },
   });
+  const getBusinesses = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
+      );
+      setData(response.data.data.businesses);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching data: ${error}`);
+    }
+  };
+  useEffect(() => {
+    getBusinesses();
+  }, []);
 
   type FormValues = typeof businessForm.values;
 
@@ -69,11 +85,14 @@ function BusinessForm() {
       businessForm.setFieldValue("activeFrom", "24hour");
     }
     console.log(values);
-    console.log(coordinates);
+    console.log(comingData);
     setIsLoading(true);
     await axios({
-      method: "put",
-      url: `${BASE_URL}/businessOwner/updateMyBusinessInfo/${userId}`,
+      method: comingData != null ? comingData.method : "put",
+      url:
+        comingData != null
+          ? comingData.api
+          : `${BASE_URL}/businessOwner/updateMyBusinessInfo/${data[0]._id}`,
       data: {
         station: {
           type: "Point",
@@ -112,9 +131,9 @@ function BusinessForm() {
     //   });
   };
 
-  const handelRadio = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-    businessForm.setFieldValue("timeActive", e.currentTarget.value);
-  };
+  // const handelRadio = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+  //   businessForm.setFieldValue("timeActive", e.currentTarget.value);
+  // };
 
   return (
     <AuthenticationLayout img={image}>
@@ -189,7 +208,7 @@ function BusinessForm() {
             {...businessForm.getInputProps("businessLicense")}
           />
           {/* </div> */}
-          <Radio.Group
+          {/* <Radio.Group
             withAsterisk
             required
             label="Active"
@@ -217,38 +236,37 @@ function BusinessForm() {
                 }}
               />
             </Group>
-          </Radio.Group>
+          </Radio.Group> */}
 
           {/* if specific time is selected */}
 
-          {businessForm.values.timeActive == "specifictime" ? (
-            <div className="grid grid-cols-2 gap-x-1.5">
-              <TimeInput
-                required
-                label="Active From"
-                className="col-span-1 text-start text-white"
-                leftSection={
-                  <IconClock
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-                {...businessForm.getInputProps("activeFrom")}
-              />
-              <TimeInput
-                required
-                label="Active To"
-                className="col-span-1 text-start text-white"
-                leftSection={
-                  <IconClock
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-                {...businessForm.getInputProps("activeTo")}
-              />
-            </div>
-          ) : null}
+          <div className="grid grid-cols-2 gap-x-1.5">
+            <TimeInput
+              required
+              label="Active From"
+              className="col-span-1 text-start text-white"
+              leftSection={
+                <IconClock
+                  style={{ width: rem(16), height: rem(16) }}
+                  stroke={1.5}
+                />
+              }
+              {...businessForm.getInputProps("activeFrom")}
+            />
+            <TimeInput
+              required
+              label="Active To"
+              className="col-span-1 text-start text-white"
+              leftSection={
+                <IconClock
+                  style={{ width: rem(16), height: rem(16) }}
+                  stroke={1.5}
+                />
+              }
+              {...businessForm.getInputProps("activeTo")}
+            />
+          </div>
+
           {/* if specific time is selected */}
 
           <div className="mt-3">
