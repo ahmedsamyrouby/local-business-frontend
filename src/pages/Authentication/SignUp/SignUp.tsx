@@ -97,7 +97,9 @@ const SignUp = () => {
     })
       .then((res) => {
         setLocalStorage("userId", res.data.data._id);
-        navigate("/business-form");
+        values.userType == "businessOwner"
+          ? navigate("/business-form")
+          : navigate("/login");
         setIsLoading(false);
         notifications.show({
           message: "Registration Successful",
@@ -110,10 +112,7 @@ const SignUp = () => {
       })
       .catch((err) => {
         notifications.show({
-          message:
-            err.response.data.message ||
-            err.response.data.errors[0].msg ||
-            "E-mali already Exist",
+          message: "Something went wrong",
           color: "red",
           autoClose: 2000,
           icon: <IconAlertSquare />,
@@ -265,7 +264,7 @@ const SignUp = () => {
                 className="text-start text-white"
                 label="User Type"
                 placeholder="Select User Type"
-                data={["Customer", "businessOwner"]}
+                data={["customer", "businessOwner"]}
                 {...form.getInputProps("userType")}
               />
             </div>
