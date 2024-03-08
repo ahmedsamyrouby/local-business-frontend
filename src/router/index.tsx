@@ -10,6 +10,7 @@ import BusinessForm from "../pages/Authentication/SignUp/BusinessForm";
 import OwnerProfile from "../pages/OwnerProfile/Owner";
 import SetupOwnerInfo from "../pages/SetupProfile/SetUpOwnerInfo";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
+import Explore from "../pages/Explore/Explore";
 
 export default function AppRouter() {
   return (
@@ -25,6 +26,7 @@ export default function AppRouter() {
         <Route path="/setupProfile" element={<SetupOwnerInfo />} />
         <Route path="/changePassword" element={<ChangePassword />} />
       </Route>
+      <Route path="/explore" element={<Explore />} />
       <Route path="/homepage" element={<HomePage />} />
     </Routes>
   );
