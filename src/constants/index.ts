@@ -14,3 +14,5 @@ export const BUSINESS_CATEGORIES = [
   "BookStore",
   "Other",
 ];
+
+export const MAP_TOKEN = "fgjn7rdj7KmCjpUgs2857ZDWqrjovChaCENtAWT3NjXpjXSavSERJbj5FVQhdnLx";
