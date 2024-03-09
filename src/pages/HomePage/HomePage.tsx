@@ -1,14 +1,17 @@
 import axios from "axios";
-import L, { LatLng, LatLngExpression } from "leaflet";
-import { useEffect, useState } from "react";
+import { LatLng, LatLngExpression } from "leaflet";
+import { useEffect, useRef, useState } from "react";
 import {
   CircleMarker,
   MapContainer,
   Marker,
   Popup,
   TileLayer,
+  useMapEvents,
 } from "react-leaflet";
 import { BASE_URL, MAP_TOKEN } from "../../constants";
+import { ActionIcon } from "@mantine/core";
+import { IconTarget } from "@tabler/icons-react";
 
 const isPM = () => {
   const date = new Date();
@@ -16,9 +19,9 @@ const isPM = () => {
 };
 
 // TODO: Add types for businesses
-// TODO: Add reset center button
 // TODO: Add Navbar
 // TODO: Refine the Popup
+// TODO: Improve the isPM function
 
 const HomePage = () => {
   const [userLocation, setUserLocation] = useState<
@@ -26,6 +29,7 @@ const HomePage = () => {
   >(undefined);
   const [loading, setLoading] = useState(true);
   const [nearbyBusinesses, setNearbyBusinesses] = useState([] as any[]);
+  const mapRef = useRef<any>(null);
 
   const getNearbyBusinesses = async () => {
     // fetch nearby businesses
@@ -43,6 +47,17 @@ const HomePage = () => {
 
     setNearbyBusinesses(nearbyBusinesses.data.data);
     console.log(nearbyBusinesses);
+  };
+
+  const resetCenter = () => {
+    if (userLocation && mapRef.current) {
+      mapRef.current.setView(userLocation, mapRef.current.getZoom(), {
+        animate: true,
+        pan: {
+          duration: 0.5,
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -66,12 +81,13 @@ const HomePage = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-full relative">
       <MapContainer
         center={userLocation}
         className="w-full h-full"
         zoom={25}
         minZoom={12}
+        ref={mapRef}
       >
         <TileLayer
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -85,10 +101,10 @@ const HomePage = () => {
         {userLocation && (
           <CircleMarker
             center={userLocation}
-            color={"#171717"}
-            fillColor="#99896B"
+            color={"#ffffff"}
+            fillColor="#0975ce"
             fillRule="evenodd"
-            fillOpacity={0.75}
+            fillOpacity={1}
           />
         )}
 
@@ -112,6 +128,13 @@ const HomePage = () => {
           );
         })}
       </MapContainer>
+      <ActionIcon
+        className="absolute z-[999999] right-3 top-3 bg-gray-100 text-black"
+        size="lg"
+        onClick={resetCenter}
+      >
+        <IconTarget />
+      </ActionIcon>
     </div>
   );
 };
