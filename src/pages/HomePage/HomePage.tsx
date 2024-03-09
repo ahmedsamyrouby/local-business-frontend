@@ -7,7 +7,7 @@ import {
   Marker,
   Popup,
   TileLayer,
-  useMapEvents,
+  useMap,
 } from "react-leaflet";
 import { BASE_URL, MAP_TOKEN } from "../../constants";
 import { ActionIcon } from "@mantine/core";
@@ -16,6 +16,24 @@ import { IconTarget } from "@tabler/icons-react";
 const isPM = () => {
   const date = new Date();
   return date.getHours() >= 12;
+};
+
+const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
+  const map = useMap();
+  const resetCenter = () => {
+    if (userLocation) {
+      map.flyTo(userLocation, 17);
+    }
+  };
+  return (
+    <ActionIcon
+      className="absolute z-[999999] right-3 top-3 bg-gray-100 text-black border border-gray-400 shadow-lg"
+      size="lg"
+      onClick={resetCenter}
+    >
+      <IconTarget />
+    </ActionIcon>
+  );
 };
 
 // TODO: Add types for businesses
@@ -49,17 +67,6 @@ const HomePage = () => {
     console.log(nearbyBusinesses);
   };
 
-  const resetCenter = () => {
-    if (userLocation && mapRef.current) {
-      mapRef.current.setView(userLocation, mapRef.current.getZoom(), {
-        animate: true,
-        pan: {
-          duration: 0.5,
-        },
-      });
-    }
-  };
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       setUserLocation({
@@ -85,7 +92,7 @@ const HomePage = () => {
       <MapContainer
         center={userLocation}
         className="w-full h-full"
-        zoom={25}
+        zoom={17}
         minZoom={12}
         ref={mapRef}
       >
@@ -127,14 +134,8 @@ const HomePage = () => {
             </Marker>
           );
         })}
+        <ResetButton userLocation={userLocation as LatLngExpression} />
       </MapContainer>
-      <ActionIcon
-        className="absolute z-[999999] right-3 top-3 bg-gray-100 text-black"
-        size="lg"
-        onClick={resetCenter}
-      >
-        <IconTarget />
-      </ActionIcon>
     </div>
   );
 };
