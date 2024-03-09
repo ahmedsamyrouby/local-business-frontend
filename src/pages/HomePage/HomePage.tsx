@@ -21,9 +21,9 @@ const isPM = () => {
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
   const resetCenter = () => {
-    if (userLocation) {
-      map.flyTo(userLocation, 17);
-    }
+    const currentZoom = map.getZoom();
+
+    map.flyTo(userLocation, currentZoom > 17 ? currentZoom : 17);
   };
   return (
     <ActionIcon
@@ -40,6 +40,7 @@ const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
 // TODO: Add Navbar
 // TODO: Refine the Popup
 // TODO: Improve the isPM function
+// TODO: Handle Loading and Error states
 
 const HomePage = () => {
   const [userLocation, setUserLocation] = useState<
@@ -50,7 +51,6 @@ const HomePage = () => {
   const mapRef = useRef<any>(null);
 
   const getNearbyBusinesses = async () => {
-    // fetch nearby businesses
     const nearbyBusinesses = await axios.get(
       `${BASE_URL}/businessOwner/getBusinessesNearby`,
       {
@@ -64,7 +64,6 @@ const HomePage = () => {
     );
 
     setNearbyBusinesses(nearbyBusinesses.data.data);
-    console.log(nearbyBusinesses);
   };
 
   useEffect(() => {
@@ -82,8 +81,6 @@ const HomePage = () => {
       getNearbyBusinesses();
     }
   }, [userLocation]);
-
-  console.log(userLocation);
 
   if (loading) return <p>Loading...</p>;
 
