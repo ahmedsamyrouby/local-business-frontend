@@ -103,31 +103,40 @@ function BusinessForm() {
         description: values.description,
         address: values.address,
       },
-    }).then((res) => {
-      console.log(res);
-      setIsLoading(false);
-      navigate("/ownerprofile");
-      notifications.show({
-        message: "Wating for Respnse...",
-        autoClose: 2000,
-        icon: <IconSquareCheck />,
-        classNames: {
-          icon: "bg-transparent text-green-500",
-        },
+    })
+      .then((res) => {
+        console.log(res);
+        setIsLoading(false);
+        comingData !== null && comingData.method === "post"
+          ? updateAttachment(values.businessLicense, res.data.data[0]._id)
+          : updateAttachment(values.businessLicense, data[0]._id);
+        navigate("/ownerprofile");
+        notifications.show({
+          message: "Wating for Respnse...",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    });
+  };
+  async function updateAttachment(file: string, _id: string) {
     const formData = new FormData();
-    formData.append("img", values.businessLicense);
+    formData.append("img", file);
     try {
       await axios.patch(
-        `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${data[0]._id}`,
+        `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${_id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   return (
     <AuthenticationLayout img={image}>
