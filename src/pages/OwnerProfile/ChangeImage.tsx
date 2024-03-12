@@ -2,33 +2,58 @@ import { Image, Text, Button, FileButton } from "@mantine/core";
 import { MdDelete } from "react-icons/md";
 import { MdCloudUpload } from "react-icons/md";
 import photo from "../../assets/images/vecteezy_default-profile-account-unknown-icon-black-silhouette_20765399.jpg";
+import { BASE_URL } from "../../constants";
+import { getLocalStorage } from "../../services/LocalStorageService";
+import axios from "axios";
 function ChangeImage({
   isIpadHeight,
   setSuccess,
   close,
-  setFile,
-  file,
+  setImg,
+  img,
+  getOwnerInfo,
 }: {
   isIpadHeight: boolean | undefined;
   setSuccess: (value: boolean) => void;
   close: () => void;
-  setFile: React.Dispatch<React.SetStateAction<Blob | null | undefined>>;
-  file: Blob | null | undefined;
+  setImg?: (value: string | null) => void;
+  img: string | null | undefined;
+  getOwnerInfo?: () => Promise<void>;
 }) {
-  function handelUpdateButton(e: File | null) {
-    console.log(e);
-    setFile(e);
-    setTimeout(() => {
-      close();
-      setTimeout(() => {
-        setSuccess(false);
-      }, 1000);
-    }, 2000);
-
+  const userId = getLocalStorage("userId");
+  async function handelUpdateButton(file: File | null) {
     console.log(file);
+    console.log(userId);
+
+    const formData = new FormData();
+    formData.append("userProfile", file);
+    await axios
+      .patch(
+        `${BASE_URL}/businessOwner/addImageToUserProfile/${userId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then(() => {
+        getOwnerInfo();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          close();
+          setTimeout(() => {
+            setSuccess(false);
+          }, 1000);
+        }, 2000);
+      });
   }
   function handelRemoveButton() {
-    setFile(null);
+    // setImg("");
     setTimeout(() => {
       close();
       setTimeout(() => {
@@ -40,7 +65,7 @@ function ChangeImage({
     <div className="flex flex-col mt-5 gap-y-2">
       <div className="flex justify-center mt-4">
         <Image
-          src={file == null ? photo : URL.createObjectURL(file)}
+          src={img == "Null" ? photo : `${BASE_URL}/${img}`}
           className={
             isIpadHeight
               ? "flex-none rounded-full h-56 w-56 p-1"

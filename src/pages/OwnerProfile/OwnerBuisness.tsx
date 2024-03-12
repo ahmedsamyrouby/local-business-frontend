@@ -1,11 +1,16 @@
-import { Button, Image, Text, ScrollArea, Title } from "@mantine/core";
+import {
+  Button,
+  Image,
+  Text,
+  ScrollArea,
+  Title,
+  FileButton,
+  Modal,
+} from "@mantine/core";
 import { useMediaQuery } from "react-responsive";
-import { FaLocationDot } from "react-icons/fa6";
-// import Photo from "../../assets/images/3564954.jpg";
-// import Photo2 from "../../assets/images/3514981.jpg";
+import { GoPlusCircle } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
 import { MdCloudUpload } from "react-icons/md";
-import { IoTimeOutline } from "react-icons/io5";
 import pending from "../../assets/images/PendingImage.jpg";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -15,6 +20,8 @@ import { businessContent } from "../../services/ConvertStringToFile";
 import { notifications } from "@mantine/notifications";
 import { IconSquareCheck } from "@tabler/icons-react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import "./index.css";
+import { useDisclosure } from "@mantine/hooks";
 
 function OwnerBuisness({
   isIpadHeight,
@@ -46,13 +53,29 @@ function OwnerBuisness({
       });
     });
   }
+  async function updateMedia(images: File[], _id: string) {
+    for (let i = 0; i < images.length; i++) {
+      try {
+        const formData = new FormData();
+        formData.append("media", images[i]);
+        await axios.patch(
+          `${BASE_URL}/businessOwner/updateMyBusinessMedia/${_id}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        getBusinesses();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
   const getBusinesses = async () => {
     try {
       const response = await axios.get(
         `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
       );
       setData(response.data.data.businesses);
-      console.log(response.data);
+      console.log(data);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -64,7 +87,7 @@ function OwnerBuisness({
     <div
       className={
         !isLarge
-          ? "flex flex-col px-3 pb-7 pt-1 gap-2 rounded-sm"
+          ? "flex flex-col px-1.5 pb-7 pt-1 gap-2 rounded-sm"
           : "flex flex-col p-7 gap-2"
       }
     >
@@ -87,6 +110,7 @@ function OwnerBuisness({
               <Business
                 key={business._id}
                 onDelete={deleteBusiness}
+                onUpdateMedia={updateMedia}
                 isContent={isContent}
                 setIsContent={setIsContent}
                 businesses={business}
@@ -139,6 +163,7 @@ function Business({
   onClose,
   setOnClose,
   onDelete,
+  onUpdateMedia,
   onNavigate,
   businesses,
 }: {
@@ -147,6 +172,7 @@ function Business({
   onClose: boolean;
   setOnClose: (value: boolean) => void;
   onDelete: (value: string) => void;
+  onUpdateMedia: (images: File[], _id: string) => void;
   onNavigate: NavigateFunction;
   businesses: businessContent;
 }) {
@@ -163,7 +189,11 @@ function Business({
       }
     >
       <Image
-        src={businesses.status == "pending" ? pending : ""}
+        src={
+          businesses.status == "pending"
+            ? pending
+            : `${BASE_URL}/${businesses.attachment}`
+        }
         radius="md"
         className="h-28 hover:shadow-xl transition-shadow object-cover w-full"
         fit="-moz-initial"
@@ -173,6 +203,7 @@ function Business({
         <Content
           content={businesses}
           onDelete={onDelete}
+          onUpdateMedia={onUpdateMedia}
           onNavigate={onNavigate}
         />
       ) : null}
@@ -184,86 +215,105 @@ function Content({
   content,
   onDelete,
   onNavigate,
+  onUpdateMedia,
 }: {
   content: businessContent;
   onDelete: (value: string) => void;
+  onUpdateMedia: (images: File[], _id: string) => void;
   onNavigate: NavigateFunction;
 }) {
+  const [opened, { open, close }] = useDisclosure(false);
   return (
-    <div className="flex grid grid-cols-2 gap-y-1.5 p-2.5">
-      <div className="flex gap-2">
-        <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-          Business Name
-        </Text>
-        <Text className="font-bold text-center text-gray-300 text-md">
-          {content.businessName}
-        </Text>
-      </div>
-
-      <div className="flex gap-2">
-        <Text className="bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-          Category
-        </Text>
-        <Text className="font-bold pr-1 text-center text-gray-300 text-md">
-          {content.category}
-        </Text>
-      </div>
-      {content.Country != "" ? (
-        <div className="flex gap-2">
-          <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-            country
-          </Text>
-          <Text className="font-bold text-center text-gray-300 text-md">
-            {content.Country}
-          </Text>
+    <>
+      <Modal
+        opened={opened}
+        onClose={close}
+        centered
+        size="xl"
+        withCloseButton={false}
+        transitionProps={{
+          transition: "fade",
+          duration: 600,
+          timingFunction: "linear",
+        }}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+        classNames={{
+          body: "p-0 ",
+          content: "bg-gradient-to-r from-primary to-gray-300  ",
+          root: "rounded-xl",
+        }}
+      >
+        <div className="flex m-3.5 gap-1 overflow-x-scroll gallery ">
+          {content.media.map((image, i) => (
+            <Image
+              key={i}
+              className="w-96 h-96 rounded-lg"
+              src={`${BASE_URL}/${image}`}
+              fit="contain"
+            />
+          ))}
         </div>
-      ) : null}
-      {content.workTime.startTime && (
-        <div className="flex gap-2">
-          <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-            <IoTimeOutline className="mr-1 mt-0.5" />
-            Active From :
-          </Text>
-          <Text className="font-bold text-center text-gray-300 text-md">
-            {content.workTime.startTime}
-          </Text>
+      </Modal>
+      <table className="table-fixed mx-2 mt-3">
+        <thead className="border-b-2 border-white ">
+          <tr className="">
+            <th className="text-primary px-1.5">Business</th>
+            <th className="text-primary">Category</th>
+            <th className="text-primary px-1.5">Country</th>
+            <th className="text-primary px-1.5">From</th>
+            <th className="text-primary px-1.5">To</th>
+            <th className="text-primary px-1.5">Location</th>
+            <th className="text-primary px-1.5">Address</th>
+            <th className="text-primary px-1.5">Description</th>
+          </tr>
+        </thead>
+        <tbody className="border-b-2 border-white">
+          <tr>
+            <td className="text-white px-1.5">{content.businessName}</td>
+            <td className="text-white ">{content.category}</td>
+            <td className="text-white px-1.5">{content.Country}</td>
+            <td className="text-white px-1.5">{content.workTime.startTime}</td>
+            <td className="text-white px-1.5">{content.workTime.endTime}</td>
+            <td className="text-white px-1.5">Location</td>
+            <td className="text-white ">
+              {content.address} ain shams ah gharbia
+            </td>
+            <td className="text-white ">{content.description}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="flex m-3.5 gap-1 overflow-x-scroll gallery">
+        {content.media.map((image, i) => (
+          <Image
+            key={i}
+            className="w-24 h-24 rounded-md cursor-pointer hover:p-1"
+            src={`${BASE_URL}/${image}`}
+            onClick={open}
+          />
+        ))}
+        <div>
+          <FileButton
+            onChange={(files: File[]) => {
+              onUpdateMedia(files, content._id);
+            }}
+            accept="image/png,image/jpeg"
+            multiple
+          >
+            {(props) => (
+              <Button {...props} className="p-0 m-0 bg-black w-24 h-24">
+                <div className="flex flex-col justify-center items-center w-24 h-24 rounded-md bg-gray-300 hover:opacity-80">
+                  <GoPlusCircle className="w-10 h-10 hover:w-9 hover:h-9" />
+                  <h2>Add Media</h2>
+                </div>
+              </Button>
+            )}
+          </FileButton>
         </div>
-      )}
-      {content.workTime.endTime && (
-        <div className="flex gap-2">
-          <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-            <IoTimeOutline className="mr-1 mt-0.5" /> Active To :
-          </Text>
-          <Text className="font-bold text-center text-gray-300 text-md">
-            {content.workTime.endTime}
-          </Text>
-        </div>
-      )}
-      <div className="flex gap-2">
-        <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-          Addres :
-        </Text>
-        <Text className="font-bold text-center text-gray-300 text-md">
-          {content.address}
-        </Text>
       </div>
-      <div className="flex gap-2">
-        <Text className="flex bg-primary rounded-lg w-34 p-1 text-center text-sm text-white font-serif italic font-bold">
-          <FaLocationDot className="mr-1 mt-0.5" />
-          Location :
-        </Text>
-        <Text className="font-bold text-center text-gray-300 text-md"></Text>
-      </div>
-
-      <div className="flex col-span-2 gap-1">
-        <Text className="bg-primary h-8  rounded-lg p-1 text-center text-sm text-white font-serif italic font-bold">
-          Description:
-        </Text>
-        <Text className="font-bold text-center text-gray-300 text-md">
-          {content.description}
-        </Text>
-      </div>
-      <div className=" flex justify-end col-span-2 gap-x-0.5 mt-1">
+      <div className=" flex justify-end gap-x-0.5 m-2">
         <Button
           className="h-7 w-18 pb-1 hover:opacity-90 bg-green-500 text-center"
           onClick={() => {
@@ -284,6 +334,6 @@ function Content({
           <MdDelete className={"w-5 h-5"} /> Delete
         </Button>
       </div>
-    </div>
+    </>
   );
 }

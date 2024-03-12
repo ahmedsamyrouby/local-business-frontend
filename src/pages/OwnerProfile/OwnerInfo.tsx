@@ -11,9 +11,11 @@ import photo from "../../assets/images/vecteezy_default-profile-account-unknown-
 import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
-import { getLocalStorage } from "../../services/LocalStorageService";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+} from "../../services/LocalStorageService";
 import ChangeImage from "./ChangeImage";
-import { convertStringToImageFile } from "../../services/ConvertStringToFile";
 import { useNavigate } from "react-router-dom";
 function OwnerInfo({
   isSmall,
@@ -27,7 +29,7 @@ function OwnerInfo({
   const userId = getLocalStorage("userId");
   const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [file, setFile] = useState<Blob | null>();
+  // const [img, setImg] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState({
     _id: "",
@@ -38,6 +40,10 @@ function OwnerInfo({
     phone: "",
     userProfile: "",
   });
+  function logOut() {
+    removeLocalStorage("userId");
+    navigate("/login");
+  }
 
   const getOwnerInfo = async () => {
     try {
@@ -45,7 +51,9 @@ function OwnerInfo({
         `${BASE_URL}/businessOwner/getUserByUserID/${userId}`
       );
       setData(respone.data.data);
-      setFile(convertStringToImageFile(data.userProfile));
+      // setImg(`${BASE_URL}/${data.userProfile}`);
+      // console.log(img);
+      console.log(data);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -90,8 +98,9 @@ function OwnerInfo({
             isIpadHeight={isIpadHeight}
             setSuccess={setSuccess}
             close={close}
-            file={file}
-            setFile={setFile}
+            img={data.userProfile}
+            // setImg={setImg}
+            getOwnerInfo={getOwnerInfo}
           />
         )}
       </Modal>
@@ -121,8 +130,11 @@ function OwnerInfo({
         {/* //Image */}
         <div className="flex px-6 pb-2">
           <Image
-            // src={file == null ? photo : URL.createObjectURL(file)}
-            src={photo}
+            src={
+              data.userProfile === "Null"
+                ? photo
+                : `${BASE_URL}/${data.userProfile}`
+            }
             className={
               isIpadHeight
                 ? "flex-none rounded-full h-48 w-48 p-1 bg-gray-900 cursor-pointer"
@@ -135,7 +147,7 @@ function OwnerInfo({
             }}
             onClick={open}
           />
-          {file == null && (
+          {data.userProfile === `Null` && (
             <FaPlus
               className={
                 isIpadHeight
@@ -356,6 +368,7 @@ function OwnerInfo({
                 ? "text-gray-300 hover:text-red-600 text-xl"
                 : "text-gray-300 hover:text-red-600"
             }
+            onClick={() => logOut()}
           >
             Log Out
           </Anchor>

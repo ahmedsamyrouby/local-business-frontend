@@ -1,7 +1,5 @@
 import {
   FileInput,
-  Group,
-  Radio,
   Select,
   TextInput,
   Textarea,
@@ -118,22 +116,18 @@ function BusinessForm() {
         },
       });
     });
-    // await axios({
-    //   method: "patch",
-    //   url: `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${userId}`,
-    //   data: { attachment: values.businessLicense },
-    // })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    const formData = new FormData();
+    formData.append("img", values.businessLicense);
+    try {
+      await axios.patch(
+        `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${data[0]._id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
-
-  // const handelRadio = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-  //   businessForm.setFieldValue("timeActive", e.currentTarget.value);
-  // };
 
   return (
     <AuthenticationLayout img={image}>
@@ -290,6 +284,15 @@ function BusinessForm() {
           >
             {"submitt".toUpperCase()}
           </Button>
+          {comingData === null ? null : (
+            <Button
+              className="bg-red-500 w-full text-base mt-1 rounded py-1 text-white"
+              type="submit"
+              onClick={() => navigate("/ownerprofile")}
+            >
+              {"cancel".toUpperCase()}
+            </Button>
+          )}
         </div>
       </form>
     </AuthenticationLayout>
