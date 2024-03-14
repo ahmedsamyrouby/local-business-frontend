@@ -92,6 +92,7 @@ const SignUp = () => {
         passwordConfirm: values.confirmPassword,
         role: values.userType,
         birthday: values.birthday,
+        gender: values.gender,
         phone: values.number,
       },
     })
@@ -110,7 +111,7 @@ const SignUp = () => {
           },
         });
       })
-      .catch((err) => {
+      .catch(() => {
         notifications.show({
           message: "Something went wrong",
           color: "red",

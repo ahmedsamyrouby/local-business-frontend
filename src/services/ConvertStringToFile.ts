@@ -9,6 +9,7 @@ export interface businessContent {
   status: string;
   userId: string;
   media: [];
+  attachment: string;
   description: string;
   address: string;
   workTime: {
@@ -17,5 +18,5 @@ export interface businessContent {
   };
   _id: string;
   messages: [];
-  reviews: [];
+  reviews: [{ userName: string; content: string; timestamp: string }];
 }

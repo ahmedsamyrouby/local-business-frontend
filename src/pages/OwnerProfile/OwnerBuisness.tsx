@@ -6,6 +6,7 @@ import {
   Title,
   FileButton,
   Modal,
+  UnstyledButton,
 } from "@mantine/core";
 import { useMediaQuery } from "react-responsive";
 import { GoPlusCircle } from "react-icons/go";
@@ -103,7 +104,7 @@ function OwnerBuisness({
           h={isIpadHeight ? 640 : isIphoneHeight ? 600 : 460}
           offsetScrollbars
           scrollbarSize={6}
-          // classNames={{ scrollbar: "bg-primary" }}
+          className="rounded-lg"
         >
           <div className="flex flex-col gap-2">
             {data.map((business: businessContent) => (
@@ -222,6 +223,7 @@ function Content({
   onUpdateMedia: (images: File[], _id: string) => void;
   onNavigate: NavigateFunction;
 }) {
+  const [selectedButton, setSelectedButton] = useState(1);
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
@@ -257,62 +259,202 @@ function Content({
           ))}
         </div>
       </Modal>
-      <table className="table-fixed mx-2 mt-3">
-        <thead className="border-b-2 border-white ">
-          <tr className="">
-            <th className="text-primary px-1.5">Business</th>
-            <th className="text-primary">Category</th>
-            <th className="text-primary px-1.5">Country</th>
-            <th className="text-primary px-1.5">From</th>
-            <th className="text-primary px-1.5">To</th>
-            <th className="text-primary px-1.5">Location</th>
-            <th className="text-primary px-1.5">Address</th>
-            <th className="text-primary px-1.5">Description</th>
-          </tr>
-        </thead>
-        <tbody className="border-b-2 border-white">
-          <tr>
-            <td className="text-white px-1.5">{content.businessName}</td>
-            <td className="text-white ">{content.category}</td>
-            <td className="text-white px-1.5">{content.Country}</td>
-            <td className="text-white px-1.5">{content.workTime.startTime}</td>
-            <td className="text-white px-1.5">{content.workTime.endTime}</td>
-            <td className="text-white px-1.5">Location</td>
-            <td className="text-white ">
-              {content.address} ain shams ah gharbia
-            </td>
-            <td className="text-white ">{content.description}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="flex m-3.5 gap-1 overflow-x-scroll gallery">
-        {content.media.map((image, i) => (
-          <Image
-            key={i}
-            className="w-24 h-24 rounded-md cursor-pointer hover:p-1"
-            src={`${BASE_URL}/${image}`}
-            onClick={open}
-          />
-        ))}
-        <div>
-          <FileButton
-            onChange={(files: File[]) => {
-              onUpdateMedia(files, content._id);
+      <div className="flex grid grid-cols-8 px-3 mx-3.5 mt-4">
+        <div
+          className={
+            selectedButton == 1
+              ? "col-span-1 border-b-2 border-primary h-9 m-0 p-0 text-center"
+              : "col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center"
+          }
+        >
+          <UnstyledButton
+            className={
+              selectedButton == 1
+                ? "text-primary text-center pb-2 w-full h-full"
+                : "text-white hover:text-primary text-center pb-2 w-full h-full"
+            }
+            onClick={() => {
+              setSelectedButton(1);
             }}
-            accept="image/png,image/jpeg"
-            multiple
           >
-            {(props) => (
-              <Button {...props} className="p-0 m-0 bg-black w-24 h-24">
-                <div className="flex flex-col justify-center items-center w-24 h-24 rounded-md bg-gray-300 hover:opacity-80">
-                  <GoPlusCircle className="w-10 h-10 hover:w-9 hover:h-9" />
-                  <h2>Add Media</h2>
-                </div>
-              </Button>
-            )}
-          </FileButton>
+            <span>About</span>
+          </UnstyledButton>
         </div>
+        <div
+          className={
+            selectedButton == 2
+              ? "col-span-1 border-b-2 border-primary h-9 m-0 p-0 text-center"
+              : "col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center"
+          }
+        >
+          <UnstyledButton
+            className={
+              selectedButton == 2
+                ? "text-primary text-center pb-2 w-full h-full"
+                : "text-white hover:text-primary text-center pb-2 w-full h-full"
+            }
+            onClick={() => {
+              setSelectedButton(2);
+            }}
+          >
+            <span>Media</span>
+          </UnstyledButton>
+        </div>
+        <div
+          className={
+            selectedButton == 3
+              ? "col-span-1 border-b-2 border-primary h-9 m-0 p-0 text-center"
+              : "col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center"
+          }
+        >
+          <UnstyledButton
+            className={
+              selectedButton == 3
+                ? "text-primary text-center pb-2 w-full h-full"
+                : "text-white hover:text-primary text-center pb-2 w-full h-full"
+            }
+            onClick={() => {
+              setSelectedButton(3);
+            }}
+          >
+            <span>Location</span>
+          </UnstyledButton>
+        </div>
+        <div
+          className={
+            selectedButton == 4
+              ? "col-span-1 border-b-2 border-primary h-9 m-0 p-0 text-center"
+              : "col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center"
+          }
+        >
+          <UnstyledButton
+            className={
+              selectedButton == 4
+                ? "text-primary text-center pb-2 w-full h-full"
+                : "text-white hover:text-primary text-center pb-2 w-full h-full"
+            }
+            onClick={() => {
+              setSelectedButton(4);
+            }}
+          >
+            <span>Reviews</span>
+          </UnstyledButton>
+        </div>
+        <div
+          className={
+            selectedButton == 5
+              ? "col-span-1 border-b-2 border-primary h-9 m-0 p-0 text-center"
+              : "col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center"
+          }
+        >
+          <UnstyledButton
+            className={
+              selectedButton == 5
+                ? "text-primary text-center pb-2 w-full h-full"
+                : "text-white hover:text-primary text-center pb-2 w-full h-full"
+            }
+            onClick={() => {
+              setSelectedButton(5);
+            }}
+          >
+            <span>Description</span>
+          </UnstyledButton>
+        </div>
+        <div className="col-span-3 border-b-2"></div>
       </div>
+      {selectedButton === 1 && (
+        <div className="grid grid-cols-2 flex text-white px-12 py-3">
+          <li>
+            <b className="text-primary">Business name:</b>{" "}
+            {content.businessName}
+          </li>
+          <li>
+            <b className="text-primary">Category:</b> {content.category}
+          </li>
+          <li>
+            <b className="text-primary">Open:</b> {content.workTime.startTime}
+          </li>
+          <li>
+            <b className="text-primary">Close:</b> {content.workTime.endTime}
+          </li>
+          <li>
+            <b className="text-primary">Country:</b> {content.Country}
+          </li>
+        </div>
+      )}
+      {selectedButton === 2 && (
+        <div className="flex my-3.5 mx-6 gap-1 overflow-x-scroll gallery">
+          {content.media.map((image, i) => (
+            <Image
+              key={i}
+              className="w-24 h-24 rounded-md cursor-pointer hover:p-1"
+              src={`${BASE_URL}/${image}`}
+              onClick={open}
+            />
+          ))}
+          <div>
+            <FileButton
+              onChange={(files: File[]) => {
+                onUpdateMedia(files, content._id);
+              }}
+              accept="image/png,image/jpeg"
+              multiple
+            >
+              {(props) => (
+                <Button {...props} className="p-0 m-0 bg-black w-24 h-24">
+                  <div className="flex flex-col justify-center items-center w-24 h-24 rounded-md bg-gray-300 hover:opacity-80">
+                    <GoPlusCircle className="w-10 h-10 hover:w-9 hover:h-9" />
+                    <h2>Add Media</h2>
+                  </div>
+                </Button>
+              )}
+            </FileButton>
+          </div>
+        </div>
+      )}
+      {/* <div>Locatin here</div> */}
+      {selectedButton === 4 && (
+        <div className="flex text-white p-9 pt-0">
+          <table
+            className="table-fixed border-collapse w-full"
+            style={{ marginBlock: "13px" }}
+          >
+            <thead className="border-b-2 border-white">
+              <tr className="">
+                <th className="text-primary text-left p-2 border-b-2 font-normal">
+                  Customer
+                </th>
+                <th className="text-primary text-center p-2 pr-0 w-80 border-b-2 font-normal">
+                  Review
+                </th>
+                <th className="text-primary text-right p-2 pl-0 w-26 border-b-2 font-normal">
+                  Time
+                </th>
+                <th className="text-primary p-2 border-b-2 font-normal"></th>
+              </tr>
+            </thead>
+            <tbody className="border-b-2 border-white">
+              {content.reviews.map((review) => (
+                <ReviewBody
+                  userName={review.userName}
+                  review={review.content}
+                  time={review.timestamp}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {selectedButton === 5 && (
+        <div className="flex text-white px-12 py-3">
+          <li>
+            Welcome to our business we have a different of categories of
+            different products we hope you find what you want and we happy for
+            your visit
+          </li>
+        </div>
+      )}
+
       <div className=" flex justify-end gap-x-0.5 m-2">
         <Button
           className="h-7 w-18 pb-1 hover:opacity-90 bg-green-500 text-center"
@@ -325,15 +467,37 @@ function Content({
             });
           }}
         >
-          <MdCloudUpload className="w-5 h-5 mr-1" /> Update
+          <MdCloudUpload className="w-5 h-5" />
         </Button>
         <Button
           className="h-7 w-18 pb-1 hover:opacity-90 bg-red-500 text-center"
           onClick={() => onDelete(content._id)}
         >
-          <MdDelete className={"w-5 h-5"} /> Delete
+          <MdDelete className={"w-5 h-5"} />
         </Button>
       </div>
     </>
+  );
+}
+function ReviewBody({
+  userName,
+  review,
+  time,
+}: {
+  userName: string;
+  review: string;
+  time: string;
+}) {
+  return (
+    <tr>
+      <td className="text-white text-left p-2 border-b-2">{userName}</td>
+      <td className="text-white text-center p-2 pr-0 border-b-2 ">{review}</td>
+      <td className="text-white text-right p-2 pl-0 pr-0 border-b-2">
+        {time.slice(0, -8)}
+      </td>
+      <td className="text-white text-right border-b-2">
+        <Button className="h-8 bg-red-700">Report</Button>
+      </td>
+    </tr>
   );
 }

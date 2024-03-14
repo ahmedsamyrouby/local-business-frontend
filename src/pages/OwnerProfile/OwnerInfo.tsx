@@ -38,6 +38,7 @@ function OwnerInfo({
     birthday: "",
     role: "",
     phone: "",
+    gender: "",
     userProfile: "",
   });
   function logOut() {
@@ -247,7 +248,7 @@ function OwnerInfo({
                   : "text-sm text-gray-400"
               }
             >
-              Male
+              {data.gender}
             </Text>
           </div>
         </div>
