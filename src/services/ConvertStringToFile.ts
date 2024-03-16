@@ -18,5 +18,13 @@ export interface businessContent {
   };
   _id: string;
   messages: [];
-  reviews: [{ userName: string; content: string; timestamp: string }];
+  reviews: [
+    {
+      userName: string;
+      content: string;
+      timestamp: string;
+      customerId: string;
+      _id: string;
+    }
+  ];
 }

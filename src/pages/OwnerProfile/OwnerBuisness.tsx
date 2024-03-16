@@ -23,7 +23,9 @@ import { IconSquareCheck } from "@tabler/icons-react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useDisclosure } from "@mantine/hooks";
-
+import { MdStar } from "react-icons/md";
+import { MdStarBorder } from "react-icons/md";
+import Swal from "sweetalert2";
 function OwnerBuisness({
   isIpadHeight,
   isIphoneHeight,
@@ -49,7 +51,7 @@ function OwnerBuisness({
         autoClose: 2000,
         icon: <IconSquareCheck />,
         classNames: {
-          icon: "bg-transparent text-green-500",
+          icon: "bg-transparent text-green-600",
         },
       });
     });
@@ -225,6 +227,51 @@ function Content({
 }) {
   const [selectedButton, setSelectedButton] = useState(1);
   const [opened, { open, close }] = useDisclosure(false);
+  const [data, setData] = useState({ rating: "" });
+  const [data2, setData2] = useState({
+    oneStarCount: "",
+    twoStarCount: "",
+    threeStarCount: "",
+    fourStarCount: "",
+    fiveStarCount: "",
+  });
+  async function getRating() {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/businessOwner/rating/${content._id}`
+      );
+      console.log(response);
+      setData(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async function getRatingCount() {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/customer/countRatings/${content._id}`
+      );
+      console.log(response);
+      setData2(response.data.ratingCounts);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    getRating();
+    getRatingCount();
+  }, []);
+  const totalRate: number =
+    Number(data2.oneStarCount) +
+    Number(data2.twoStarCount) +
+    Number(data2.threeStarCount) +
+    Number(data2.fourStarCount) +
+    Number(data2.fiveStarCount);
+  const rateOne: number = (Number(data2.oneStarCount) * 100) / totalRate;
+  const rateTwo: number = (Number(data2.twoStarCount) * 100) / totalRate;
+  const rateThree: number = (Number(data2.threeStarCount) * 100) / totalRate;
+  const rateFour: number = (Number(data2.fourStarCount) * 100) / totalRate;
+  const rateFive: number = (Number(data2.fiveStarCount) * 100) / totalRate;
   return (
     <>
       <Modal
@@ -414,36 +461,124 @@ function Content({
       )}
       {/* <div>Locatin here</div> */}
       {selectedButton === 4 && (
-        <div className="flex text-white p-9 pt-0">
-          <table
-            className="table-fixed border-collapse w-full"
-            style={{ marginBlock: "13px" }}
-          >
-            <thead className="border-b-2 border-white">
-              <tr className="">
-                <th className="text-primary text-left p-2 border-b-2 font-normal">
-                  Customer
-                </th>
-                <th className="text-primary text-center p-2 pr-0 w-80 border-b-2 font-normal">
-                  Review
-                </th>
-                <th className="text-primary text-right p-2 pl-0 w-26 border-b-2 font-normal">
-                  Time
-                </th>
-                <th className="text-primary p-2 border-b-2 font-normal"></th>
-              </tr>
-            </thead>
-            <tbody className="border-b-2 border-white">
-              {content.reviews.map((review) => (
-                <ReviewBody
-                  userName={review.userName}
-                  review={review.content}
-                  time={review.timestamp}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className="flex grid grid-cols-4">
+            <div className="col-span-1 mx-8 my-2">
+              <Title className="text-7xl text-center text-yellow-600">
+                {data.rating}
+              </Title>
+              <div className="flex">
+                <StarRating rate={Number(data.rating)} />
+              </div>
+              <div>
+                <Text className="text-yellow-600 font-semibold">
+                  Business Rating
+                </Text>
+              </div>
+            </div>
+            <div className="flex flex-col gap-y-4 col-span-2 my-5 w-full">
+              <div className="flex w-full bg-white h-2">
+                <div
+                  className="bg-gray-500 h-2"
+                  style={{ width: `${rateFive}%` }}
+                ></div>
+              </div>
+              <div className="w-full bg-white h-2">
+                <div
+                  className="bg-gray-500 h-2"
+                  style={{ width: `${rateFour}%` }}
+                ></div>
+              </div>
+              <div className="w-full bg-white h-2">
+                <div
+                  className="bg-gray-500 h-2"
+                  style={{ width: `${rateThree}%` }}
+                ></div>
+              </div>
+              <div className="w-full bg-white h-2">
+                <div
+                  className="bg-gray-500 h-2"
+                  style={{ width: `${rateTwo}%` }}
+                ></div>
+              </div>
+              <div className="w-full bg-white h-2">
+                <div
+                  className="bg-gray-500 h-2"
+                  style={{ width: `${rateOne}%` }}
+                ></div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-y-1 col-span-1 my-3">
+              <div className="flex ml-2">
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+              </div>
+              <div className="flex ml-2">
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+              </div>
+              <div className="flex ml-2">
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+              </div>
+              <div className="flex ml-2">
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+              </div>
+              <div className="flex ml-2">
+                <MdStar className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+                <MdStarBorder className="text-yellow-600" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="flex text-white p-9 pt-0">
+            <table
+              className="table-fixed border-collapse w-full"
+              style={{ marginBlock: "13px" }}
+            >
+              <thead className="border-b-2 border-white">
+                <tr className="">
+                  <th className="text-primary text-left p-2 border-b-2 font-normal">
+                    Customer
+                  </th>
+                  <th className="text-primary text-center p-2 pr-0 w-80 border-b-2 font-normal">
+                    Review
+                  </th>
+                  <th className="text-primary text-right p-2 pl-0 w-26 border-b-2 font-normal">
+                    Time
+                  </th>
+                  <th className="text-primary p-2 border-b-2 font-normal"></th>
+                </tr>
+              </thead>
+              <tbody className="border-b-2 border-white">
+                {content.reviews.map((review) => (
+                  <ReviewBody
+                    userName={review.userName}
+                    review={review.content}
+                    time={review.timestamp}
+                    userId={review._id}
+                    content={content}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
       {selectedButton === 5 && (
         <div className="flex text-white px-12 py-3">
@@ -457,7 +592,7 @@ function Content({
 
       <div className=" flex justify-end gap-x-0.5 m-2">
         <Button
-          className="h-7 w-18 pb-1 hover:opacity-90 bg-green-500 text-center"
+          className="h-7 w-18 pb-1 hover:opacity-90 bg-green-600 text-center"
           onClick={() => {
             onNavigate("/business-form", {
               state: {
@@ -470,7 +605,7 @@ function Content({
           <MdCloudUpload className="w-5 h-5" />
         </Button>
         <Button
-          className="h-7 w-18 pb-1 hover:opacity-90 bg-red-500 text-center"
+          className="h-7 w-18 pb-1 hover:opacity-90 bg-red-600 text-center"
           onClick={() => onDelete(content._id)}
         >
           <MdDelete className={"w-5 h-5"} />
@@ -483,11 +618,35 @@ function ReviewBody({
   userName,
   review,
   time,
+  userId,
+  content,
 }: {
   userName: string;
   review: string;
   time: string;
+  userId: string;
+  content: businessContent;
 }) {
+  async function reportReview() {
+    const { value: text } = await Swal.fire({
+      input: "textarea",
+      inputLabel: "Message",
+      inputPlaceholder: "Type your message here...",
+      inputAttributes: {
+        "aria-label": "Type your message here",
+      },
+      showCancelButton: true,
+    });
+    console.log(userId);
+    await axios({
+      method: "post",
+      url: `${BASE_URL}/report/${userId}/${content._id}`,
+      data: { reason: text },
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }
+
   return (
     <tr>
       <td className="text-white text-left p-2 border-b-2">{userName}</td>
@@ -496,8 +655,22 @@ function ReviewBody({
         {time.slice(0, -8)}
       </td>
       <td className="text-white text-right border-b-2">
-        <Button className="h-8 bg-red-700">Report</Button>
+        <Button className="h-8 bg-red-700" onClick={reportReview}>
+          Report
+        </Button>
       </td>
     </tr>
+  );
+}
+function StarRating({ rate }: { rate: number }) {
+  return (
+    <>
+      {[...Array(rate)].map(() => (
+        <MdStar className="text-yellow-600" size={22} />
+      ))}
+      {[...Array(5 - rate)].map(() => (
+        <MdStarBorder className="text-yellow-600" size={20} />
+      ))}
+    </>
   );
 }
