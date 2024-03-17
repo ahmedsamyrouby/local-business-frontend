@@ -3,6 +3,7 @@ import { IconBookmark, IconMapPin, IconShare } from "@tabler/icons-react";
 
 import Spinneys from "../../assets/images/spinneys-logo.jpg";
 import { useMediaQuery } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 export type Business = {
   _id: string;
@@ -25,10 +26,15 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 };
 
 const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
+  const navigate = useNavigate();
   return (
     <article
       key={business._id}
       className="bg-white rounded-md shadow-lg overflow-hidden"
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/explore/${business._id}`);
+      }}
     >
       <div className="relative">
         <Image
@@ -77,10 +83,15 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
 };
 
 const MobileBusinessCard = ({ business }: BusinessCardProps) => {
+  const navigate = useNavigate();
   return (
     <article
       key={business._id}
       className="mt-4 flex justify-between bg-gray-200 w-full h-32 p-2 rounded-sm"
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/explore/${business._id}`);
+      }}
     >
       <div className="flex gap-2">
         <div className="min-w-24 max-w-28 h-full rounded-sm overflow-hidden relative">
