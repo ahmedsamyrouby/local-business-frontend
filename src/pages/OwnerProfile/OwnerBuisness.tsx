@@ -25,6 +25,7 @@ import "./index.css";
 import { useDisclosure } from "@mantine/hooks";
 import { MdStar } from "react-icons/md";
 import { MdStarBorder } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import Swal from "sweetalert2";
 function OwnerBuisness({
   isIpadHeight,
@@ -55,6 +56,20 @@ function OwnerBuisness({
         },
       });
     });
+  }
+  async function uploadLogo(file: File, _id: string) {
+    try {
+      const formData = new FormData();
+      formData.append("logo", file);
+      await axios.patch(
+        `${BASE_URL}/businessOwner/addLogoToBusiness/${_id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      getBusinesses();
+    } catch (err) {
+      console.log(err);
+    }
   }
   async function updateMedia(images: File[], _id: string) {
     for (let i = 0; i < images.length; i++) {
@@ -114,6 +129,7 @@ function OwnerBuisness({
                 key={business._id}
                 onDelete={deleteBusiness}
                 onUpdateMedia={updateMedia}
+                onUploadLogo={uploadLogo}
                 isContent={isContent}
                 setIsContent={setIsContent}
                 businesses={business}
@@ -167,6 +183,7 @@ function Business({
   setOnClose,
   onDelete,
   onUpdateMedia,
+  onUploadLogo,
   onNavigate,
   businesses,
 }: {
@@ -176,6 +193,7 @@ function Business({
   setOnClose: (value: boolean) => void;
   onDelete: (value: string) => void;
   onUpdateMedia: (images: File[], _id: string) => void;
+  onUploadLogo: (file: File, _id: string) => void;
   onNavigate: NavigateFunction;
   businesses: businessContent;
 }) {
@@ -195,7 +213,7 @@ function Business({
         src={
           businesses.status == "pending"
             ? pending
-            : `${BASE_URL}/${businesses.attachment}`
+            : `${BASE_URL}/${businesses.logo}`
         }
         radius="md"
         className="h-28 hover:shadow-xl transition-shadow object-cover w-full"
@@ -208,6 +226,7 @@ function Business({
           onDelete={onDelete}
           onUpdateMedia={onUpdateMedia}
           onNavigate={onNavigate}
+          onUploadLogo={onUploadLogo}
         />
       ) : null}
     </div>
@@ -219,11 +238,13 @@ function Content({
   onDelete,
   onNavigate,
   onUpdateMedia,
+  onUploadLogo,
 }: {
   content: businessContent;
   onDelete: (value: string) => void;
   onUpdateMedia: (images: File[], _id: string) => void;
   onNavigate: NavigateFunction;
+  onUploadLogo: (image: File, _id: string) => void;
 }) {
   const [selectedButton, setSelectedButton] = useState(1);
   const [opened, { open, close }] = useDisclosure(false);
@@ -272,6 +293,7 @@ function Content({
   const rateThree: number = (Number(data2.threeStarCount) * 100) / totalRate;
   const rateFour: number = (Number(data2.fourStarCount) * 100) / totalRate;
   const rateFive: number = (Number(data2.fiveStarCount) * 100) / totalRate;
+  console.log(content.reviews);
   return (
     <>
       <Modal
@@ -425,6 +447,10 @@ function Content({
             <b className="text-primary">Close:</b> {content.workTime.endTime}
           </li>
           <li>
+            <b className="text-primary">Days:</b>{" "}
+            {content.days.map((day) => `${day} `)}
+          </li>
+          <li>
             <b className="text-primary">Country:</b> {content.Country}
           </li>
         </div>
@@ -480,31 +506,41 @@ function Content({
               <div className="flex w-full bg-white h-2">
                 <div
                   className="bg-gray-500 h-2"
-                  style={{ width: `${rateFive}%` }}
+                  style={{
+                    width: Number.isNaN(rateFive) ? "0px" : `${rateFive}%`,
+                  }}
                 ></div>
               </div>
               <div className="w-full bg-white h-2">
                 <div
                   className="bg-gray-500 h-2"
-                  style={{ width: `${rateFour}%` }}
+                  style={{
+                    width: Number.isNaN(rateFour) ? "0px" : `${rateFour}%`,
+                  }}
                 ></div>
               </div>
               <div className="w-full bg-white h-2">
                 <div
                   className="bg-gray-500 h-2"
-                  style={{ width: `${rateThree}%` }}
+                  style={{
+                    width: Number.isNaN(rateThree) ? "0px" : `${rateThree}%`,
+                  }}
                 ></div>
               </div>
               <div className="w-full bg-white h-2">
                 <div
                   className="bg-gray-500 h-2"
-                  style={{ width: `${rateTwo}%` }}
+                  style={{
+                    width: Number.isNaN(rateTwo) ? "0px" : `${rateTwo}%`,
+                  }}
                 ></div>
               </div>
               <div className="w-full bg-white h-2">
                 <div
                   className="bg-gray-500 h-2"
-                  style={{ width: `${rateOne}%` }}
+                  style={{
+                    width: Number.isNaN(rateOne) ? "0px" : `${rateOne}%`,
+                  }}
                 ></div>
               </div>
             </div>
@@ -515,6 +551,9 @@ function Content({
                 <MdStar className="text-yellow-600" size={20} />
                 <MdStar className="text-yellow-600" size={20} />
                 <MdStar className="text-yellow-600" size={20} />
+                <Text className="text-white ml-1 text-sm">
+                  {Number.isNaN(rateFive) ? `0%` : `${rateFive.toFixed(1)}%`}
+                </Text>
               </div>
               <div className="flex ml-2">
                 <MdStar className="text-yellow-600" size={20} />
@@ -522,6 +561,9 @@ function Content({
                 <MdStar className="text-yellow-600" size={20} />
                 <MdStar className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
+                <Text className="text-white ml-1 text-sm">
+                  {Number.isNaN(rateFour) ? `0%` : `${rateFour.toFixed(1)}%`}
+                </Text>
               </div>
               <div className="flex ml-2">
                 <MdStar className="text-yellow-600" size={20} />
@@ -529,6 +571,9 @@ function Content({
                 <MdStar className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
+                <Text className="text-white ml-1 text-sm">
+                  {Number.isNaN(rateThree) ? `0%` : `${rateThree.toFixed(1)}%`}
+                </Text>
               </div>
               <div className="flex ml-2">
                 <MdStar className="text-yellow-600" size={20} />
@@ -536,6 +581,9 @@ function Content({
                 <MdStarBorder className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
+                <Text className="text-white ml-1 text-sm">
+                  {Number.isNaN(rateTwo) ? `0%` : `${rateTwo.toFixed(1)}%`}
+                </Text>
               </div>
               <div className="flex ml-2">
                 <MdStar className="text-yellow-600" size={20} />
@@ -543,54 +591,78 @@ function Content({
                 <MdStarBorder className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
                 <MdStarBorder className="text-yellow-600" size={20} />
+                <Text className="text-white ml-1 text-sm">
+                  {Number.isNaN(rateOne) ? `0%` : `${rateOne.toFixed(1)}%`}
+                </Text>
               </div>
             </div>
           </div>
-          <div className="flex text-white p-9 pt-0">
-            <table
-              className="table-fixed border-collapse w-full"
-              style={{ marginBlock: "13px" }}
-            >
-              <thead className="border-b-2 border-white">
-                <tr className="">
-                  <th className="text-primary text-left p-2 border-b-2 font-normal">
-                    Customer
-                  </th>
-                  <th className="text-primary text-center p-2 pr-0 w-80 border-b-2 font-normal">
-                    Review
-                  </th>
-                  <th className="text-primary text-right p-2 pl-0 w-26 border-b-2 font-normal">
-                    Time
-                  </th>
-                  <th className="text-primary p-2 border-b-2 font-normal"></th>
-                </tr>
-              </thead>
-              <tbody className="border-b-2 border-white">
-                {content.reviews.map((review) => (
-                  <ReviewBody
-                    userName={review.userName}
-                    review={review.content}
-                    time={review.timestamp}
-                    userId={review._id}
-                    content={content}
-                  />
-                ))}
-              </tbody>
-            </table>
+          <div
+            className={
+              content.reviews.length === 0
+                ? "flex justify-center text-xl text-white p-9 pt-0"
+                : "flex text-white p-9 pt-0"
+            }
+          >
+            {content.reviews.length === 0 ? (
+              "No reviews found yet"
+            ) : (
+              <table
+                className="table-fixed border-collapse w-full"
+                style={{ marginBlock: "13px" }}
+              >
+                <thead className="border-b-2 border-white">
+                  <tr className="">
+                    <th className="text-primary text-left p-2 border-b-2 font-normal">
+                      Customer
+                    </th>
+                    <th className="text-primary text-center p-2 pr-0 w-80 border-b-2 font-normal">
+                      Review
+                    </th>
+                    <th className="text-primary text-right p-2 pl-0 w-26 border-b-2 font-normal">
+                      Time
+                    </th>
+                    <th className="text-primary p-2 border-b-2 font-normal"></th>
+                  </tr>
+                </thead>
+                <tbody className="border-b-2 border-white">
+                  {content.reviews.map((review) => (
+                    <ReviewBody
+                      userName={review.userName}
+                      review={review.content}
+                      time={review.timestamp}
+                      userId={review._id}
+                      content={content}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </>
       )}
       {selectedButton === 5 && (
         <div className="flex text-white px-12 py-3">
-          <li>
-            Welcome to our business we have a different of categories of
-            different products we hope you find what you want and we happy for
-            your visit
-          </li>
+          <li>{content.description}</li>
         </div>
       )}
 
       <div className=" flex justify-end gap-x-0.5 m-2">
+        <FileButton
+          onChange={(file) => {
+            onUploadLogo(file, content._id);
+          }}
+          accept="image/png,image/jpeg"
+        >
+          {(props) => (
+            <Button
+              {...props}
+              className="h-7 w-18 pb-1 hover:opacity-90 bg-blue-400 text-center"
+            >
+              <MdCloudUpload className={"w-5 h-5"} /> Logo
+            </Button>
+          )}
+        </FileButton>
         <Button
           className="h-7 w-18 pb-1 hover:opacity-90 bg-green-600 text-center"
           onClick={() => {
@@ -602,13 +674,13 @@ function Content({
             });
           }}
         >
-          <MdCloudUpload className="w-5 h-5" />
+          <MdEdit className="w-5 h-5" /> Edit
         </Button>
         <Button
           className="h-7 w-18 pb-1 hover:opacity-90 bg-red-600 text-center"
           onClick={() => onDelete(content._id)}
         >
-          <MdDelete className={"w-5 h-5"} />
+          <MdDelete className={"w-5 h-5"} /> Delete
         </Button>
       </div>
     </>

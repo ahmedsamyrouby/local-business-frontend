@@ -7,6 +7,7 @@ import {
   rem,
   Button,
   InputLabel,
+  MultiSelect,
 } from "@mantine/core";
 import { IconClock, IconSquareCheck } from "@tabler/icons-react";
 import { TimeInput } from "@mantine/dates";
@@ -58,6 +59,7 @@ function BusinessForm() {
       businessLicense: "",
       description: "",
       address: "",
+      days: [],
     },
   });
   const getBusinesses = async () => {
@@ -102,6 +104,7 @@ function BusinessForm() {
         category: values.category,
         description: values.description,
         address: values.address,
+        days: values.days,
       },
     })
       .then((res) => {
@@ -182,20 +185,6 @@ function BusinessForm() {
               {...businessForm.getInputProps("country")}
             />
           </div>
-          {/* <div className="flex gap-x-1 ">
-            <FileInput
-              rightSection={
-                <FaFileImage
-                  style={{ width: rem(18), height: rem(18), color: "#99896B" }}
-                  stroke="1.5"
-                />
-              }
-              description="Logo of your Business"
-              className="w-full text-start text-white"
-              label="Business's Photo"
-              placeholder="Your business's Photo"
-              {...businessForm.getInputProps("businessPhoto")}
-            /> */}
           <FileInput
             rightSection={
               <FaFileImage
@@ -210,39 +199,32 @@ function BusinessForm() {
             placeholder="Your business's license"
             {...businessForm.getInputProps("businessLicense")}
           />
-          {/* </div> */}
-          {/* <Radio.Group
-            withAsterisk
-            required
-            label="Active"
-            className="text-start text-white"
-          >
-            <Group mt="xs">
-              <Radio
-                required
-                label="24 Hours"
-                value="24hour"
-                color="#99896B"
-                size="xs"
-                onClick={(e) => {
-                  handelRadio(e);
-                }}
-              />
-              <Radio
-                required
-                label="specific time"
-                value="specifictime"
-                color="#99896B"
-                size="xs"
-                onClick={(e) => {
-                  handelRadio(e);
-                }}
-              />
-            </Group>
-          </Radio.Group> */}
 
-          {/* if specific time is selected */}
-
+          <div className="mt-3">
+            <InputLabel className="text-white font-bold">
+              Business Location
+            </InputLabel>
+            <Map setLocation={setLocation} location={location!} />
+          </div>
+          <div>
+            {" "}
+            <MultiSelect
+              className="text-start text-white"
+              label="Days"
+              placeholder="Pick Your days"
+              data={[
+                "Saturday",
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wedensday",
+                "Thursday",
+                "Friday",
+                "All Days",
+              ]}
+              {...businessForm.getInputProps("days")}
+            />
+          </div>
           <div className="grid grid-cols-2 gap-x-1.5">
             <TimeInput
               required
@@ -268,15 +250,6 @@ function BusinessForm() {
               }
               {...businessForm.getInputProps("activeTo")}
             />
-          </div>
-
-          {/* if specific time is selected */}
-
-          <div className="mt-3">
-            <InputLabel className="text-white font-bold">
-              Business Location
-            </InputLabel>
-            <Map setLocation={setLocation} location={location!} />
           </div>
           <Textarea
             className="text-start text-white"

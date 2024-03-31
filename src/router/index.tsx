@@ -10,10 +10,14 @@ import BusinessForm from "../pages/Authentication/SignUp/BusinessForm";
 import OwnerProfile from "../pages/OwnerProfile/Owner";
 import SetupOwnerInfo from "../pages/SetupProfile/SetUpOwnerInfo";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
+import OwnerLayout from "../layout/ownerLayout";
 
 export default function AppRouter() {
   return (
     <Routes>
+      <Route path="/" element={<OwnerLayout />}>
+        <Route path="/ownerprofile" element={<OwnerProfile />} />
+      </Route>
       <Route path="/" element={<Layout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -21,7 +25,6 @@ export default function AppRouter() {
         <Route path="/otp" element={<OTP />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/business-form" element={<BusinessForm />} />
-        <Route path="/ownerprofile" element={<OwnerProfile />} />
         <Route path="/setupProfile" element={<SetupOwnerInfo />} />
         <Route path="/changePassword" element={<ChangePassword />} />
       </Route>

@@ -12,12 +12,14 @@ export interface businessContent {
   attachment: string;
   description: string;
   address: string;
+  logo: string;
   workTime: {
     startTime: string | undefined;
     endTime: string | undefined;
   };
   _id: string;
   messages: [];
+  days: [];
   reviews: [
     {
       userName: string;

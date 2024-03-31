@@ -11,12 +11,8 @@ import photo from "../../assets/images/vecteezy_default-profile-account-unknown-
 import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
-import {
-  getLocalStorage,
-  removeLocalStorage,
-} from "../../services/LocalStorageService";
+import { getLocalStorage } from "../../services/LocalStorageService";
 import ChangeImage from "./ChangeImage";
-import { useNavigate } from "react-router-dom";
 function OwnerInfo({
   isSmall,
   isIpadHeight,
@@ -27,9 +23,7 @@ function OwnerInfo({
   isIphoneHeight?: boolean;
 }) {
   const userId = getLocalStorage("userId");
-  const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  // const [img, setImg] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState({
     _id: "",
@@ -41,10 +35,6 @@ function OwnerInfo({
     gender: "",
     userProfile: "",
   });
-  function logOut() {
-    removeLocalStorage("userId");
-    navigate("/login");
-  }
 
   const getOwnerInfo = async () => {
     try {
@@ -100,13 +90,11 @@ function OwnerInfo({
             setSuccess={setSuccess}
             close={close}
             img={data.userProfile}
-            // setImg={setImg}
             getOwnerInfo={getOwnerInfo}
           />
         )}
       </Modal>
       <div
-        //h-ful in information container
         className="flex flex-col bg-gray-900 rounded-lg overflow-hidden drop-shadow-lg"
         style={{
           height: isIpadHeight ? "100%" : isIphoneHeight ? "100%" : "39.39rem",
@@ -115,7 +103,7 @@ function OwnerInfo({
               ? "100%"
               : isIphoneHeight
               ? "100%"
-              : "24rem"
+              : "25rem"
             : "19.5rem",
         }}
       >
@@ -327,52 +315,6 @@ function OwnerInfo({
               </Anchor>
             </CopyToClipboard>
           </Text>
-        </div>
-        <div
-          className={
-            isIpadHeight
-              ? "flex flex-col justify-end h-96 pl-4"
-              : isIphoneHeight
-              ? "flex flex-col justify-end h-72 pl-4"
-              : "flex flex-col justify-end h-48 pl-4"
-          }
-        >
-          <Anchor
-            className={
-              isIpadHeight
-                ? "text-gray-300 text-2xl"
-                : isIphoneHeight
-                ? "text-gray-300 text-xl"
-                : "text-gray-300 "
-            }
-            onClick={() => navigate("/changePassword")}
-          >
-            Change Password
-          </Anchor>
-          <Anchor
-            className={
-              isIpadHeight
-                ? "text-gray-300 text-2xl"
-                : isIphoneHeight
-                ? "text-gray-300 text-xl"
-                : "text-gray-300"
-            }
-            onClick={() => navigate("/setupProfile")}
-          >
-            Setup Profile
-          </Anchor>
-          <Anchor
-            className={
-              isIpadHeight
-                ? "text-gray-300 hover:text-red-600 text-2xl"
-                : isIphoneHeight
-                ? "text-gray-300 hover:text-red-600 text-xl"
-                : "text-gray-300 hover:text-red-600"
-            }
-            onClick={() => logOut()}
-          >
-            Log Out
-          </Anchor>
         </div>
       </div>
     </>
