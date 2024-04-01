@@ -51,7 +51,7 @@ function Map({ setLocation: setCenter, location: center }: MapProps) {
       <MapContainer center={center} zoom={17} className="w-full h-full">
         <TileLayer
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <UpdatePosition />
       </MapContainer>

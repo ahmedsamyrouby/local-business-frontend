@@ -13,11 +13,6 @@ import { BASE_URL, MAP_TOKEN } from "../../constants";
 import { ActionIcon } from "@mantine/core";
 import { IconTarget } from "@tabler/icons-react";
 
-const isPM = () => {
-  const date = new Date();
-  return date.getHours() >= 12;
-};
-
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
   const resetCenter = () => {
@@ -95,11 +90,7 @@ const HomePage = () => {
       >
         <TileLayer
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url={
-            isPM()
-              ? `https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`
-              : `https://tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`
-          }
+          url={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
         />
 
         {userLocation && (
