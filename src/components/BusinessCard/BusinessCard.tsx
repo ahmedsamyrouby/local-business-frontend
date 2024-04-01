@@ -1,5 +1,10 @@
-import { ActionIcon, Badge, Image, Rating } from "@mantine/core";
-import { IconBookmark, IconMapPin, IconShare } from "@tabler/icons-react";
+import { ActionIcon, Badge, Button, Image, Rating } from "@mantine/core";
+import {
+  IconArrowRight,
+  IconBookmark,
+  IconMapPin,
+  IconShare,
+} from "@tabler/icons-react";
 
 import Spinneys from "../../assets/images/spinneys-logo.jpg";
 import { useMediaQuery } from "@mantine/hooks";
@@ -54,12 +59,18 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <ActionIcon size={32} className="bg-transparent text-primary mr-2">
+            {/* <ActionIcon size={32} className="bg-transparent text-primary mr-2">
               <IconBookmark />
             </ActionIcon>
             <ActionIcon size={32} className="bg-transparent text-primary">
               <IconShare />
-            </ActionIcon>
+            </ActionIcon> */}
+            <Button
+              rightSection={<IconArrowRight />}
+              className="bg-transparent text-primary mr-2 p-0"
+            >
+              View Business
+            </Button>
           </div>
           <Badge
             radius={"sm"}
@@ -125,12 +136,13 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
         </div>
       </div>
       <div className="h-full flex flex-col justify-between">
-        <ActionIcon size={32} className="bg-transparent text-primary p-1">
+        {/* <ActionIcon size={32} className="bg-transparent text-primary p-1">
           <IconBookmark />
         </ActionIcon>
         <ActionIcon size={32} className="bg-transparent text-primary p-1">
           <IconShare />
-        </ActionIcon>
+        </ActionIcon> */}
+        
       </div>
     </article>
   );
