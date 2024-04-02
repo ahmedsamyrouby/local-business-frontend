@@ -14,3 +14,7 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+a.active {
+  @apply text-black font-semibold;
+}

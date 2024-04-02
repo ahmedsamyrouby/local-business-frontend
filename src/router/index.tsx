@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Authentication/Login/Login";
-import Layout from "../layout";
+import AuthLayout from "../layout/AuthLayout";
 import ForgotPassword from "../pages/Authentication/ForgotPassword/ForgotPassword";
 import OTP from "../pages/Authentication/OTP/OTP";
 import ResetPassword from "../pages/Authentication/ResetPassword/ResetPassword";
@@ -12,11 +12,12 @@ import SetupOwnerInfo from "../pages/SetupProfile/SetUpOwnerInfo";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Explore from "../pages/Explore/Explore";
 import BusinessDetails from "../pages/BusinessDetails/BusinessDetails";
+import Layout from "../layout/Layout";
 
 export default function AppRouter() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -27,9 +28,11 @@ export default function AppRouter() {
         <Route path="/setupProfile" element={<SetupOwnerInfo />} />
         <Route path="/changePassword" element={<ChangePassword />} />
       </Route>
-      <Route path="/explore" element={<Explore />} />
-      <Route path="/explore/:id" element={<BusinessDetails />} />
-      <Route path="/homepage" element={<HomePage />} />
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/explore/:id" element={<BusinessDetails />} />
+      </Route>
     </Routes>
   );
 }
