@@ -24,11 +24,7 @@ const BusinessDetails = () => {
   const reviewForm = useForm({
     initialValues: {
       review: "",
-    },
-
-    validate: {
-      review: (value) =>
-        value.length > 0 ? null : "Review should not be empty",
+      rating: null,
     },
   });
   const [business, setBusiness] = useState<any>({});
@@ -41,27 +37,78 @@ const BusinessDetails = () => {
     setBusiness(res.data.data);
   };
 
-  const addReview = async (values: { review: string }) => {
-    setAddReviewLoading(true);
-    const res = await axios.post(
+  const addReview = async (values: {
+    review: string;
+    rating: number | null;
+  }) => {
+    const reviewRes = await axios.post(
       `${BASE_URL}/customer/${customerId}/writeReview/${id}`,
       {
         review: values.review,
       }
     );
-    if (res.status === 201 || res.status === 200) {
-      close();
-      getBusiness();
-      reviewForm.reset();
-      notifications.show({
-        message: "Review Added Successfully",
-        autoClose: 2000,
-        icon: <IconSquareCheck />,
-        classNames: {
-          icon: "bg-transparent text-green-500",
-        },
-      });
+    return reviewRes;
+  };
+
+  const addRating = async (values: {
+    review: string;
+    rating: number | null;
+  }) => {
+    const ratingRes = await axios.post(
+      `${BASE_URL}/customer/${customerId}/rate/${id}`,
+      {
+        starRating: values.rating,
+      }
+    );
+    return ratingRes;
+  };
+
+  const reviewBusiness = async (values: {
+    review: string;
+    rating: number | null;
+  }) => {
+    setAddReviewLoading(true);
+    if (values.review && !values.rating) {
+      const res = await addReview(values);
+      if (res.status === 201) {
+        notifications.show({
+          message: "Review added successfully",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      }
+    } else if (values.rating && !values.review) {
+      const res = await addRating(values);
+      if (res.status === 201) {
+        notifications.show({
+          message: "Rating added successfully",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      }
+    } else {
+      const res = await addReview(values);
+      const res2 = await addRating(values);
+      if (res.status === 201 && res2.status === 201) {
+        notifications.show({
+          message: "Review and Rating added successfully",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      }
     }
+    close();
+    getBusiness();
+    reviewForm.reset();
     setAddReviewLoading(false);
   };
 
@@ -184,14 +231,16 @@ const BusinessDetails = () => {
           blur: 3,
         }}
       >
-        <form onSubmit={reviewForm.onSubmit((values) => addReview(values))}>
+        <form
+          onSubmit={reviewForm.onSubmit((values) => reviewBusiness(values))}
+        >
           <div className="space-y-5 h-fit">
             <h1 className="text-2xl font-bold w-full text-center">
               Add a review
             </h1>
             <div className="w-full flex flex-col gap-1 items-center justify-center">
               <span className="font-[500]">Overall Rating</span>
-              <Rating size={"lg"} />
+              <Rating size={"lg"} {...reviewForm.getInputProps("rating")} />
             </div>
             <Divider />
             <Textarea
