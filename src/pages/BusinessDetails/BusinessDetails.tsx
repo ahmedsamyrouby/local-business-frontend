@@ -224,19 +224,21 @@ const BusinessDetails = () => {
               </>
             )}
           </div>
-          <div>
-            <a
-              href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
-              target="_blank"
-            >
-              <StaticMap
-                location={{
-                  lat: business.business.coordinates[0],
-                  lng: business.business.coordinates[1],
-                }}
-              />
-            </a>
-          </div>
+          {business.business && (
+            <div>
+              <a
+                href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
+                target="_blank"
+              >
+                <StaticMap
+                  location={{
+                    lat: business.business.coordinates[0],
+                    lng: business.business.coordinates[1],
+                  }}
+                />
+              </a>
+            </div>
+          )}
         </div>
         <Divider className="border-t-white/80" />
 
