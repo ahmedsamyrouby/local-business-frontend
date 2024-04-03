@@ -4,7 +4,7 @@ import {
   IconBriefcase,
   IconHome,
   IconLogout,
-  IconMenu,
+  IconMenu2,
   IconMessage,
   IconSearch,
   IconUser,
@@ -14,7 +14,7 @@ import { Link, NavLink } from "react-router-dom";
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
   return (
-    <nav className="bg-primary px-3 py-4 flex justify-between items-center">
+    <nav className="bg-gray-450 px-3 py-4 flex justify-between items-center">
       <div>
         <Link to={"/"} className="text-xl font-bold text-gray-200 flex gap-2">
           <IconBriefcase size={26} />
@@ -96,8 +96,8 @@ const NavBar = () => {
             </Button>
           </div>
         </Drawer>
-        <ActionIcon>
-          <IconMenu onClick={open} size={24} />
+        <ActionIcon className="bg-transparent">
+          <IconMenu2 onClick={open} size={24} className="text-primary" />
         </ActionIcon>
       </div>
     </nav>
