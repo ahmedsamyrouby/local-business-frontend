@@ -1,20 +1,28 @@
 import { useParams } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
 import {
+  IconBookmark,
   IconBuilding,
   IconClock,
   IconMapPin,
-  IconPhone,
+  IconMessage,
   IconPlus,
+  IconShare,
   IconSquareCheck,
 } from "@tabler/icons-react";
-import { Button, Divider, Modal, Rating, Textarea } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Divider,
+  Modal,
+  Rating,
+  Textarea,
+} from "@mantine/core";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { useEffect, useState } from "react";
 import ReviewCard, { Review } from "../../components/ReviewCard/ReviewCard";
 import { useDisclosure } from "@mantine/hooks";
-import Map from "../../components/Map/Map";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -134,66 +142,104 @@ const BusinessDetails = () => {
           </Carousel>
         </div>
       )}
-      <div className="max-w-[1350px] mx-auto">
-        <div className="flex gap-6 mt-5 p-10">
-          <div className="rounded overflow-hidden w-44">
-            <img
-              className="w-full h-full object-cover"
-              src="http://placeholder.com/150"
-            />
-          </div>
-          <div>
-            <h1 className="text-[28px] font-bold text-white">
-              {business.businessName}
-            </h1>
-            <div className="flex items-center gap-1 text-primary">
-              <IconMapPin size={"18px"} />
-              <p className="text-white/80">{business.Country}</p>
-            </div>
-            <div className="flex items-center gap-1 text-primary">
+      <div className="max-w-[1350px] mx-auto relative">
+        <div className="flex justify-between mt-5 p-10">
+          <div className="flex flex-col gap-6">
+            <div className="flex gap-6">
+              <div className="space-y-2">
+                <div className="rounded overflow-hidden w-44 max-h-44">
+                  <img
+                    className="w-full h-full object-cover"
+                    src="http://placeholder.com/150"
+                  />
+                </div>
+                <div className="flex gap-2 justify-between items-center">
+                  <ActionIcon size={"xl"}>
+                    <IconBookmark />
+                  </ActionIcon>
+                  <ActionIcon size={"xl"}>
+                    <IconMessage />
+                  </ActionIcon>
+                  <ActionIcon size={"xl"}>
+                    <IconShare />
+                  </ActionIcon>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div>
+                  <h1 className="text-[28px] mb-2 font-bold text-white">
+                    {business.businessName}
+                  </h1>
+                  <div className="flex gap-10">
+                    <div>
+                      <div className="flex items-center gap-1 text-primary">
+                        <IconMapPin size={"18px"} />
+                        <p className="text-white/80">{business.Country}</p>
+                      </div>
+                      {/* <div className="flex items-center gap-1 text-primary">
               <IconPhone size={"18px"} />
               <p className="text-white/80">+20 123 456 7891</p>{" "}
-              {/* TODO - get real phone number */}
-            </div>
-            <div className="flex items-center gap-1 text-primary">
-              <IconBuilding size={"18px"} />
-              <p className="text-white/80">{business.category}</p>
-            </div>
-            {business.workTime && (
-              <div className="flex items-center gap-1 text-primary">
-                <IconClock size={"18px"} />
-                <p className="text-white/80">
-                  {business.workTime.startTime} - {business.workTime.endTime}
-                </p>
+              // TODO - get real phone number
+            </div> */}
+                      <div className="flex items-center gap-1 text-primary">
+                        <IconBuilding size={"18px"} />
+                        <p className="text-white/80">{business.category}</p>
+                      </div>
+                      {business.workTime && (
+                        <div className="flex items-center gap-1 text-primary">
+                          <IconClock size={"18px"} />
+                          <p className="text-white/80">
+                            {business.workTime.startTime} -{" "}
+                            {business.workTime.endTime}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      {business.days && business.days.length > 0 && (
+                        <div>
+                          <h2 className="font-semibold text-white">
+                            Working Days:
+                          </h2>
+                          <>
+                            {business.days.map((day: string) => (
+                              <p className="text-white/80">{day}</p>
+                            ))}
+                          </>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+            {business.description && (
+              <>
+                <div className="flex justify-between gap-3">
+                  <div>
+                    <h1 className="text-white text-2xl font-bold">About</h1>
+                    <p className="text-white/80">{business.description}</p>
+                  </div>
+                </div>
+              </>
             )}
+          </div>
+          <div>
+            <a
+              href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
+              target="_blank"
+            >
+              <StaticMap
+                location={{
+                  lat: business.business.coordinates[0],
+                  lng: business.business.coordinates[1],
+                }}
+              />
+            </a>
           </div>
         </div>
         <Divider className="border-t-white/80" />
-        {business.description && (
-          <>
-            <div className="flex justify-between gap-3 p-5">
-              <div>
-                <h1 className="text-white text-2xl font-bold">About</h1>
-                <p className="text-white/80">{business.description}</p>
-              </div>
-              <div>
-                <a
-                  href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
-                  target="_blank"
-                >
-                  <StaticMap
-                    location={{
-                      lat: business.business.coordinates[0],
-                      lng: business.business.coordinates[1],
-                    }}
-                  />
-                </a>
-              </div>
-            </div>
-            <Divider className="border-t-white/80" />
-          </>
-        )}
+
         {business.reviews && (
           <>
             <div className="w-full p-5 flex justify-between items-center">
