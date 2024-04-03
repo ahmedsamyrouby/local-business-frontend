@@ -4,15 +4,24 @@ import {
   IconBriefcase,
   IconHome,
   IconLogout,
+  IconMail,
   IconMenu2,
   IconMessage,
+  IconPhone,
   IconSearch,
   IconUser,
 } from "@tabler/icons-react";
 import { Link, NavLink } from "react-router-dom";
+import { getLocalStorage } from "../../services/LocalStorageService";
 
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
+  const userData = {
+    name: getLocalStorage("name"),
+    email: getLocalStorage("email"),
+    phone: getLocalStorage("phone"),
+  };
+
   return (
     <nav className="bg-gray-450 px-3 py-4 flex justify-between items-center">
       <div>
@@ -37,11 +46,23 @@ const NavBar = () => {
         >
           <Menu.Target>
             <Button leftSection={<IconUser />} className="bg-white/20 text-md">
-              User's Name
+              {userData.name}
             </Button>
           </Menu.Target>
 
           <Menu.Dropdown>
+            <Menu.Item disabled>
+              <div className="mb-4">
+                <p className="text-black">
+                  <span className="font-semibold">Email: </span> <br />
+                  {userData.email}
+                </p>
+                <p className="text-black">
+                  <span className="font-semibold">Phone Number: </span> <br />
+                  {userData.phone}
+                </p>
+              </div>
+            </Menu.Item>
             <Menu.Item color="red" leftSection={<IconLogout />}>
               Logout
             </Menu.Item>
@@ -61,9 +82,19 @@ const NavBar = () => {
           position={"right"}
         >
           <div className="flex flex-col gap-4 text-xl">
-            <Drawer.Title className="text-[1.5rem] font-semibold mb-3">
-              User's Name
-            </Drawer.Title>
+            <div className="mb-3">
+              <Drawer.Title className="text-[1.5rem] font-semibold mb-2">
+                {userData.name}
+              </Drawer.Title>
+              <div className="flex flex-col gap justify-center">
+                <div className="flex gap-1 items-center">
+                  <IconMail size={18} /> {userData.email}
+                </div>
+                <div className="flex gap-1 items-center">
+                  <IconPhone size={18} /> {userData.phone}
+                </div>
+              </div>
+            </div>
             <NavLink
               to={"/"}
               className={"flex gap-1 items-center"}
