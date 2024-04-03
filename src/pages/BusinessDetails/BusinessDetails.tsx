@@ -18,6 +18,7 @@ import Map from "../../components/Map/Map";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
+import StaticMap from "../../components/StaticMap/StaticMap";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -176,17 +177,16 @@ const BusinessDetails = () => {
                 <h1 className="text-white text-2xl font-bold">About</h1>
                 <p className="text-white/80">{business.description}</p>
               </div>
-              <div className="w-96">
+              <div>
                 <a
-                  href={`https://maps.google.com/maps?&amp;q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
+                  href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
                   target="_blank"
                 >
-                  <Map
+                  <StaticMap
                     location={{
                       lat: business.business.coordinates[0],
                       lng: business.business.coordinates[1],
                     }}
-                    setLocation={() => {}}
                   />
                 </a>
               </div>
@@ -229,6 +229,10 @@ const BusinessDetails = () => {
         overlayProps={{
           backgroundOpacity: 0.55,
           blur: 3,
+        }}
+        classNames={{
+          inner: "z-[1200]",
+          overlay: "z-[1100]",
         }}
       >
         <form
