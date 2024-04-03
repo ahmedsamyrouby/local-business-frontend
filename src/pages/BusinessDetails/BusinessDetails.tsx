@@ -6,6 +6,7 @@ import {
   IconMapPin,
   IconPhone,
   IconPlus,
+  IconSquareCheck,
 } from "@tabler/icons-react";
 import { Button, Divider, Modal, Rating, Textarea } from "@mantine/core";
 import axios from "axios";
@@ -14,15 +15,54 @@ import { useEffect, useState } from "react";
 import ReviewCard, { Review } from "../../components/ReviewCard/ReviewCard";
 import { useDisclosure } from "@mantine/hooks";
 import Map from "../../components/Map/Map";
+import { getLocalStorage } from "../../services/LocalStorageService";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
 const BusinessDetails = () => {
   const { id } = useParams();
+  const reviewForm = useForm({
+    initialValues: {
+      review: "",
+    },
+
+    validate: {
+      review: (value) =>
+        value.length > 0 ? null : "Review should not be empty",
+    },
+  });
   const [business, setBusiness] = useState<any>({});
   const [opened, { open, close }] = useDisclosure(false);
+  const customerId = getLocalStorage("userId");
+  const [addReviewLoading, setAddReviewLoading] = useState(false);
 
   const getBusiness = async () => {
     const res = await axios.get(`${BASE_URL}/customer/getBusinessById/${id}`);
     setBusiness(res.data.data);
+  };
+
+  const addReview = async (values: { review: string }) => {
+    setAddReviewLoading(true);
+    const res = await axios.post(
+      `${BASE_URL}/customer/${customerId}/writeReview/${id}`,
+      {
+        review: values.review,
+      }
+    );
+    if (res.status === 201 || res.status === 200) {
+      close();
+      getBusiness();
+      reviewForm.reset();
+      notifications.show({
+        message: "Review Added Successfully",
+        autoClose: 2000,
+        icon: <IconSquareCheck />,
+        classNames: {
+          icon: "bg-transparent text-green-500",
+        },
+      });
+    }
+    setAddReviewLoading(false);
   };
 
   useEffect(() => {
@@ -144,7 +184,7 @@ const BusinessDetails = () => {
           blur: 3,
         }}
       >
-        <form>
+        <form onSubmit={reviewForm.onSubmit((values) => addReview(values))}>
           <div className="space-y-5 h-fit">
             <h1 className="text-2xl font-bold w-full text-center">
               Add a review
@@ -160,9 +200,14 @@ const BusinessDetails = () => {
               }}
               label={"Write a review for the business"}
               placeholder={"Write your review here..."}
+              {...reviewForm.getInputProps("review")}
             />
           </div>
-          <Button type="submit" className="mt-5 w-full">
+          <Button
+            type="submit"
+            className="mt-5 w-full"
+            loading={addReviewLoading}
+          >
             Submit Review
           </Button>
         </form>

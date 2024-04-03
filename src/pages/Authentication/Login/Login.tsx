@@ -38,7 +38,7 @@ const Login = () => {
         setLocalStorage("role", res.data.data.role);
         res.data.data.role === "businessOwner"
           ? navigate("/ownerprofile")
-          : navigate("/homepage");
+          : navigate("/");
         setIsLoading(false);
         notifications.show({
           message: "Login Successful",
