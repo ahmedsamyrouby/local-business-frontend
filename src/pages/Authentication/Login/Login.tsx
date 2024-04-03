@@ -36,6 +36,9 @@ const Login = () => {
         setLocalStorage("userToken", res.data.token);
         setLocalStorage("userId", res.data.data._id);
         setLocalStorage("role", res.data.data.role);
+        setLocalStorage("name", res.data.name);
+        setLocalStorage("email", res.data.email);
+        setLocalStorage("phone", res.data.phone);
         res.data.data.role === "businessOwner"
           ? navigate("/ownerprofile")
           : navigate("/");
