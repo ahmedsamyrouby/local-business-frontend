@@ -178,13 +178,13 @@ const BusinessDetails = () => {
               </div>
               <div className="w-96">
                 <a
-                  href="https://maps.google.com/maps?&amp;q=31,31"
+                  href={`https://maps.google.com/maps?&amp;q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
                   target="_blank"
                 >
                   <Map
                     location={{
-                      lat: 31,
-                      lng: 31,
+                      lat: business.business.coordinates[0],
+                      lng: business.business.coordinates[1],
                     }}
                     setLocation={() => {}}
                   />
