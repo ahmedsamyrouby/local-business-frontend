@@ -47,7 +47,7 @@ const HomePage = () => {
 
   const getNearbyBusinesses = async () => {
     const nearbyBusinesses = await axios.get(
-      `${BASE_URL}/businessOwner/getBusinessesNearby`,
+      `${BASE_URL}/Customer/getBusinessesNearby`,
       {
         params: {
           latitude: (userLocation as LatLng).lat,
