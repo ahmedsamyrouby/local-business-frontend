@@ -631,7 +631,8 @@ function Content({
                       userName={review.userName}
                       review={review.content}
                       time={review.timestamp}
-                      userId={review._id}
+                      reviewId={review._id}
+                      customerId={review.customerId}
                       content={content}
                     />
                   ))}
@@ -690,13 +691,15 @@ function ReviewBody({
   userName,
   review,
   time,
-  userId,
+  reviewId,
+  customerId,
   content,
 }: {
   userName: string;
   review: string;
   time: string;
-  userId: string;
+  reviewId: string;
+  customerId: string;
   content: businessContent;
 }) {
   async function reportReview() {
@@ -709,10 +712,17 @@ function ReviewBody({
       },
       showCancelButton: true,
     });
-    console.log(userId);
+    if (text) {
+      Swal.fire({
+        title: "Done!",
+        text: "Your reason has been sent.",
+        icon: "success",
+      });
+    }
+    console.log(reviewId);
     await axios({
       method: "post",
-      url: `${BASE_URL}/report/${userId}/${content._id}`,
+      url: `${BASE_URL}/report/${reviewId}/${content._id}/${customerId}`,
       data: { reason: text },
     })
       .then((res) => console.log(res))

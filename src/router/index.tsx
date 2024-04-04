@@ -11,12 +11,16 @@ import OwnerProfile from "../pages/OwnerProfile/Owner";
 import SetupOwnerInfo from "../pages/SetupProfile/SetUpOwnerInfo";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import OwnerLayout from "../layout/ownerLayout";
+import Requests from "../pages/OwnerProfile/Request";
+import Chat from "../pages/OwnerProfile/Chat";
 
 export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<OwnerLayout />}>
         <Route path="/ownerprofile" element={<OwnerProfile />} />
+        <Route path="/request" element={<Requests />} />
+        <Route path="/chat" element={<Chat />} />
       </Route>
       <Route path="/" element={<Layout />}>
         <Route path="/login" element={<Login />} />

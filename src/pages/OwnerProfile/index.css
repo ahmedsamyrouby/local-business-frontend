@@ -1,3 +1,15 @@
 .gallery::-webkit-scrollbar {
   display: none;
 }
+.backGround {
+  background-image: url("../../assets/images/login.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  overflow: hidden;
+  position: relative;
+  opacity: 0.9;
+}
+.backGround::after {
+  opacity: 0.5;
+}
