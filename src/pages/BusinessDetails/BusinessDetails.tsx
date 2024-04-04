@@ -37,7 +37,7 @@ const BusinessDetails = () => {
     },
   });
   const [business, setBusiness] = useState<any>({});
-  const [businessRating, setBusinessRating] = useState<number | null>(null);
+  const [businessRating, setBusinessRating] = useState<number | undefined>(undefined);
   const [addReviewOpened, { open: openAddReview, close: closeAddReview }] =
     useDisclosure(false);
   const [
