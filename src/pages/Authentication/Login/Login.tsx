@@ -36,9 +36,12 @@ const Login = () => {
         setLocalStorage("userToken", res.data.token);
         setLocalStorage("userId", res.data.data._id);
         setLocalStorage("role", res.data.data.role);
+        setLocalStorage("name", res.data.data.name);
+        setLocalStorage("email", res.data.data.email);
+        setLocalStorage("phone", res.data.data.phone);
         res.data.data.role === "businessOwner"
           ? navigate("/ownerprofile")
-          : navigate("/homepage");
+          : navigate("/");
         setIsLoading(false);
         notifications.show({
           message: "Login Successful",

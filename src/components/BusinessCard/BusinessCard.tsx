@@ -1,8 +1,14 @@
-import { ActionIcon, Badge, Image, Rating } from "@mantine/core";
-import { IconBookmark, IconMapPin, IconShare } from "@tabler/icons-react";
+import { ActionIcon, Badge, Button, Image, Rating } from "@mantine/core";
+import {
+  IconArrowRight,
+  IconBookmark,
+  IconMapPin,
+  IconShare,
+} from "@tabler/icons-react";
 
 import Spinneys from "../../assets/images/spinneys-logo.jpg";
 import { useMediaQuery } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 export type Business = {
   _id: string;
@@ -25,10 +31,15 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 };
 
 const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
+  const navigate = useNavigate();
   return (
     <article
       key={business._id}
       className="bg-white rounded-md shadow-lg overflow-hidden"
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/explore/${business._id}`);
+      }}
     >
       <div className="relative">
         <Image
@@ -44,16 +55,22 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
           <p className="text-gray-600 ml-2">{business.Country}</p>
         </div>
         <div className="flex items-center mb-2">
-          <Rating value={3} size={"md"} />
+          {/* <Rating value={3} size={"md"} /> */}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <ActionIcon size={32} className="bg-transparent text-primary mr-2">
+            {/* <ActionIcon size={32} className="bg-transparent text-primary mr-2">
               <IconBookmark />
             </ActionIcon>
             <ActionIcon size={32} className="bg-transparent text-primary">
               <IconShare />
-            </ActionIcon>
+            </ActionIcon> */}
+            <Button
+              rightSection={<IconArrowRight />}
+              className="bg-transparent text-primary mr-2 p-0"
+            >
+              View Business
+            </Button>
           </div>
           <Badge
             radius={"sm"}
@@ -77,10 +94,15 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
 };
 
 const MobileBusinessCard = ({ business }: BusinessCardProps) => {
+  const navigate = useNavigate();
   return (
     <article
       key={business._id}
       className="mt-4 flex justify-between bg-gray-200 w-full h-32 p-2 rounded-sm"
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(`/explore/${business._id}`);
+      }}
     >
       <div className="flex gap-2">
         <div className="min-w-24 max-w-28 h-full rounded-sm overflow-hidden relative">
@@ -103,7 +125,7 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
             </div>
           </div>
           {/* TODO - get real business rating */}
-          <Rating value={3} size={"md"} />
+          {/* <Rating value={3} size={"md"} /> */}
           <Badge
             radius={"sm"}
             className="z-2 text-[10px] border border-primary max-w-40"
@@ -114,12 +136,12 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
         </div>
       </div>
       <div className="h-full flex flex-col justify-between">
-        <ActionIcon size={32} className="bg-transparent text-primary p-1">
+        {/* <ActionIcon size={32} className="bg-transparent text-primary p-1">
           <IconBookmark />
         </ActionIcon>
         <ActionIcon size={32} className="bg-transparent text-primary p-1">
           <IconShare />
-        </ActionIcon>
+        </ActionIcon> */}
       </div>
     </article>
   );

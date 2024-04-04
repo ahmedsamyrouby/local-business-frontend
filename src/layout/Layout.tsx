@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
+import NavBar from "../components/NavBar/NavBar";
 
 const Layout = () => {
   return (
-    <div className="flex-center min-h-screen overflow-x-hidden bg-gray-900 md:bg-dark md:p-8">
+    <div>
+      <NavBar />
       <Outlet />
     </div>
   );
