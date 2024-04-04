@@ -36,8 +36,20 @@ const BusinessDetails = () => {
       rating: null,
     },
   });
+  const requestServiceForm = useForm({
+    initialValues: {
+      request: "",
+    },
+
+    validate: {
+      request: (value) =>
+        value.length > 0 ? null : "Request details are required",
+    },
+  });
   const [business, setBusiness] = useState<any>({});
-  const [businessRating, setBusinessRating] = useState<number | undefined>(undefined);
+  const [businessRating, setBusinessRating] = useState<number | undefined>(
+    undefined
+  );
   const [addReviewOpened, { open: openAddReview, close: closeAddReview }] =
     useDisclosure(false);
   const [
@@ -55,6 +67,27 @@ const BusinessDetails = () => {
   const getBusinessRating = async () => {
     const res = await axios.get(`${BASE_URL}/businessOwner/rating/${id}`);
     setBusinessRating(res.data.rating);
+  };
+
+  const requestAService = async (values: { request: string }) => {
+    const res = await axios.post(
+      `${BASE_URL}/customer/${customerId}/serviceRequest/${id}`,
+      {
+        requestDetails: values.request,
+      }
+    );
+    if (res.status === 201 || res.status === 200) {
+      notifications.show({
+        message: "Service requested successfully",
+        autoClose: 2000,
+        icon: <IconSquareCheck />,
+        classNames: {
+          icon: "bg-transparent text-green-500",
+        },
+      });
+    }
+    closeRequestService();
+    requestServiceForm.reset();
   };
 
   const addReview = async (values: {
@@ -155,7 +188,7 @@ const BusinessDetails = () => {
         </div>
       )}
       <div className="max-w-[1350px] mx-auto relative">
-        <div className="flex justify-between mt-5 p-10">
+        <div className="flex justify-between mt-5 p-5">
           <div className="flex flex-col gap-6">
             <div className="flex gap-6">
               <div className="space-y-2">
@@ -349,21 +382,28 @@ const BusinessDetails = () => {
           overlay: "z-[1100]",
         }}
       >
-        <div className="space-y-5 h-fit">
-          <h1 className="text-2xl font-bold w-full text-center">
-            Request a Service
-          </h1>
-          <Textarea
-            classNames={{
-              input: "h-40",
-            }}
-            label={"Service request details"}
-            placeholder={"Write your service request details here..."}
-          />
-        </div>
-        <Button type="submit" className="mt-5 w-full">
-          Submit
-        </Button>
+        <form
+          onSubmit={requestServiceForm.onSubmit((values) =>
+            requestAService(values)
+          )}
+        >
+          <div className="space-y-5 h-fit">
+            <h1 className="text-2xl font-bold w-full text-center">
+              Request a Service
+            </h1>
+            <Textarea
+              classNames={{
+                input: "h-40",
+              }}
+              label={"Service request details"}
+              placeholder={"Write your service request details here..."}
+              {...requestServiceForm.getInputProps("request")}
+            />
+          </div>
+          <Button type="submit" className="mt-5 w-full">
+            Submit
+          </Button>
+        </form>
       </Modal>
     </div>
   );
