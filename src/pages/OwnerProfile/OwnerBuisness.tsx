@@ -27,6 +27,7 @@ import { MdStar } from "react-icons/md";
 import { MdStarBorder } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import Swal from "sweetalert2";
+import StaticMap from "../../components/StaticMap/StaticMap";
 function OwnerBuisness({
   isIpadHeight,
   isIphoneHeight,
@@ -483,6 +484,16 @@ function Content({
               )}
             </FileButton>
           </div>
+        </div>
+      )}
+      {selectedButton === 3 && (
+        <div className="m-5 w-full flex justify-center rounded-lg">
+          <StaticMap
+            location={{
+              lat: content.business.coordinates[0],
+              lng: content.business.coordinates[1],
+            }}
+          />
         </div>
       )}
       {/* <div>Locatin here</div> */}

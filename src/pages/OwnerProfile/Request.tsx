@@ -1,6 +1,7 @@
 import { Title, ScrollArea, Text, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
+import StaticMap from "../../components/StaticMap/StaticMap";
 
 function Requests() {
   const navigate = useNavigate();
@@ -135,7 +136,15 @@ function Requests() {
             </div>
           </div>
         </div>
-        <div className="w-full "></div>
+        <div className="w-full flex justify-center items-center">
+          {" "}
+          <StaticMap
+            location={{
+              lat: 30,
+              lng: 31,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

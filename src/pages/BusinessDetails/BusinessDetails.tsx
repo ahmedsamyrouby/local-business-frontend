@@ -178,7 +178,7 @@ const BusinessDetails = () => {
             {business.media.map((image: string, index: number) => (
               <Carousel.Slide key={index}>
                 <img
-                  src={image}
+                  src={`${BASE_URL}/${image}`}
                   alt={`${business.businessName} image ${index}`}
                   className="w-full h-full object-cover"
                 />
@@ -195,7 +195,7 @@ const BusinessDetails = () => {
                 <div className="rounded overflow-hidden w-44 max-h-44">
                   <img
                     className="w-full h-full object-cover"
-                    src="http://placeholder.com/150"
+                    src={`${BASE_URL}/${business.logo}`}
                   />
                 </div>
                 <div className="space-y-2">

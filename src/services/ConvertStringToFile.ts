@@ -1,5 +1,5 @@
 export interface businessContent {
-  station: {
+  business: {
     type: "Point";
     coordinates: [];
   };

@@ -85,7 +85,7 @@ function BusinessForm() {
       businessForm.setFieldValue("activeFrom", "24hour");
     }
     console.log(values);
-    console.log(comingData);
+    console.log(coordinates);
     setIsLoading(true);
     await axios({
       method: comingData != null ? comingData.method : "put",
@@ -94,7 +94,7 @@ function BusinessForm() {
           ? comingData.api
           : `${BASE_URL}/businessOwner/updateMyBusinessInfo/${data[0]._id}`,
       data: {
-        station: {
+        business: {
           type: "Point",
           coordinates: [coordinates[0], coordinates[1]],
         },
