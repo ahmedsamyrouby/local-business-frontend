@@ -37,6 +37,7 @@ const BusinessDetails = () => {
     },
   });
   const [business, setBusiness] = useState<any>({});
+  const [businessRating, setBusinessRating] = useState<number | null>(null);
   const [addReviewOpened, { open: openAddReview, close: closeAddReview }] =
     useDisclosure(false);
   const [
@@ -49,6 +50,11 @@ const BusinessDetails = () => {
   const getBusiness = async () => {
     const res = await axios.get(`${BASE_URL}/customer/getBusinessById/${id}`);
     setBusiness(res.data.data);
+  };
+
+  const getBusinessRating = async () => {
+    const res = await axios.get(`${BASE_URL}/businessOwner/rating/${id}`);
+    setBusinessRating(res.data.rating);
   };
 
   const addReview = async (values: {
@@ -128,6 +134,7 @@ const BusinessDetails = () => {
 
   useEffect(() => {
     getBusiness();
+    getBusinessRating();
   }, []);
 
   return (
@@ -179,11 +186,15 @@ const BusinessDetails = () => {
               </div>
               <div className="flex flex-col gap-3">
                 <div>
-                  <h1 className="text-[28px] mb-2 font-bold text-white">
-                    {business.businessName}
-                  </h1>
+                  <div className="mb-2">
+                    <h1 className="text-[28px] font-bold text-white">
+                      {business.businessName}
+                    </h1>
+                    <Rating value={businessRating} readOnly />
+                  </div>
                   <div className="flex gap-10">
                     <div>
+                      <div></div>
                       <div className="flex items-center gap-1 text-primary">
                         <IconMapPin size={"18px"} />
                         <p className="text-white/80">{business.Country}</p>

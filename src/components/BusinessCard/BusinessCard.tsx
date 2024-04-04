@@ -55,7 +55,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
           <p className="text-gray-600 ml-2">{business.Country}</p>
         </div>
         <div className="flex items-center mb-2">
-          <Rating value={3} size={"md"} />
+          {/* <Rating value={3} size={"md"} /> */}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -125,7 +125,7 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
             </div>
           </div>
           {/* TODO - get real business rating */}
-          <Rating value={3} size={"md"} />
+          {/* <Rating value={3} size={"md"} /> */}
           <Badge
             radius={"sm"}
             className="z-2 text-[10px] border border-primary max-w-40"
@@ -142,7 +142,6 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
         <ActionIcon size={32} className="bg-transparent text-primary p-1">
           <IconShare />
         </ActionIcon> */}
-        
       </div>
     </article>
   );
