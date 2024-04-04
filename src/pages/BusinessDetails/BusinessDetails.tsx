@@ -37,7 +37,12 @@ const BusinessDetails = () => {
     },
   });
   const [business, setBusiness] = useState<any>({});
-  const [opened, { open, close }] = useDisclosure(false);
+  const [addReviewOpened, { open: openAddReview, close: closeAddReview }] =
+    useDisclosure(false);
+  const [
+    requestServiceOpened,
+    { open: openRequestService, close: closeRequestService },
+  ] = useDisclosure(false);
   const customerId = getLocalStorage("userId");
   const [addReviewLoading, setAddReviewLoading] = useState(false);
 
@@ -115,7 +120,7 @@ const BusinessDetails = () => {
         });
       }
     }
-    close();
+    closeAddReview();
     getBusiness();
     reviewForm.reset();
     setAddReviewLoading(false);
@@ -153,16 +158,23 @@ const BusinessDetails = () => {
                     src="http://placeholder.com/150"
                   />
                 </div>
-                <div className="flex gap-2 justify-between items-center">
-                  <ActionIcon size={"xl"}>
-                    <IconBookmark />
-                  </ActionIcon>
-                  <ActionIcon size={"xl"}>
-                    <IconMessage />
-                  </ActionIcon>
-                  <ActionIcon size={"xl"}>
-                    <IconShare />
-                  </ActionIcon>
+                <div className="space-y-2">
+                  <div>
+                    <Button className="w-full" onClick={openRequestService}>
+                      Request a Service
+                    </Button>
+                  </div>
+                  <div className="flex gap-2 justify-between items-center">
+                    <ActionIcon size={"xl"}>
+                      <IconBookmark />
+                    </ActionIcon>
+                    <ActionIcon size={"xl"}>
+                      <IconMessage />
+                    </ActionIcon>
+                    <ActionIcon size={"xl"}>
+                      <IconShare />
+                    </ActionIcon>
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col gap-3">
@@ -246,7 +258,7 @@ const BusinessDetails = () => {
           <>
             <div className="w-full p-5 flex justify-between items-center">
               <h1 className="text-white text-2xl font-bold">Reviews</h1>
-              <Button rightSection={<IconPlus />} onClick={open}>
+              <Button rightSection={<IconPlus />} onClick={openAddReview}>
                 Add Review
               </Button>
             </div>
@@ -271,8 +283,8 @@ const BusinessDetails = () => {
       </div>
 
       <Modal
-        opened={opened}
-        onClose={close}
+        opened={addReviewOpened}
+        onClose={closeAddReview}
         centered
         overlayProps={{
           backgroundOpacity: 0.55,
@@ -312,6 +324,35 @@ const BusinessDetails = () => {
             Submit Review
           </Button>
         </form>
+      </Modal>
+      <Modal
+        opened={requestServiceOpened}
+        onClose={closeRequestService}
+        centered
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+        classNames={{
+          inner: "z-[1200]",
+          overlay: "z-[1100]",
+        }}
+      >
+        <div className="space-y-5 h-fit">
+          <h1 className="text-2xl font-bold w-full text-center">
+            Request a Service
+          </h1>
+          <Textarea
+            classNames={{
+              input: "h-40",
+            }}
+            label={"Service request details"}
+            placeholder={"Write your service request details here..."}
+          />
+        </div>
+        <Button type="submit" className="mt-5 w-full">
+          Submit
+        </Button>
       </Modal>
     </div>
   );
