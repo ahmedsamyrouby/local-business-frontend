@@ -13,8 +13,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import ChangeImage from "./ChangeImage";
-import { convertStringToImageFile } from "../../services/ConvertStringToFile";
-import { useNavigate } from "react-router-dom";
 function OwnerInfo({
   isSmall,
   isIpadHeight,
@@ -25,9 +23,7 @@ function OwnerInfo({
   isIphoneHeight?: boolean;
 }) {
   const userId = getLocalStorage("userId");
-  const navigate = useNavigate();
   const [opened, { open, close }] = useDisclosure(false);
-  const [file, setFile] = useState<Blob | null>();
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState({
     _id: "",
@@ -36,6 +32,7 @@ function OwnerInfo({
     birthday: "",
     role: "",
     phone: "",
+    gender: "",
     userProfile: "",
   });
 
@@ -45,7 +42,9 @@ function OwnerInfo({
         `${BASE_URL}/businessOwner/getUserByUserID/${userId}`
       );
       setData(respone.data.data);
-      setFile(convertStringToImageFile(data.userProfile));
+      // setImg(`${BASE_URL}/${data.userProfile}`);
+      // console.log(img);
+      console.log(data);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -90,13 +89,12 @@ function OwnerInfo({
             isIpadHeight={isIpadHeight}
             setSuccess={setSuccess}
             close={close}
-            file={file}
-            setFile={setFile}
+            img={data.userProfile}
+            getOwnerInfo={getOwnerInfo}
           />
         )}
       </Modal>
       <div
-        //h-ful in information container
         className="flex flex-col bg-gray-900 rounded-lg overflow-hidden drop-shadow-lg"
         style={{
           height: isIpadHeight ? "100%" : isIphoneHeight ? "100%" : "39.39rem",
@@ -105,7 +103,7 @@ function OwnerInfo({
               ? "100%"
               : isIphoneHeight
               ? "100%"
-              : "24rem"
+              : "25rem"
             : "19.5rem",
         }}
       >
@@ -121,8 +119,11 @@ function OwnerInfo({
         {/* //Image */}
         <div className="flex px-6 pb-2">
           <Image
-            // src={file == null ? photo : URL.createObjectURL(file)}
-            src={photo}
+            src={
+              data.userProfile === "Null"
+                ? photo
+                : `${BASE_URL}/${data.userProfile}`
+            }
             className={
               isIpadHeight
                 ? "flex-none rounded-full h-48 w-48 p-1 bg-gray-900 cursor-pointer"
@@ -135,7 +136,7 @@ function OwnerInfo({
             }}
             onClick={open}
           />
-          {file == null && (
+          {data.userProfile === `Null` && (
             <FaPlus
               className={
                 isIpadHeight
@@ -235,7 +236,7 @@ function OwnerInfo({
                   : "text-sm text-gray-400"
               }
             >
-              Male
+              {data.gender}
             </Text>
           </div>
         </div>
@@ -314,51 +315,6 @@ function OwnerInfo({
               </Anchor>
             </CopyToClipboard>
           </Text>
-        </div>
-        <div
-          className={
-            isIpadHeight
-              ? "flex flex-col justify-end h-96 pl-4"
-              : isIphoneHeight
-              ? "flex flex-col justify-end h-72 pl-4"
-              : "flex flex-col justify-end h-48 pl-4"
-          }
-        >
-          <Anchor
-            className={
-              isIpadHeight
-                ? "text-gray-300 text-2xl"
-                : isIphoneHeight
-                ? "text-gray-300 text-xl"
-                : "text-gray-300 "
-            }
-            onClick={() => navigate("/changePassword")}
-          >
-            Change Password
-          </Anchor>
-          <Anchor
-            className={
-              isIpadHeight
-                ? "text-gray-300 text-2xl"
-                : isIphoneHeight
-                ? "text-gray-300 text-xl"
-                : "text-gray-300"
-            }
-            onClick={() => navigate("/setupProfile")}
-          >
-            Setup Profile
-          </Anchor>
-          <Anchor
-            className={
-              isIpadHeight
-                ? "text-gray-300 hover:text-red-600 text-2xl"
-                : isIphoneHeight
-                ? "text-gray-300 hover:text-red-600 text-xl"
-                : "text-gray-300 hover:text-red-600"
-            }
-          >
-            Log Out
-          </Anchor>
         </div>
       </div>
     </>

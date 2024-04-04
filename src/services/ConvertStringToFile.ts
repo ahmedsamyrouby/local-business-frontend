@@ -1,8 +1,3 @@
-export function convertStringToImageFile(stringData: string): File {
-  const blob = new Blob([stringData], { type: "jpg" });
-  const file = new File([blob], "foo.txt", { type: "image/jpg" });
-  return file;
-}
 export interface businessContent {
   station: {
     type: "Point";
@@ -14,13 +9,24 @@ export interface businessContent {
   status: string;
   userId: string;
   media: [];
+  attachment: string;
   description: string;
   address: string;
+  logo: string;
   workTime: {
     startTime: string | undefined;
     endTime: string | undefined;
   };
   _id: string;
   messages: [];
-  reviews: [];
+  days: [];
+  reviews: [
+    {
+      userName: string;
+      content: string;
+      timestamp: string;
+      customerId: string;
+      _id: string;
+    }
+  ];
 }
