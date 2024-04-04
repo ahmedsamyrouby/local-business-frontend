@@ -9,12 +9,14 @@ import {
 import Spinneys from "../../assets/images/spinneys-logo.jpg";
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../constants";
 
 export type Business = {
   _id: string;
   businessName: string;
   category: string;
   Country: string;
+  logo: string;
 };
 
 interface BusinessCardProps {
@@ -43,7 +45,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
     >
       <div className="relative">
         <Image
-          src={Spinneys}
+          src={`${BASE_URL}/${business.logo}`}
           alt={business.businessName}
           className="w-full h-64 object-cover"
         />
@@ -106,7 +108,10 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
     >
       <div className="flex gap-2">
         <div className="min-w-24 max-w-28 h-full rounded-sm overflow-hidden relative">
-          <Image className={"object-cover h-full w-full"} src={Spinneys} />
+          <Image
+            className={"object-cover h-full w-full"}
+            src={`${BASE_URL}/${business.logo}`}
+          />
           {/* TODO - Add "Open now" and "Closed" Badge depending on working hours */}
           {/* <Badge
                 radius={"sm"}
