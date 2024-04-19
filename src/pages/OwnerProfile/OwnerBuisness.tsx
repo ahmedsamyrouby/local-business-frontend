@@ -13,6 +13,8 @@ import { GoPlusCircle } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
 import { MdCloudUpload } from "react-icons/md";
 import pending from "../../assets/images/PendingImage.jpg";
+import approved from "../../assets/images/Untitled design (3).png";
+import rejected from "../../assets/images/Untitled design (4).png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
@@ -214,14 +216,20 @@ function Business({
         src={
           businesses.status == "pending"
             ? pending
-            : `${BASE_URL}/${businesses.logo}`
+            : businesses.status === "accepted"
+            ? businesses.logo
+              ? `${BASE_URL}/${businesses.logo}`
+              : approved
+            : rejected
         }
         radius="md"
         className="h-28 hover:shadow-xl transition-shadow object-cover w-full"
         fit="-moz-initial"
         onClick={handelOpenImage}
       />
-      {isContent == businesses._id && onClose ? (
+      {isContent == businesses._id &&
+      onClose &&
+      businesses.status === "accepted" ? (
         <Content
           content={businesses}
           onDelete={onDelete}
