@@ -11,16 +11,24 @@ import {
   IconSearch,
   IconUser,
 } from "@tabler/icons-react";
-import { Link, NavLink } from "react-router-dom";
-import { getLocalStorage } from "../../services/LocalStorageService";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+} from "../../services/LocalStorageService";
 
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
+  const navigate = useNavigate();
   const userData = {
     name: getLocalStorage("name"),
     email: getLocalStorage("email"),
     phone: getLocalStorage("phone"),
   };
+  function logOut() {
+    removeLocalStorage("userId");
+    navigate("/login");
+  }
 
   return (
     <nav className="bg-gray-450 px-3 py-4 flex justify-between items-center">
@@ -63,7 +71,11 @@ const NavBar = () => {
                 </p>
               </div>
             </Menu.Item>
-            <Menu.Item color="red" leftSection={<IconLogout />}>
+            <Menu.Item
+              onClick={logOut}
+              color="red"
+              leftSection={<IconLogout />}
+            >
               Logout
             </Menu.Item>
           </Menu.Dropdown>
