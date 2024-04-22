@@ -1,13 +1,6 @@
 import { useMediaQuery } from "react-responsive";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  Drawer,
-  Button,
-  Menu,
-  Text,
-  UnstyledButton,
-  Title,
-} from "@mantine/core";
+import { Drawer, Button, Menu, Text, UnstyledButton } from "@mantine/core";
 import { MdMenu } from "react-icons/md";
 import { SiGooglemybusiness } from "react-icons/si";
 import { IoNotifications } from "react-icons/io5";
@@ -83,93 +76,6 @@ function OwnerProfile() {
               }}
               style={{ color: "#584D3A" }}
             />
-            {/* <Menu
-              withArrow
-              position="bottom-end"
-              shadow="md"
-              width={350}
-              transitionProps={{
-                transition: "scale",
-                duration: 150,
-              }}
-            >
-              <Menu.Target>
-                <UnstyledButton className="hover:opacity-80">
-                  <IoNotifications
-                    className=" h-8 w-8"
-                    style={{ color: "#584D3A" }}
-                  />
-                </UnstyledButton>
-              </Menu.Target>
-
-              <Menu.Dropdown>
-                <Menu.Label>Requests</Menu.Label>
-                <Menu.Item>
-                  <div className="flex gap-y-1">
-                    <div className="flex flex-col gap-x-1">
-                      <div className="flex gap-x-1">
-                        {" "}
-                        <Text className="text-md text-primary font-bold">
-                          Business Name
-                        </Text>
-                      </div>
-                      <div className="flex gap-x-1">
-                        <Text className="text-sm font-bold">Customer: </Text>
-                        <Text className="text-sm">Hossam</Text>
-                      </div>
-                    </div>
-                    <div className="w-full h-full flex justify-end">
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
-                          fill="currentColor"
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </Menu.Item>
-                <Menu.Item>
-                  <div className="flex gap-y-1">
-                    <div className="flex flex-col gap-x-1">
-                      <div className="flex gap-x-1">
-                        {" "}
-                        <Text className="text-md text-primary font-bold">
-                          Business Name
-                        </Text>
-                      </div>
-                      <div className="flex gap-x-1">
-                        <Text className="text-sm font-bold">Customer: </Text>
-                        <Text className="text-sm">Khaled</Text>
-                      </div>
-                    </div>
-                    <div className="w-full h-full flex justify-end">
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
-                          fill="currentColor"
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu> */}
             <Menu
               withArrow
               position="bottom-end"
