@@ -23,6 +23,9 @@ import { MdEdit } from "react-icons/md";
 import StaticMap from "../../components/StaticMap/StaticMap";
 import ReviewBody from "./ReviewBody";
 import StarRating from "./StarRating";
+import { useNavigate } from "react-router-dom";
+import { IoNotifications } from "react-icons/io5";
+// import Business from "./Business";
 function Content({
   content,
   onDelete,
@@ -36,6 +39,7 @@ function Content({
   onNavigate: NavigateFunction;
   onUploadLogo: (image: File, _id: string) => void;
 }) {
+  const navigate = useNavigate();
   const [selectedButton, setSelectedButton] = useState(1);
   const [opened, { open, close }] = useDisclosure(false);
   const [data, setData] = useState({ rating: "" });
@@ -118,7 +122,29 @@ function Content({
           ))}
         </div>
       </Modal>
-      <div className="flex grid grid-cols-8 px-3 mx-3.5 mt-4">
+      <div className="flex grid grid-cols-9 px-3 mx-3.5 mt-4">
+        <div className="col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center">
+          <UnstyledButton
+            className="text-white hover:text-primary flex justify-center pb-2 w-full h-full"
+            onClick={() => {
+              navigate("/request", {
+                state: {
+                  id: content._id,
+                  businessName: content.businessName,
+                },
+              });
+            }}
+          >
+            <span>
+              {" "}
+              <IoNotifications
+                className="hover:opacity-80 h-8 w-8"
+                onClick={() => {}}
+                style={{ color: "#584D3A" }}
+              />
+            </span>
+          </UnstyledButton>
+        </div>
         <div
           className={
             selectedButton == 1

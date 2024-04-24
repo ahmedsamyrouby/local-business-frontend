@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Drawer, Button, Menu, Text, UnstyledButton } from "@mantine/core";
 import { MdMenu } from "react-icons/md";
 import { SiGooglemybusiness } from "react-icons/si";
-import { IoNotifications } from "react-icons/io5";
+// import { IoNotifications } from "react-icons/io5";
 import { IoSettings } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
 import { CgArrowsExchangeAlt } from "react-icons/cg";
@@ -69,13 +69,7 @@ function OwnerProfile() {
               }}
               style={{ color: "#584D3A" }}
             />
-            <IoNotifications
-              className="hover:opacity-80 h-8 w-8"
-              onClick={() => {
-                navigate("/request");
-              }}
-              style={{ color: "#584D3A" }}
-            />
+
             <Menu
               withArrow
               position="bottom-end"
