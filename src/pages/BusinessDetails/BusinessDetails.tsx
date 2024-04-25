@@ -27,6 +27,7 @@ import { getLocalStorage } from "../../services/LocalStorageService";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import StaticMap from "../../components/StaticMap/StaticMap";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -211,9 +212,23 @@ const BusinessDetails = () => {
                     <ActionIcon size={"xl"}>
                       <IconMessage />
                     </ActionIcon>
-                    <ActionIcon size={"xl"}>
-                      <IconShare />
-                    </ActionIcon>
+                    <CopyToClipboard
+                      text={window.location.href}
+                      onCopy={() => {
+                        notifications.show({
+                          message: "Link copied to clipboard",
+                          autoClose: 2000,
+                          icon: <IconSquareCheck />,
+                          classNames: {
+                            icon: "bg-transparent text-green-500",
+                          },
+                        });
+                      }}
+                    >
+                      <ActionIcon size={"xl"}>
+                        <IconShare />
+                      </ActionIcon>
+                    </CopyToClipboard>
                   </div>
                 </div>
               </div>
