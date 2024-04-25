@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Drawer, Menu } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Drawer, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -9,6 +9,7 @@ import {
   IconMessage,
   IconPhone,
   IconSearch,
+  IconStar,
   IconUser,
 } from "@tabler/icons-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import {
   getLocalStorage,
   removeLocalStorage,
 } from "../../services/LocalStorageService";
+import { getInitials } from "../../utils";
 
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
@@ -53,7 +55,14 @@ const NavBar = () => {
           }}
         >
           <Menu.Target>
-            <Button leftSection={<IconUser />} className="bg-white/20 text-md">
+            <Button
+              leftSection={
+                <Avatar size={"sm"} color="white">
+                  {userData.name ? getInitials(userData.name) : null}
+                </Avatar>
+              }
+              className="bg-white/20 text-md"
+            >
               {userData.name}
             </Button>
           </Menu.Target>
@@ -71,10 +80,15 @@ const NavBar = () => {
                 </p>
               </div>
             </Menu.Item>
+            <Menu.Item color="black" leftSection={<IconStar size={18} />}>
+              <NavLink to={"/favorites"} className="text-black">
+                Favorites
+              </NavLink>
+            </Menu.Item>
             <Menu.Item
               onClick={logOut}
               color="red"
-              leftSection={<IconLogout />}
+              leftSection={<IconLogout size={18} />}
             >
               Logout
             </Menu.Item>
@@ -89,13 +103,17 @@ const NavBar = () => {
             content: "flex flex-col space-between",
             body: "flex flex-col justify-between h-full",
           }}
+          size={"lg"}
           opened={mobileNavOpened}
           onClose={close}
           position={"right"}
         >
-          <div className="flex flex-col gap-4 text-xl">
+          <div className="flex flex-col gap-4 text-md">
             <div className="mb-3">
-              <Drawer.Title className="text-[1.5rem] font-semibold mb-2">
+              <Drawer.Title className="text-lg font-semibold mb-2 p-3 flex gap-3 justify-center items-center bg-gray-100">
+                <Avatar color="#99896B">
+                  {userData.name ? getInitials(userData.name) : null}
+                </Avatar>
                 {userData.name}
               </Drawer.Title>
               <div className="flex flex-col gap justify-center">
@@ -127,6 +145,13 @@ const NavBar = () => {
               onClick={close}
             >
               <IconMessage /> Chat
+            </NavLink>
+            <NavLink
+              to={"/favorites"}
+              className={"flex gap-1 items-center"}
+              onClick={close}
+            >
+              <IconStar /> Favorites
             </NavLink>
           </div>
           <div>

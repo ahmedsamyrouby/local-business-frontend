@@ -1,12 +1,9 @@
-import { ActionIcon, Badge, Button, Image, Rating } from "@mantine/core";
+import { Badge, Button, Image } from "@mantine/core";
 import {
   IconArrowRight,
-  IconBookmark,
   IconMapPin,
-  IconShare,
 } from "@tabler/icons-react";
 
-import Spinneys from "../../assets/images/spinneys-logo.jpg";
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../constants";
