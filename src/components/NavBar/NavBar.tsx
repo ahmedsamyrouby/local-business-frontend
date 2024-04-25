@@ -10,9 +10,8 @@ import {
   IconPhone,
   IconSearch,
   IconStar,
-  IconUser,
 } from "@tabler/icons-react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   getLocalStorage,
   removeLocalStorage,
@@ -21,6 +20,7 @@ import { getInitials } from "../../utils";
 
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
+  const location = useLocation();
   const navigate = useNavigate();
   const userData = {
     name: getLocalStorage("name"),
@@ -80,10 +80,17 @@ const NavBar = () => {
                 </p>
               </div>
             </Menu.Item>
-            <Menu.Item color="black" leftSection={<IconStar size={18} />}>
-              <NavLink to={"/favorites"} className="text-black">
-                Favorites
-              </NavLink>
+            <Menu.Item
+              color="black"
+              onClick={() => navigate("/favorites")}
+              leftSection={<IconStar size={18} />}
+              className={
+                location.pathname.includes("favorites")
+                  ? "text-primary bg-primary/15"
+                  : ""
+              }
+            >
+              Favorites
             </Menu.Item>
             <Menu.Item
               onClick={logOut}
