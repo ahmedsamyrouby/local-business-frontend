@@ -6,6 +6,7 @@ import {
   FileButton,
   Modal,
   UnstyledButton,
+  Badge,
 } from "@mantine/core";
 import { GoPlusCircle } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
@@ -50,6 +51,7 @@ function Content({
     fourStarCount: "",
     fiveStarCount: "",
   });
+  const [notificationsNumber, setNotificationNumber] = useState(0);
   async function getRating() {
     try {
       const response = await axios.get(
@@ -72,9 +74,24 @@ function Content({
       console.log(err);
     }
   }
+  async function getRequestsOfServicesNumber() {
+    await axios
+      .get(`http://localhost:3011/businessOwner/getAllService/${content._id}`)
+      .then((res) => {
+        let number: number = 0;
+        res.data.data.map((req: { approvalStatus: string }) => {
+          if (req.approvalStatus === "Pending") {
+            number = number + 1;
+          }
+        });
+
+        setNotificationNumber(number);
+      });
+  }
   useEffect(() => {
     getRating();
     getRatingCount();
+    getRequestsOfServicesNumber();
   }, []);
   const totalRate: number =
     Number(data2.oneStarCount) +
@@ -135,13 +152,19 @@ function Content({
               });
             }}
           >
-            <span>
-              {" "}
+            <span className="text-end mb-10">
               <IoNotifications
                 className="hover:opacity-80 h-8 w-8"
                 onClick={() => {}}
                 style={{ color: "#584D3A" }}
               />
+              <div style={{ marginTop: "-50px" }}>
+                {notificationsNumber ? (
+                  <Badge size="xs" circle className="bg-red-600">
+                    {notificationsNumber}
+                  </Badge>
+                ) : null}
+              </div>
             </span>
           </UnstyledButton>
         </div>
