@@ -1,6 +1,44 @@
 import { Text, Button } from "@mantine/core";
 import StaticMap from "../StaticMap/StaticMap";
-function RequestMap({ coordinates }: { coordinates: never[] }) {
+import axios from "axios";
+import { BASE_URL } from "../../constants";
+function RequestMap({
+  req,
+  getRequestsOfServices,
+  setShowMap,
+  setMap,
+}: {
+  req: {
+    id: string;
+    coordinates: never[];
+  };
+  getRequestsOfServices: () => Promise<void>;
+  setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
+  setMap: React.Dispatch<
+    React.SetStateAction<{
+      id: string;
+      coordinates: never[];
+    }>
+  >;
+}) {
+  async function responseOnRequest(response: string) {
+    await axios({
+      method: "put",
+      url: `${BASE_URL}/businessOwner/updateStatus/${req.id}`,
+      data: {
+        status: response === "Accepte" ? "In Progress" : "Completed",
+        approvalStatus: `${response}d`,
+      },
+    })
+      .then(() => {
+        getRequestsOfServices();
+        setShowMap(false);
+        setMap({ id: "", coordinates: [] });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return (
     <>
       <div className="w-full content-center ">
@@ -12,8 +50,22 @@ function RequestMap({ coordinates }: { coordinates: never[] }) {
             Do you want to take this request?
           </Text>
           <div className="flex justify-center gap-x-1">
-            <Button className="bg-green-600 hover:opacity-80">Accepte</Button>
-            <Button className="bg-red-600 hover:opacity-80">Reject</Button>
+            <Button
+              className="bg-green-600 hover:opacity-80"
+              onClick={(event) => {
+                responseOnRequest(event.currentTarget.innerText);
+              }}
+            >
+              Accepte
+            </Button>
+            <Button
+              className="bg-red-600 hover:opacity-80"
+              onClick={(event) => {
+                responseOnRequest(event.currentTarget.innerText);
+              }}
+            >
+              Decline
+            </Button>
           </div>
         </div>
       </div>
@@ -21,8 +73,8 @@ function RequestMap({ coordinates }: { coordinates: never[] }) {
         {" "}
         <StaticMap
           location={{
-            lat: coordinates[0],
-            lng: coordinates[1],
+            lat: req.coordinates[0],
+            lng: req.coordinates[1],
           }}
         />
       </div>

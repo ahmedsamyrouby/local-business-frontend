@@ -1,4 +1,4 @@
-import { Title, ScrollArea } from "@mantine/core";
+import { Title, ScrollArea, Text } from "@mantine/core";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ function Requests() {
   const [data, setData] = useState([]);
   const locationData = useLocation();
   const [showMap, setShowMap] = useState(false);
-  const [map, setMap] = useState([]);
+  const [map, setMap] = useState({ id: "", coordinates: [] });
   const comingData = locationData.state;
 
   async function getRequestsOfServices() {
@@ -53,31 +53,45 @@ function Requests() {
         <Title className="text-center text-white m-4">Requests</Title>
         <ScrollArea className="w-full h-full">
           <div className="flex flex-col gap-y-0.5 m-1">
-            {data.map((req: requestBody) =>
-              req.approvalStatus == "Pending" ? (
-                <div
-                  onClick={() => {
-                    setMap(req.coordinates);
-                    setShowMap(false);
-                    setTimeout(() => {
-                      setShowMap(true);
-                    }, 1000);
-                  }}
-                >
-                  <RequestCard
-                    key={req._id}
-                    // id={req._id}
-                    data={req}
-                    businessName={comingData.businessName}
-                  />
-                </div>
-              ) : null
+            {data.map(
+              (req: requestBody) =>
+                req.approvalStatus === "Pending" ? (
+                  <div
+                    onClick={() => {
+                      setMap({ id: req._id, coordinates: req.coordinates });
+                      console.log(map);
+                      setShowMap(false);
+                      setTimeout(() => {
+                        setShowMap(true);
+                      }, 1000);
+                    }}
+                  >
+                    <RequestCard
+                      key={req._id}
+                      // id={req._id}
+                      data={req}
+                      businessName={comingData.businessName}
+                    />
+                  </div>
+                ) : null
+              // ) : (
+              //   <div className="flex justify-center text-white">
+              //     <Text>Empty of Requests</Text>
+              //   </div>
+              // )
             )}
           </div>
         </ScrollArea>
       </div>
       <div className="backGround flex w-full h-screen  ">
-        {showMap ? <RequestMap coordinates={map} /> : null}
+        {showMap ? (
+          <RequestMap
+            req={map}
+            getRequestsOfServices={getRequestsOfServices}
+            setShowMap={setShowMap}
+            setMap={setMap}
+          />
+        ) : null}
       </div>
     </div>
   );
