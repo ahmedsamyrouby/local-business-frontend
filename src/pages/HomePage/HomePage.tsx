@@ -64,7 +64,7 @@ const HomePage = () => {
           latitude: (userLocation as LatLng).lat,
           longitude: (userLocation as LatLng).lng,
           minDistance: 0,
-          maxDistance: 1000000,
+          maxDistance: 100000,
         },
       }
     );
@@ -199,8 +199,8 @@ const HomePage = () => {
           containScroll="trimSnaps"
           withControls={recommendedBusinesses.length > 5}
         >
-          {recommendedBusinesses.map((business) => (
-            <Carousel.Slide>
+          {recommendedBusinesses.map((business, idx) => (
+            <Carousel.Slide key={idx}>
               <BusinessCard key={business._id} business={business} />
             </Carousel.Slide>
           ))}

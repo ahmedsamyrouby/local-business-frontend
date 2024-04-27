@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
 import {
+  IconAlertTriangle,
   IconBookmark,
   IconBuilding,
   IconClock,
@@ -166,6 +167,34 @@ const BusinessDetails = () => {
     setAddReviewLoading(false);
   };
 
+  const addToFavorites = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/Customer/favorites/${customerId}/${id}`
+      );
+
+      if (res.status === 201) {
+        notifications.show({
+          message: "Business added to favorites successfully",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+      }
+    } catch (error: any) {
+      notifications.show({
+        message: error.response.data.error,
+        autoClose: 2000,
+        icon: <IconAlertTriangle />,
+        classNames: {
+          icon: "bg-transparent text-yellow-500",
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     getBusiness();
     getBusinessRating();
@@ -206,7 +235,7 @@ const BusinessDetails = () => {
                     </Button>
                   </div>
                   <div className="flex gap-2 justify-between items-center">
-                    <ActionIcon size={"xl"}>
+                    <ActionIcon size={"xl"} onClick={addToFavorites}>
                       <IconBookmark />
                     </ActionIcon>
                     <ActionIcon size={"xl"}>
