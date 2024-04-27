@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { BusinessCardProps } from "../BusinessCard/BusinessCard";
 import { BASE_URL } from "../../constants";
 import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
-import { ActionIcon, Badge, Image } from "@mantine/core";
+import { ActionIcon, Badge, Image, Rating } from "@mantine/core";
 
 const CompactBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const CompactBusinessCard = ({ business }: BusinessCardProps) => {
           <IconMapPin size={"16px"} />
           <p className="text-gray-600 ml-1">{business.Country}</p>
         </div>
-        {/* <Rating value={3} size={"sm"} /> */}
+        {business.rate && <Rating value={business.rate} size={"sm"} />}
         <div className="flex justify-between gap-1 items-center">
           <Badge
             radius={"sm"}

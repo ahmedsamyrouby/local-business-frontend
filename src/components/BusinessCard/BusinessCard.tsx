@@ -1,8 +1,5 @@
-import { Badge, Button, Image } from "@mantine/core";
-import {
-  IconArrowRight,
-  IconMapPin,
-} from "@tabler/icons-react";
+import { Badge, Button, Image, Rating } from "@mantine/core";
+import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
 
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +9,9 @@ export type Business = {
   _id: string;
   businessName: string;
   category: string;
-  Country: string;
+  country: string;
   logo: string;
+  rate?: number;
 };
 
 export interface BusinessCardProps {
@@ -51,10 +49,14 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
         <h1 className="text-2xl font-bold">{business.businessName}</h1>
         <div className="flex items-center mb-2">
           <IconMapPin size={"18px"} />
-          <p className="text-gray-600 ml-2">{business.Country}</p>
+          <p className="text-gray-600 ml-2">{business.country}</p>
         </div>
         <div className="flex items-center mb-2">
-          {/* <Rating value={3} size={"md"} /> */}
+          {business.rate ? (
+            <Rating value={business.rate} size={"md"} fractions={2} />
+          ) : (
+            <span className="h-5"></span>
+          )}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -123,11 +125,14 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
             <h1 className="text-xl font-bold">{business.businessName}</h1>
             <div className="flex items-center gap-1 text-gray-500">
               <IconMapPin size={"18px"} />
-              <p className="text-sm">{business.Country}</p>
+              <p className="text-sm">{business.country}</p>
             </div>
           </div>
-          {/* TODO - get real business rating */}
-          {/* <Rating value={3} size={"md"} /> */}
+          {business.rate ? (
+            <Rating value={business.rate} size={"md"} fractions={2} />
+          ) : (
+            <span className="h-5"></span>
+          )}
           <Badge
             radius={"sm"}
             className="z-2 text-[10px] border border-primary max-w-40"

@@ -19,6 +19,7 @@ import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { transformBusinesses } from "../../utils";
 
 const Explore = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -30,7 +31,7 @@ const Explore = () => {
     message: "",
     code: 0,
   });
-  const [businesses, setBusinesses] = useState<any>([]);
+  const [businesses, setBusinesses] = useState<Array<Business>>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const baseUrl = BASE_URL;
 
@@ -45,15 +46,16 @@ const Explore = () => {
       // handle searching when a filter is selected
       if (selectedFilter) {
         setBusinesses(
-          res.data.businesses.filter(
-            (business: Business) => business.category === selectedFilter
+          transformBusinesses(
+            res.data.businesses.filter(
+              (business: Business) => business.category === selectedFilter
+            )
           )
         );
       } else {
-        setBusinesses(res.data.businesses);
+        setBusinesses(transformBusinesses(res.data.businesses));
       }
       setIsError({ status: false, message: "", code: 0 });
-      console.log(res.data.businesses);
     } catch (err: any) {
       setIsError({
         status: true,
@@ -71,7 +73,7 @@ const Explore = () => {
       const res = await axios.get(
         `${baseUrl}/customer/filterbycategory/${selected}`
       );
-      setBusinesses(res.data.businesses);
+      setBusinesses(transformBusinesses(res.data.businesses));
       setSearchQuery("");
       setIsError({ status: false, message: "", code: 0 });
     } catch (err: any) {

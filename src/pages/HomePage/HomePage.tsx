@@ -12,11 +12,14 @@ import {
 import { BASE_URL } from "../../constants";
 import { ActionIcon, Button, Divider, Loader } from "@mantine/core";
 import { IconTarget } from "@tabler/icons-react";
-import BusinessCard from "../../components/BusinessCard/BusinessCard";
+import BusinessCard, {
+  Business,
+} from "../../components/BusinessCard/BusinessCard";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
-import { mockBusinesses } from "../Favourites/Favorites";
 import CompactBusinessCard from "../../components/CompactBusinessCard/CompactBusinessCard";
+import { getLocalStorage } from "../../services/LocalStorageService";
+import { transformBusinesses } from "../../utils";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -48,6 +51,10 @@ const HomePage = () => {
   const [nearbyBusinesses, setNearbyBusinesses] = useState([] as any[]);
   const mapRef = useRef<any>(null);
   const navigate = useNavigate();
+  const userId = getLocalStorage("userId");
+  const [recommendedBusinesses, setRecommendedBusinesses] = useState<
+    Array<Business>
+  >([]);
 
   const getNearbyBusinesses = async () => {
     const nearbyBusinesses = await axios.get(
@@ -57,12 +64,19 @@ const HomePage = () => {
           latitude: (userLocation as LatLng).lat,
           longitude: (userLocation as LatLng).lng,
           minDistance: 0,
-          maxDistance: 100000,
+          maxDistance: 1000000,
         },
       }
     );
 
     setNearbyBusinesses(nearbyBusinesses.data.data);
+  };
+
+  const getRecommendedBusinesses = async () => {
+    const recommendedBusinesses = await axios.get(
+      `${BASE_URL}/Customer/recommend/${userId}`
+    );
+    setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
   };
 
   useEffect(() => {
@@ -80,6 +94,12 @@ const HomePage = () => {
       getNearbyBusinesses();
     }
   }, [userLocation]);
+
+  useEffect(() => {
+    if (userId) {
+      getRecommendedBusinesses();
+    }
+  }, []);
 
   if (loading)
     return (
@@ -172,13 +192,14 @@ const HomePage = () => {
           Recommended <span className="text-primary">For You</span>
         </h2>
         <Carousel
-          slideSize={{ base: "100%", sm: "50%", md: "20%" }}
-          slideGap={{ base: 0, sm: "md" }}
+          slideSize={{ base: "100%", xs: "50%", md: "20%" }}
+          slideGap={{ base: 0, xs: "md" }}
           align="start"
           draggable
           containScroll="trimSnaps"
+          withControls={recommendedBusinesses.length > 5}
         >
-          {mockBusinesses.map((business) => (
+          {recommendedBusinesses.map((business) => (
             <Carousel.Slide>
               <BusinessCard key={business._id} business={business} />
             </Carousel.Slide>
