@@ -1,81 +1,47 @@
+import { useEffect, useState } from "react";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
-
-export const mockBusinesses: Array<Business> = [
-  {
-    _id: "1",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "2",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "3",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "4",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "5",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "6",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "7",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "8",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-  {
-    _id: "9",
-    businessName: "Business Name",
-    category: "Category",
-    Country: "Country",
-    logo: "https://via.placeholder.com/150",
-  },
-];
+import { getLocalStorage } from "../../services/LocalStorageService";
+import { transformBusinesses } from "../../utils";
+import axios from "axios";
+import { BASE_URL } from "../../constants";
+import { Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const Favorites = () => {
+  const [favorites, setFavorites] = useState<Array<Business>>([]);
+  const userId = getLocalStorage("userId");
+  const navigate = useNavigate();
+
+  const getFavorites = async () => {
+    const res = await axios.get(`${BASE_URL}/customer/GetFavorites/${userId}`);
+    setFavorites(transformBusinesses(res.data));
+  };
+
+  useEffect(() => {
+    getFavorites();
+  }, []);
+
   return (
     <div className="w-full min-h-screen bg-gray-900 px-4 relative">
-      <div className="py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {mockBusinesses.map((business) => (
-          <BusinessCard key={business._id} business={business} />
-        ))}
-      </div>
+      {favorites.length === 0 ? (
+        <div className="w-full h-screen flex-center flex-col gap-4">
+          <h1 className="text-2xl text-white">No favorites yet</h1>
+          <Button onClick={() => navigate("/explore")}>
+            Explore Businesses
+          </Button>
+        </div>
+      ) : (
+        <div className="w-full p-4 flex justify-around">
+          <h1 className="text-2xl text-white">Favorites</h1>
+          <div className="py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {favorites.map((business) => (
+              <BusinessCard key={business._id} business={business} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
