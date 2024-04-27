@@ -16,7 +16,7 @@ export type Business = {
   logo: string;
 };
 
-interface BusinessCardProps {
+export interface BusinessCardProps {
   business: Business;
 }
 

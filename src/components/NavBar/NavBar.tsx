@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Button, Drawer, Menu } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Divider, Drawer, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -131,6 +131,7 @@ const NavBar = () => {
                   <IconPhone size={18} /> {userData.phone}
                 </div>
               </div>
+              <Divider className="my-3" />
             </div>
             <NavLink
               to={"/"}

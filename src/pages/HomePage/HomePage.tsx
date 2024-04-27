@@ -16,6 +16,7 @@ import BusinessCard from "../../components/BusinessCard/BusinessCard";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
 import { mockBusinesses } from "../Favourites/Favorites";
+import CompactBusinessCard from "../../components/CompactBusinessCard/CompactBusinessCard";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -99,7 +100,7 @@ const HomePage = () => {
             </h2>
             <div className="py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {nearbyBusinesses.map((business) => (
-                <BusinessCard key={business._id} business={business} />
+                <CompactBusinessCard key={business._id} business={business} />
               ))}
             </div>
           </div>
@@ -171,45 +172,17 @@ const HomePage = () => {
           Recommended <span className="text-primary">For You</span>
         </h2>
         <Carousel
-          slideSize={{ base: "100%", sm: "50%", md: "25%" }}
+          slideSize={{ base: "100%", sm: "50%", md: "20%" }}
           slideGap={{ base: 0, sm: "md" }}
           align="start"
           draggable
           containScroll="trimSnaps"
         >
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[0]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[1]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[2]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[3]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[4]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[5]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[6]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[7]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[8]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[0]} />
-          </Carousel.Slide>
-          <Carousel.Slide>
-            <BusinessCard business={mockBusinesses[0]} />
-          </Carousel.Slide>
+          {mockBusinesses.map((business) => (
+            <Carousel.Slide>
+              <BusinessCard key={business._id} business={business} />
+            </Carousel.Slide>
+          ))}
         </Carousel>
       </div>
     </div>
