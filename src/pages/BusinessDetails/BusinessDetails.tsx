@@ -3,6 +3,7 @@ import { Carousel } from "@mantine/carousel";
 import {
   IconAlertTriangle,
   IconBookmark,
+  IconBookmarkFilled,
   IconBuilding,
   IconClock,
   IconMapPin,
@@ -29,6 +30,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import StaticMap from "../../components/StaticMap/StaticMap";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { transformBusinesses } from "../../utils";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -60,6 +62,8 @@ const BusinessDetails = () => {
   ] = useDisclosure(false);
   const customerId = getLocalStorage("userId");
   const [addReviewLoading, setAddReviewLoading] = useState(false);
+  const userId = getLocalStorage("userId");
+  const [isFavorite, setIsFavorites] = useState<boolean>(false);
 
   const getBusiness = async () => {
     const res = await axios.get(`${BASE_URL}/customer/getBusinessById/${id}`);
@@ -182,6 +186,42 @@ const BusinessDetails = () => {
             icon: "bg-transparent text-green-500",
           },
         });
+        setIsFavorites(true);
+      }
+    } catch (error: any) {
+      notifications.show({
+        message: error.response.data.error,
+        autoClose: 2000,
+        icon: <IconAlertTriangle />,
+        classNames: {
+          icon: "bg-transparent text-yellow-500",
+        },
+      });
+    }
+  };
+
+  const getFavorites = async () => {
+    const res = await axios.get(`${BASE_URL}/customer/GetFavorites/${userId}`);
+    const favoriteBusiness = transformBusinesses(res.data.favoriteBusinesses);
+    setIsFavorites(favoriteBusiness.some((business) => business._id === id));
+  };
+
+  const deleteFromFavorites = async () => {
+    try {
+      const res = await axios.delete(
+        `${BASE_URL}/Customer/DeleteFavorites/${customerId}/${id}`
+      );
+
+      if (res.status === 200) {
+        notifications.show({
+          message: "Business removed from favorites successfully",
+          autoClose: 2000,
+          icon: <IconSquareCheck />,
+          classNames: {
+            icon: "bg-transparent text-green-500",
+          },
+        });
+        setIsFavorites(false);
       }
     } catch (error: any) {
       notifications.show({
@@ -197,6 +237,7 @@ const BusinessDetails = () => {
 
   useEffect(() => {
     getBusiness();
+    getFavorites();
     getBusinessRating();
   }, []);
 
@@ -235,9 +276,15 @@ const BusinessDetails = () => {
                     </Button>
                   </div>
                   <div className="flex gap-2 justify-between items-center">
-                    <ActionIcon size={"xl"} onClick={addToFavorites}>
-                      <IconBookmark />
-                    </ActionIcon>
+                    {isFavorite ? (
+                      <ActionIcon size={"xl"} onClick={deleteFromFavorites}>
+                        <IconBookmarkFilled />
+                      </ActionIcon>
+                    ) : (
+                      <ActionIcon size={"xl"} onClick={addToFavorites}>
+                        <IconBookmark />
+                      </ActionIcon>
+                    )}
                     <ActionIcon size={"xl"}>
                       <IconMessage />
                     </ActionIcon>
