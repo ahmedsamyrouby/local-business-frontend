@@ -38,7 +38,10 @@ const Favorites = () => {
     <div className="w-full min-h-screen bg-gray-900 px-4 relative">
       {favorites.length === 0 ? (
         <div className="w-full h-screen flex-center flex-col gap-4">
-          <h1 className="text-2xl text-white">No favorites yet</h1>
+          <h1 className="text-2xl text-white">
+            You have no{" "}
+            <span className="text-primary font-semibold">Favorites</span> yet...
+          </h1>
           <Button onClick={() => navigate("/explore")}>
             Explore Businesses
           </Button>

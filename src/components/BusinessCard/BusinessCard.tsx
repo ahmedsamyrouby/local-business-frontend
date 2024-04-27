@@ -53,7 +53,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
         </div>
         <div className="flex items-center mb-2">
           {business.rate ? (
-            <Rating value={business.rate} size={"md"} fractions={2} />
+            <Rating value={business.rate} size={"md"} fractions={2} readOnly />
           ) : (
             <span className="h-5"></span>
           )}
@@ -129,7 +129,7 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
             </div>
           </div>
           {business.rate ? (
-            <Rating value={business.rate} size={"md"} fractions={2} />
+            <Rating value={business.rate} size={"md"} fractions={2} readOnly />
           ) : (
             <span className="h-5"></span>
           )}
@@ -155,3 +155,4 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
 };
 
 export default BusinessCard;
+export { DesktopBusinessCard, MobileBusinessCard };

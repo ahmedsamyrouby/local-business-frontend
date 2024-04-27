@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
 import {
   IconAlertTriangle,
@@ -31,6 +31,10 @@ import { notifications } from "@mantine/notifications";
 import StaticMap from "../../components/StaticMap/StaticMap";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { transformBusinesses } from "../../utils";
+import {
+  Business,
+  MobileBusinessCard,
+} from "../../components/BusinessCard/BusinessCard";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -64,6 +68,10 @@ const BusinessDetails = () => {
   const [addReviewLoading, setAddReviewLoading] = useState(false);
   const userId = getLocalStorage("userId");
   const [isFavorite, setIsFavorites] = useState<boolean>(false);
+  const [recommendedBusinesses, setRecommendedBusinesses] = useState<
+    Array<Business>
+  >([]);
+  const location = useLocation();
 
   const getBusiness = async () => {
     const res = await axios.get(`${BASE_URL}/customer/getBusinessById/${id}`);
@@ -94,6 +102,11 @@ const BusinessDetails = () => {
     }
     closeRequestService();
     requestServiceForm.reset();
+  };
+
+  const getRecommendedBusinesses = async () => {
+    const res = await axios.get(`${BASE_URL}/Customer/recommend/${userId}`);
+    setRecommendedBusinesses(transformBusinesses(res.data));
   };
 
   const addReview = async (values: {
@@ -239,7 +252,8 @@ const BusinessDetails = () => {
     getBusiness();
     getFavorites();
     getBusinessRating();
-  }, []);
+    getRecommendedBusinesses();
+  }, [location.pathname]);
 
   return (
     <div className="w-full min-h-screen bg-gray-900 overflow-hidden">
@@ -388,33 +402,47 @@ const BusinessDetails = () => {
           )}
         </div>
         <Divider className="border-t-white/80" />
-
-        {business.reviews && (
-          <>
-            <div className="w-full p-5 flex justify-between items-center">
-              <h1 className="text-white text-2xl font-bold">Reviews</h1>
-              <Button rightSection={<IconPlus />} onClick={openAddReview}>
-                Add Review
-              </Button>
+        <div className="flex">
+          {business.reviews && (
+            <div className="w-2/3 me-5">
+              <div className="w-full p-5 flex justify-between items-center">
+                <h1 className="text-white text-2xl font-bold">Reviews</h1>
+                <Button rightSection={<IconPlus />} onClick={openAddReview}>
+                  Add Review
+                </Button>
+              </div>
+              {business.reviews.length ? (
+                <div className="rounded overflow-hidden mb-10">
+                  {business.reviews.map((review: Review, idx: number) => (
+                    <>
+                      <ReviewCard key={review._id} review={review} />
+                      {idx !== business.reviews.length - 1 && (
+                        <Divider className="border-t-gray-900" />
+                      )}
+                    </>
+                  ))}
+                </div>
+              ) : (
+                <div className="w-full h-40 flex items-center justify-center">
+                  <p className="text-white/80 text-lg">No reviews yet</p>
+                </div>
+              )}
             </div>
-            {business.reviews.length ? (
-              <div className="rounded overflow-hidden mb-10">
-                {business.reviews.map((review: Review, idx: number) => (
-                  <>
-                    <ReviewCard key={review._id} review={review} />
-                    {idx !== business.reviews.length - 1 && (
-                      <Divider className="border-t-gray-900" />
-                    )}
-                  </>
+          )}
+          <Divider className="border-l-white/80" orientation="vertical" />
+          {recommendedBusinesses && (
+            <div className="w-1/3 p-5">
+              <h1 className="text-white text-2xl font-bold">
+                Recommended <span className="text-primary">For You</span>
+              </h1>
+              <div className="flex flex-col gap-2">
+                {recommendedBusinesses.map((business: Business) => (
+                  <MobileBusinessCard key={business._id} business={business} />
                 ))}
               </div>
-            ) : (
-              <div className="w-full h-40 flex items-center justify-center">
-                <p className="text-white/80 text-lg">No reviews yet</p>
-              </div>
-            )}
-          </>
-        )}
+            </div>
+          )}
+        </div>
       </div>
 
       <Modal
