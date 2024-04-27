@@ -9,11 +9,13 @@ import {
   TileLayer,
   useMap,
 } from "react-leaflet";
-import { BASE_URL} from "../../constants";
+import { BASE_URL } from "../../constants";
 import { ActionIcon, Button, Divider, Loader } from "@mantine/core";
 import { IconTarget } from "@tabler/icons-react";
 import BusinessCard from "../../components/BusinessCard/BusinessCard";
 import { useNavigate } from "react-router-dom";
+import { Carousel } from "@mantine/carousel";
+import { mockBusinesses } from "../Favourites/Favorites";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -86,7 +88,7 @@ const HomePage = () => {
     );
 
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-900 p-8">
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (
           <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-white/5">
@@ -163,8 +165,53 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      <Divider className="border-t-white/80 p-4 w-[95%] m-auto" />
-      <div></div>
+      <Divider className="border-t-white/80" />
+      <div className="py-6 flex flex-col gap-6">
+        <h2 className="text-3xl font-bold text-white">
+          Recommended <span className="text-primary">For You</span>
+        </h2>
+        <Carousel
+          slideSize={{ base: "100%", sm: "50%", md: "25%" }}
+          slideGap={{ base: 0, sm: "md" }}
+          align="start"
+          draggable
+          containScroll="trimSnaps"
+        >
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[0]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[1]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[2]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[3]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[4]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[5]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[6]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[7]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[8]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[0]} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <BusinessCard business={mockBusinesses[0]} />
+          </Carousel.Slide>
+        </Carousel>
+      </div>
     </div>
   );
 };
