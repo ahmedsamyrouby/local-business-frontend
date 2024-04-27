@@ -2,7 +2,7 @@ import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
 
-const mockBusinesses: Business[] = [
+export const mockBusinesses: Array<Business> = [
   {
     _id: "1",
     businessName: "Business Name",

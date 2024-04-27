@@ -9,9 +9,11 @@ import {
   TileLayer,
   useMap,
 } from "react-leaflet";
-import { BASE_URL, MAP_TOKEN } from "../../constants";
-import { ActionIcon } from "@mantine/core";
+import { BASE_URL} from "../../constants";
+import { ActionIcon, Button, Divider, Loader } from "@mantine/core";
 import { IconTarget } from "@tabler/icons-react";
+import BusinessCard from "../../components/BusinessCard/BusinessCard";
+import { useNavigate } from "react-router-dom";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -32,9 +34,7 @@ const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
 };
 
 // TODO: Add types for businesses
-// TODO: Add Navbar
 // TODO: Refine the Popup
-// TODO: Improve the isPM function
 // TODO: Handle Loading and Error states
 
 const HomePage = () => {
@@ -44,6 +44,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [nearbyBusinesses, setNearbyBusinesses] = useState([] as any[]);
   const mapRef = useRef<any>(null);
+  const navigate = useNavigate();
 
   const getNearbyBusinesses = async () => {
     const nearbyBusinesses = await axios.get(
@@ -53,7 +54,7 @@ const HomePage = () => {
           latitude: (userLocation as LatLng).lat,
           longitude: (userLocation as LatLng).lng,
           minDistance: 0,
-          maxDistance: 1000000,
+          maxDistance: 100000,
         },
       }
     );
@@ -77,53 +78,93 @@ const HomePage = () => {
     }
   }, [userLocation]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="w-full h-screen flex-center bg-gray-900">
+        <Loader size="xl" color="#99896B" />
+      </div>
+    );
 
   return (
-    <div className="h-screen w-full relative">
-      <MapContainer
-        center={userLocation}
-        className="w-full h-full"
-        zoom={17}
-        minZoom={12}
-        ref={mapRef}
-      >
-        <TileLayer
-          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
-        />
-
-        {userLocation && (
-          <CircleMarker
-            center={userLocation}
-            color={"#ffffff"}
-            fillColor="#0975ce"
-            fillRule="evenodd"
-            fillOpacity={1}
-          />
-        )}
-
-        {nearbyBusinesses.map((business, index) => {
-          return (
-            <Marker
-              key={index}
-              position={{
-                lat: business.business.coordinates[0],
-                lng: business.business.coordinates[1],
-              }}
+    <div className="bg-gray-900">
+      <div className="w-full p-4 flex justify-around">
+        {nearbyBusinesses.length > 0 ? (
+          <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-white/5">
+            <h2 className={"text-3xl mb-2 font-bold text-white"}>
+              <span className="text-primary">{nearbyBusinesses.length}</span>
+              {nearbyBusinesses.length > 1 ? " Businesses" : " Business"} Found
+              Near You. Explore Now!
+            </h2>
+            <div className="py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {nearbyBusinesses.map((business) => (
+                <BusinessCard key={business._id} business={business} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="w-1/2 max-h-[700px] p-12 bg-white/5 flex-center flex-col gap-4">
+            <h2 className="text-3xl font-bold text-white">
+              No Businesses Found Near You. Explore Now!
+            </h2>
+            <Button
+              className="bg-primary text-white p-4 rounded-md h-auto"
+              size="lg"
+              onClick={() => navigate("/explore")}
             >
-              <Popup>
-                <h1 className="font-bold text-xl text-sky-400">
-                  {business.businessName}
-                </h1>
-                <p>{business.category}</p>
-                <p>{business.description}</p>
-              </Popup>
-            </Marker>
-          );
-        })}
-        <ResetButton userLocation={userLocation as LatLngExpression} />
-      </MapContainer>
+              Explore
+            </Button>
+          </div>
+        )}
+        <div className="p-28">
+          <div className="max-w-[500px] w-[500px] max-h-[500px] h-[500px]">
+            <MapContainer
+              center={userLocation}
+              className="w-full h-full"
+              zoom={17}
+              minZoom={12}
+              ref={mapRef}
+            >
+              <TileLayer
+                attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
+              />
+
+              {userLocation && (
+                <CircleMarker
+                  center={userLocation}
+                  color={"#ffffff"}
+                  fillColor="#0975ce"
+                  fillRule="evenodd"
+                  fillOpacity={1}
+                />
+              )}
+
+              {nearbyBusinesses.map((business, index) => {
+                return (
+                  <Marker
+                    key={index}
+                    position={{
+                      lat: business.business.coordinates[0],
+                      lng: business.business.coordinates[1],
+                    }}
+                  >
+                    <Popup>
+                      <h1 className="font-bold text-xl text-sky-400">
+                        {business.businessName}
+                      </h1>
+                      <p>{business.category}</p>
+                      <p>{business.description}</p>
+                    </Popup>
+                  </Marker>
+                );
+              })}
+              <ResetButton userLocation={userLocation as LatLngExpression} />
+            </MapContainer>
+          </div>
+        </div>
+      </div>
+      <Divider className="border-t-white/80 p-4 w-[95%] m-auto" />
+      <div></div>
     </div>
   );
 };

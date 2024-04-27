@@ -18,3 +18,19 @@
 a.active {
   @apply text-primary font-semibold;
 }
+
+.styled-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
