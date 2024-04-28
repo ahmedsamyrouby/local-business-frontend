@@ -30,3 +30,12 @@ export interface businessContent {
     }
   ];
 }
+export interface requestBody {
+  _id: string;
+  requestDetails: string;
+  name: string;
+  phone: string;
+  coordinates: never[];
+  status: string;
+  approvalStatus: string;
+}

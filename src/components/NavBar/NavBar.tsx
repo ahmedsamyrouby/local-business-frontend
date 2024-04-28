@@ -29,6 +29,7 @@ const NavBar = () => {
   };
   function logOut() {
     removeLocalStorage("userId");
+    removeLocalStorage("userToken");
     navigate("/login");
   }
 
