@@ -5,6 +5,8 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../constants";
 
+import marketPlaceholder from "../../assets/images/market.png";
+
 export type Business = {
   _id: string;
   businessName: string;
@@ -39,11 +41,19 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
       }}
     >
       <div className="relative">
-        <Image
-          src={`${BASE_URL}/${business.logo}`}
-          alt={business.businessName}
-          className="w-full h-64 object-cover"
-        />
+        {business.logo.length > 0 ? (
+          <Image
+            src={`${BASE_URL}/${business.logo}`}
+            alt={business.businessName}
+            className="w-full h-64 object-cover"
+          />
+        ) : (
+          <Image
+            src={marketPlaceholder}
+            alt={business.businessName}
+            className="w-full h-64 object-contain p-4"
+          />
+        )}
       </div>
       <div className="p-4">
         <h1 className="text-2xl font-bold">{business.businessName}</h1>
@@ -107,10 +117,17 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
     >
       <div className="flex gap-2">
         <div className="min-w-24 max-w-28 h-full rounded-sm overflow-hidden relative">
-          <Image
-            className={"object-cover h-full w-full"}
-            src={`${BASE_URL}/${business.logo}`}
-          />
+          {business.logo.length > 0 ? (
+            <Image
+              className={"object-cover h-full w-full"}
+              src={`${BASE_URL}/${business.logo}`}
+            />
+          ) : (
+            <Image
+              className={"object-contain bg-white h-full w-full p-4"}
+              src={marketPlaceholder}
+            />
+          )}
           {/* TODO - Add "Open now" and "Closed" Badge depending on working hours */}
           {/* <Badge
                 radius={"sm"}

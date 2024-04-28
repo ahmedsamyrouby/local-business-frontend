@@ -35,6 +35,7 @@ import {
   Business,
   MobileBusinessCard,
 } from "../../components/BusinessCard/BusinessCard";
+import marketPlaceholder from "../../assets/images/market.png";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -187,7 +188,7 @@ const BusinessDetails = () => {
   const addToFavorites = async () => {
     try {
       const res = await axios.post(
-        `${BASE_URL}/Customer/favorites/${customerId}/${id}`
+        `${BASE_URL}/Customer/addtofavorites/${customerId}/${id}`
       );
 
       if (res.status === 201) {
@@ -278,10 +279,17 @@ const BusinessDetails = () => {
             <div className="flex gap-6">
               <div className="space-y-2">
                 <div className="rounded overflow-hidden w-44 max-h-44">
-                  <img
-                    className="w-full h-full object-cover"
-                    src={`${BASE_URL}/${business.logo}`}
-                  />
+                  {business.logo.length > 0 ? (
+                    <img
+                      className="w-full h-full object-cover"
+                      src={`${BASE_URL}/${business.logo}`}
+                    />
+                  ) : (
+                    <img
+                      className="w-full h-full bg-white object-contain p-4"
+                      src={marketPlaceholder}
+                    />
+                  )}
                 </div>
                 <div className="space-y-2">
                   <div>

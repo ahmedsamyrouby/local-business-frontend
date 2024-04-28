@@ -4,6 +4,8 @@ import { BASE_URL } from "../../constants";
 import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
 import { ActionIcon, Badge, Image, Rating } from "@mantine/core";
 
+import marketPlaceholder from "../../assets/images/market.png";
+
 const CompactBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
 
@@ -13,11 +15,19 @@ const CompactBusinessCard = ({ business }: BusinessCardProps) => {
       onClick={() => navigate(`/explore/${business._id}`)}
     >
       <div className="relative">
-        <Image
-          src={`${BASE_URL}/${business.logo}`}
-          alt={business.businessName}
-          className="w-full h-40 object-cover"
-        />
+        {business.logo.length > 0 ? (
+          <Image
+            src={`${BASE_URL}/${business.logo}`}
+            alt={business.businessName}
+            className="w-full h-40 object-cover"
+          />
+        ) : (
+          <Image
+            src={marketPlaceholder}
+            alt={business.businessName}
+            className="w-full h-40 object-contain p-4"
+          />
+        )}
       </div>
       <div className="p-2">
         <h1 className="text-lg font-bold">{business.businessName}</h1>
