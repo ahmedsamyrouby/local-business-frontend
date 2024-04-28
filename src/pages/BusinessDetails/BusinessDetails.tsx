@@ -279,7 +279,7 @@ const BusinessDetails = () => {
             <div className="flex gap-6">
               <div className="space-y-2">
                 <div className="rounded overflow-hidden w-44 max-h-44">
-                  {business.logo.length > 0 ? (
+                  {business?.logo?.length! > 0 ? (
                     <img
                       className="w-full h-full object-cover"
                       src={`${BASE_URL}/${business.logo}`}

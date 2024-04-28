@@ -15,7 +15,7 @@ const CompactBusinessCard = ({ business }: BusinessCardProps) => {
       onClick={() => navigate(`/explore/${business._id}`)}
     >
       <div className="relative">
-        {business.logo.length > 0 ? (
+        {business?.logo?.length! > 0 ? (
           <Image
             src={`${BASE_URL}/${business.logo}`}
             alt={business.businessName}

@@ -41,7 +41,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
       }}
     >
       <div className="relative">
-        {business.logo.length > 0 ? (
+        {business?.logo?.length! > 0 ? (
           <Image
             src={`${BASE_URL}/${business.logo}`}
             alt={business.businessName}
@@ -117,7 +117,7 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
     >
       <div className="flex gap-2">
         <div className="min-w-24 max-w-28 h-full rounded-sm overflow-hidden relative">
-          {business.logo.length > 0 ? (
+          {business?.logo?.length! > 0 ? (
             <Image
               className={"object-cover h-full w-full"}
               src={`${BASE_URL}/${business.logo}`}
