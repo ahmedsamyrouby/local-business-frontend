@@ -475,16 +475,18 @@ function Content({
                   </tr>
                 </thead>
                 <tbody className="border-b-2 border-white">
-                  {content.reviews.map((review) => (
-                    <ReviewBody
-                      userName={review.userName}
-                      review={review.content}
-                      time={review.timestamp}
-                      reviewId={review._id}
-                      customerId={review.customerId}
-                      content={content}
-                    />
-                  ))}
+                  {content.reviews.map((review) =>
+                    review.content ? (
+                      <ReviewBody
+                        userName={review.userName}
+                        review={review.content}
+                        time={review.timestamp}
+                        reviewId={review._id}
+                        customerId={review.customerId}
+                        content={content}
+                      />
+                    ) : null
+                  )}
                 </tbody>
               </table>
             )}

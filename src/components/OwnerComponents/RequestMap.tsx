@@ -22,11 +22,12 @@ function RequestMap({
   >;
 }) {
   async function responseOnRequest(response: string) {
+    console.log(req);
     await axios({
       method: "put",
       url: `${BASE_URL}/businessOwner/updateStatus/${req.id}`,
       data: {
-        status: response === "Accepte" ? "In Progress" : "Completed",
+        newStatus: response === "Accepte" ? "In Progress" : "Completed",
         approvalStatus: `${response}d`,
       },
     })
