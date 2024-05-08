@@ -104,6 +104,10 @@ const Explore = () => {
     }
   }, [selectedFilter]);
 
+  useEffect(() => {
+    document.title = "Explore";
+  });
+
   return (
     <div className="w-full min-h-screen bg-gray-900 px-4 relative">
       <div className="bg-gray-900 sticky top-0 z-10 pt-4 pb-2 flex flex-col gap-2">

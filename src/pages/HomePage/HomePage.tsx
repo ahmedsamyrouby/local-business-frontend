@@ -87,6 +87,7 @@ const HomePage = () => {
       });
       setLoading(false);
     });
+    document.title = "Homepage"
   }, []);
 
   useEffect(() => {

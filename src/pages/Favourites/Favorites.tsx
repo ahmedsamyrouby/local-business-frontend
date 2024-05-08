@@ -24,6 +24,7 @@ const Favorites = () => {
 
   useEffect(() => {
     getFavorites();
+    document.title = "Favorites"
   }, []);
 
   if (loading) {

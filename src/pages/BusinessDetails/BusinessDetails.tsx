@@ -256,6 +256,12 @@ const BusinessDetails = () => {
     getRecommendedBusinesses();
   }, [location.pathname]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      document.title = business.businessName;
+    }, 1000);
+  }, [business]);
+
   return (
     <div className="w-full min-h-screen bg-gray-900 overflow-hidden">
       {business.media && business.media.length > 0 && (
