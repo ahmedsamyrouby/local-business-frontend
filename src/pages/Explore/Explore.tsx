@@ -99,7 +99,7 @@ const Explore = () => {
   useEffect(() => {
     if (selectedFilter === null) {
       filterBusinesses("");
-    } else {
+    } else if (searchQuery === "" && selectedFilter !== "") {
       filterBusinesses(selectedFilter);
     }
   }, [selectedFilter]);
