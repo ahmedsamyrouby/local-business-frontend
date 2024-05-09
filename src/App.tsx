@@ -4,27 +4,14 @@ import { Notifications } from "@mantine/notifications";
 import { MantineProvider, createTheme } from "@mantine/core";
 
 const theme = createTheme({
-  primaryColor: "primary-brown",
-  colors: {
-    "primary-brown": [
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-      "#99896B",
-    ],
-  },
+  primaryColor: "cyan",
+  fontFamily: 'Inter, sans-serif',
 });
 
 function App() {
   return (
     <>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={theme} forceColorScheme="light">
         <BrowserRouter>
           <Notifications />
           <AppRouter />
