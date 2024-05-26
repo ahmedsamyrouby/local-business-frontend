@@ -12,7 +12,7 @@ import SetupOwnerInfo from "../pages/SetupProfile/SetUpOwnerInfo";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Explore from "../pages/Explore/Explore";
 import BusinessDetails from "../pages/BusinessDetails/BusinessDetails";
-import Layout from "../layout/Layout";
+import CustomerLayout from "../layout/CustomerLayout";
 import CustomerChat from "../pages/CustomerChat/CustomerChat";
 import OwnerLayout from "../layout/ownerLayout";
 import Requests from "../pages/OwnerProfile/Request";
@@ -37,7 +37,7 @@ export default function AppRouter() {
         <Route path="/setupProfile" element={<SetupOwnerInfo />} />
         <Route path="/changePassword" element={<ChangePassword />} />
       </Route>
-      <Route element={<Layout />}>
+      <Route element={<CustomerLayout />}>
         <Route index element={<HomePage />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/explore/:id" element={<BusinessDetails />} />
