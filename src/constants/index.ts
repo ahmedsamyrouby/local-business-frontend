@@ -6,12 +6,12 @@ export const BUSINESS_CATEGORIES = [
   "Health and Beauty Services",
   "Medical and Healthcare Services",
   "Tourism and Hospitality",
-  "Education and Training Centers:",
+  "Education and Training Centers",
   "Real Estate and Construction",
   "Arts and Entertainment",
   "Home Services",
   "Auto Services",
-  "BookStore",
+  "Book Store",
   "Other",
 ];
 

@@ -9,8 +9,17 @@ import {
   TileLayer,
   useMap,
 } from "react-leaflet";
-import { BASE_URL } from "../../constants";
-import { ActionIcon, Button, Divider, Loader } from "@mantine/core";
+import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants";
+import {
+  ActionIcon,
+  Button,
+  Card,
+  Divider,
+  Loader,
+  Title,
+  Image,
+  Text,
+} from "@mantine/core";
 import { IconTarget } from "@tabler/icons-react";
 import BusinessCard, {
   Business,
@@ -20,6 +29,19 @@ import { Carousel } from "@mantine/carousel";
 import CompactBusinessCard from "../../components/CompactBusinessCard/CompactBusinessCard";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import { transformBusinesses } from "../../utils";
+
+// Business Category Illustrations
+import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
+import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
+import BookStoreIll from "../../assets/categories-art/book-store.svg";
+import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
+import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
+import HomeServicesIll from "../../assets/categories-art/home-services.svg";
+import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
+import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
+import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
+import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
+import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -87,7 +109,7 @@ const HomePage = () => {
       });
       setLoading(false);
     });
-    document.title = "Homepage"
+    document.title = "Homepage";
   }, []);
 
   useEffect(() => {
@@ -105,12 +127,64 @@ const HomePage = () => {
   if (loading)
     return (
       <div className="w-full h-screen flex-center bg-gray-900">
-        <Loader size="xl" color="#99896B" />
+        <Loader size="xl" />
       </div>
     );
 
   return (
     <div className="bg-gray-900 p-8">
+      <div className="m-2 space-y-4">
+        <Title order={2} className="text-white">
+          Categories
+        </Title>
+        <Carousel
+          slideSize={"auto"}
+          slideGap={{ base: "xl", sm: "md" }}
+          align="start"
+          draggable
+          containScroll="trimSnaps"
+          className="px-12"
+        >
+          {BUSINESS_CATEGORIES.slice(0, BUSINESS_CATEGORIES.length - 1).map(
+            (category, idx) => (
+              <Carousel.Slide key={idx} className="flex">
+                <Card
+                  className="flex-center gap-4 p-5 text-white text-center bg-white/5 h-[200px] w-[200px]"
+                  shadow="sm"
+                  radius="md"
+                >
+                  <Text>{category}</Text>
+                  <div>
+                    <Image
+                      className="w-24 h-24 object-contain"
+                      src={
+                        {
+                          "Restaurants and Cafés": RestaurantsAndCafesIll,
+                          "Retail Stores": RetailStoresIll,
+                          "Health and Beauty Services": HealthAndBeautyIll,
+                          "Medical and Healthcare Services":
+                            MedicalAndHealthcareIll,
+                          "Tourism and Hospitality": TourismAndHospitalityIll,
+                          "Education and Training Centers":
+                            EducationAndTrainingIll,
+                          "Real Estate and Construction":
+                            RealEstateAndConstructionIll,
+                          "Arts and Entertainment": ArtsAndEntertainmentIll,
+                          "Home Services": HomeServicesIll,
+                          "Auto Services": AutoServicesIll,
+                          "Book Store": BookStoreIll,
+                        }[category]
+                      }
+                      alt={category}
+                    />
+                  </div>
+                </Card>
+              </Carousel.Slide>
+            )
+          )}
+        </Carousel>
+      </div>
+      <Divider className="border-t-white/80" />
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (
           <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-white/5">
