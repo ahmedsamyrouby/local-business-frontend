@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Button, Divider, Drawer, Menu } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Divider, Drawer, Menu, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -34,15 +34,15 @@ const NavBar = () => {
   }
 
   return (
-    <nav className="bg-gray-450 px-3 py-4 flex justify-between items-center">
+    <nav className="bg-white border-b px-3 py-4 flex justify-between items-center">
       <div>
-        <Link to={"/"} className="text-xl font-bold text-gray-200 flex gap-2">
-          <IconBriefcase size={26} />
-          Local Businesses
+        <Link to={"/"} className="text-xl font-bold flex items-center gap-2">
+          <IconBriefcase className="text-primary" size={26} />
+          <Title order={3} >Local Businesses</Title>
         </Link>
       </div>
       {/* DESKTOP NAV */}
-      <div className="text-white hidden md:flex gap-4 items-center">
+      <div className="text-gray-900 hidden md:flex gap-4 items-center">
         <NavLink to={"/"} className={"h-max"}>
           Home
         </NavLink>
@@ -58,11 +58,11 @@ const NavBar = () => {
           <Menu.Target>
             <Button
               leftSection={
-                <Avatar size={"sm"} color="white">
+                <Avatar size={"sm"} color="black">
                   {userData.name ? getInitials(userData.name) : null}
                 </Avatar>
               }
-              className="bg-white/20 text-md"
+              className="bg-white/20 text-gray-900 text-md"
             >
               {userData.name}
             </Button>

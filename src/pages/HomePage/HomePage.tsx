@@ -122,19 +122,19 @@ const HomePage = () => {
     if (userId) {
       getRecommendedBusinesses();
     }
-  }, []);
+  }, []); 
 
   if (loading)
     return (
-      <div className="w-full h-screen flex-center bg-gray-900">
+      <div className="w-full h-screen flex-center bg-white">
         <Loader size="xl" />
       </div>
     );
 
   return (
-    <div className="bg-gray-900 p-8">
+    <div className="bg-white p-8">
       <div className="m-2 space-y-4">
-        <Title order={2} className="text-white">
+        <Title order={2}>
           Categories
         </Title>
         <Carousel
@@ -149,7 +149,7 @@ const HomePage = () => {
             (category, idx) => (
               <Carousel.Slide key={idx} className="flex">
                 <Card
-                  className="flex-center gap-4 p-5 text-white text-center bg-white/5 h-[200px] w-[200px]"
+                  className="flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px]"
                   shadow="sm"
                   radius="md"
                 >
@@ -187,8 +187,8 @@ const HomePage = () => {
       <Divider className="border-t-white/80" />
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (
-          <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-white/5">
-            <h2 className={"text-3xl mb-2 font-bold text-white"}>
+          <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-black/5">
+            <h2 className={"text-3xl mb-2 font-bold"}>
               <span className="text-primary">{nearbyBusinesses.length}</span>
               {nearbyBusinesses.length > 1 ? " Businesses" : " Business"} Found
               Near You. Explore Now!
@@ -200,8 +200,8 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          <div className="w-1/2 max-h-[700px] p-12 bg-white/5 flex-center flex-col gap-4">
-            <h2 className="text-3xl font-bold text-white">
+          <div className="w-1/2 max-h-[700px] p-12 bg-black/5 flex-center flex-col gap-4">
+            <h2 className="text-3xl font-bold">
               No Businesses Found Near You. Explore Now!
             </h2>
             <Button
@@ -263,7 +263,7 @@ const HomePage = () => {
       </div>
       <Divider className="border-t-white/80" />
       <div className="py-6 flex flex-col gap-6">
-        <h2 className="text-3xl font-bold text-white">
+        <h2 className="text-3xl font-bold">
           Recommended <span className="text-primary">For You</span>
         </h2>
         <Carousel
