@@ -402,13 +402,13 @@ const BusinessDetails = () => {
           {business.business && (
             <div>
               <a
-                href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
+                href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[1]},${business.business.coordinates[0]}`}
                 target="_blank"
               >
                 <StaticMap
                   location={{
-                    lat: business.business.coordinates[0],
-                    lng: business.business.coordinates[1],
+                    lat: business.business.coordinates[1],
+                    lng: business.business.coordinates[0],
                   }}
                 />
               </a>

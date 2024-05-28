@@ -347,8 +347,8 @@ const HomePage = () => {
                   <Marker
                     key={index}
                     position={{
-                      lat: business.business.coordinates[0],
-                      lng: business.business.coordinates[1],
+                      lat: business.business.coordinates[1],
+                      lng: business.business.coordinates[0],
                     }}
                   >
                     <Popup>
