@@ -19,8 +19,19 @@ import {
   Title,
   Image,
   Text,
+  Container,
+  Input,
+  Select,
+  List,
+  ThemeIcon,
+  Box,
 } from "@mantine/core";
-import { IconTarget } from "@tabler/icons-react";
+import {
+  IconArrowBigLeftFilled,
+  IconArrowBigRightFilled,
+  IconCheck,
+  IconTarget,
+} from "@tabler/icons-react";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
@@ -42,6 +53,8 @@ import RealEstateAndConstructionIll from "../../assets/categories-art/real-estat
 import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
 import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
 import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
+
+import heroImage from "../../assets/hero-image.svg";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -122,7 +135,7 @@ const HomePage = () => {
     if (userId) {
       getRecommendedBusinesses();
     }
-  }, []); 
+  }, []);
 
   if (loading)
     return (
@@ -132,18 +145,77 @@ const HomePage = () => {
     );
 
   return (
-    <div className="bg-white p-8">
-      <div className="m-2 space-y-4">
-        <Title order={2}>
-          Categories
-        </Title>
+    <Container fluid className="bg-white p-8">
+      <Box className="flex justify-around items-center mb-10">
+        <div className="w-1/2 flex flex-col gap-8">
+          <div>
+            <Title className={"text-5xl mb-2"}>
+              Discover{" "}
+              <span className="bg-primary/25 py-1 px-3 rounded-md">
+                local businesses
+              </span>{" "}
+              <br />
+              near you
+            </Title>
+            <Text className="text-gray-400 pe-5">
+              From hidden gems to well-known favorites, our comprehensive
+              listings and user reviews make it easy to find the perfect local
+              business for your needs. Whether it's dining, shopping, or
+              professional services, we've got you covered with trustworthy
+              recommendations.
+            </Text>
+          </div>
+          <div>
+            <List
+              spacing="sm"
+              size="sm"
+              icon={
+                <ThemeIcon size={20} radius="xl">
+                  <IconCheck style={{ width: 12, height: 12 }} stroke={1.5} />
+                </ThemeIcon>
+              }
+            >
+              <List.Item>
+                <b>Wide Range of Listings</b> – Find restaurants, shops, and
+                services.
+              </List.Item>
+              <List.Item>
+                <b>Trusted Customer Reviews</b> – Read reviews from other
+                customers.
+              </List.Item>
+              <List.Item>
+                <b>Quick and Easy Search</b> – Find what you need in no time.
+              </List.Item>
+              <List.Item>
+                <b>Trusted Recommendations</b> – Discover local favorites and
+                hidden gems.
+              </List.Item>
+            </List>
+          </div>
+          <div className="p-3 rounded-md bg-black/5 flex gap-1">
+            <Input placeholder="Enter business name..." className="flex-grow" />
+            <Select placeholder="Category" data={[...BUSINESS_CATEGORIES]} />
+            <Button>Search</Button>
+          </div>
+        </div>
+        <div className="w-[600px]">
+          <Image src={heroImage} />
+        </div>
+      </Box>
+      <Box className="space-y-4 px-10 mb-10">
+        <Title order={2}>Categories</Title>
         <Carousel
           slideSize={"auto"}
           slideGap={{ base: "xl", sm: "md" }}
           align="start"
           draggable
           containScroll="trimSnaps"
-          className="px-12"
+          nextControlIcon={<IconArrowBigRightFilled className="text-gray-900" />}
+          previousControlIcon={<IconArrowBigLeftFilled className="text-gray-900" />}
+          classNames={{
+            control: "h-full bg-black/10 flex rounded-none p-3 shadow-lg border-0",
+            controls: "h-full top-0 p-0 rounded-md overflow-hidden",
+          }}
         >
           {BUSINESS_CATEGORIES.slice(0, BUSINESS_CATEGORIES.length - 1).map(
             (category, idx) => (
@@ -183,7 +255,7 @@ const HomePage = () => {
             )
           )}
         </Carousel>
-      </div>
+      </Box>
       <Divider className="border-t-white/80" />
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (
@@ -281,7 +353,7 @@ const HomePage = () => {
           ))}
         </Carousel>
       </div>
-    </div>
+    </Container>
   );
 };
 
