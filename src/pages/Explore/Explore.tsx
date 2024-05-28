@@ -5,6 +5,8 @@ import {
   Badge,
   Drawer,
   Select,
+  Pagination,
+  Box,
 } from "@mantine/core";
 import {
   IconCircleXFilled,
@@ -18,8 +20,10 @@ import axios from "axios";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery, usePagination } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
+
+const paginationLimits = ["10", "25", "50", "100"];
 
 const Explore = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -34,47 +38,36 @@ const Explore = () => {
   const [businesses, setBusinesses] = useState<Array<Business>>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const baseUrl = BASE_URL;
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, onPaginationChange] = useState(1);
+  const pagination = usePagination({
+    page,
+    onChange: onPaginationChange,
+    total: totalPages,
+  });
+  const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
 
-  const searchBusinesses = async () => {
-    window.scrollTo(0, 0); // scroll to top of the page when searching
+  const searchBusinesses = async (
+    page: number,
+    limit: number,
+    category?: (typeof BUSINESS_CATEGORIES)[number],
+    search?: string
+  ) => {
+    // window.scrollTo(0, 0); // scroll to top of the page when searching
     try {
       setILoading(true);
       const res = await axios.get(
-        `${baseUrl}/customer/searchBusinesses/${searchQuery}`
-      );
-
-      // handle searching when a filter is selected
-      if (selectedFilter) {
-        setBusinesses(
-          transformBusinesses(
-            res.data.businesses.filter(
-              (business: Business) => business.category === selectedFilter
-            )
-          )
-        );
-      } else {
-        setBusinesses(transformBusinesses(res.data.businesses));
-      }
-      setIsError({ status: false, message: "", code: 0 });
-    } catch (err: any) {
-      setIsError({
-        status: true,
-        message: err.response.data.message,
-        code: err.response.status,
-      });
-    } finally {
-      setILoading(false);
-    }
-  };
-
-  const filterBusinesses = async (selected: string) => {
-    try {
-      setILoading(true);
-      const res = await axios.get(
-        `${baseUrl}/customer/filterbycategory/${selected}`
+        `${baseUrl}/customer/searchBusinesses/${search || ""}`,
+        {
+          params: {
+            category: category || undefined,
+            page: page,
+            limit: limit,
+          },
+        }
       );
       setBusinesses(transformBusinesses(res.data.businesses));
-      setSearchQuery("");
+      setTotalPages(res.data.totalPages);
       setIsError({ status: false, message: "", code: 0 });
     } catch (err: any) {
       setIsError({
@@ -90,19 +83,24 @@ const Explore = () => {
   useEffect(() => {
     // debounce the search and clean up after unmount
     const timeout = setTimeout(() => {
-      searchBusinesses();
-    }, 1000);
+      searchBusinesses(
+        page,
+        parseInt(paginationLimitSelect),
+        selectedFilter,
+        searchQuery
+      );
+    }, 800);
 
     return () => clearTimeout(timeout);
-  }, [searchQuery]);
+  }, [searchQuery, page, selectedFilter, paginationLimitSelect]);
 
   useEffect(() => {
-    if (selectedFilter === null) {
-      filterBusinesses("");
-    } else if (searchQuery === "" && selectedFilter !== "") {
-      filterBusinesses(selectedFilter);
-    }
-  }, [selectedFilter]);
+    const timeout = setTimeout(() => {
+      pagination.setPage(1);
+    }, 750);
+
+    return () => clearTimeout(timeout);
+  }, [searchQuery, selectedFilter, paginationLimitSelect]);
 
   useEffect(() => {
     document.title = "Explore";
@@ -144,6 +142,7 @@ const Explore = () => {
                 data={BUSINESS_CATEGORIES}
                 label="Category"
                 placeholder="Filter by category"
+                clearable
               />
             </div>
           </Drawer>
@@ -164,9 +163,9 @@ const Explore = () => {
           <Loader />
         </div>
       ) : (
-        <div>
+        <div className="w-full min-h-screen">
           {isError.status && isError.code === 404 ? (
-            <div className="w-full min-h-screen flex flex-col gap-1 justify-center items-center text-white">
+            <div className="flex flex-col gap-1 justify-center items-center text-white">
               <IconMoodSad size={64} />
               <h1 className="text-xl font-semibold">No businesses found</h1>
             </div>
@@ -179,6 +178,24 @@ const Explore = () => {
           )}
         </div>
       )}
+      <Box className="w-full flex-center p-5">
+        <Pagination
+          size={"xl"}
+          total={totalPages}
+          value={pagination.active}
+          onChange={pagination.setPage}
+        />
+        <Select
+          className="w-24 ml-4"
+          defaultValue={paginationLimitSelect}
+          onChange={(value) => {
+            setPaginationLimitSelect(value as string);
+          }}
+          data={paginationLimits}
+          size="md"
+          checkIconPosition="right"
+        />
+      </Box>
     </div>
   );
 };
