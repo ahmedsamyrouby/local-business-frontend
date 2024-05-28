@@ -43,7 +43,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
   console.log(business);
   return (
-    <Card withBorder className="rounded-md p-3 bg-white shadow-sm">
+    <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
       <Card.Section>
         <Image
           className="h-60"
