@@ -2,12 +2,12 @@ import {
   Loader,
   TextInput,
   ActionIcon,
-  Badge,
   Drawer,
   Select,
   Pagination,
   Box,
   Text,
+  Pill,
 } from "@mantine/core";
 import {
   IconCircleXFilled,
@@ -117,6 +117,10 @@ const Explore = () => {
     setSearchQuery("");
   }, []);
 
+  const clearFilter = useCallback(() => {
+    setSelectedFilter("");
+  }, []);
+
   const businessList = useMemo(
     () => (
       <div className="pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -136,7 +140,7 @@ const Explore = () => {
           onChange={(e) => setSearchQuery(e.currentTarget.value)}
           classNames={{
             root: "w-full border-none",
-            input: "text-white bg-gray-100",
+            input: "bg-gray-100",
           }}
           rightSection={
             searchQuery ? (
@@ -162,6 +166,7 @@ const Explore = () => {
           >
             <div>
               <Select
+                checkIconPosition="right"
                 value={selectedFilter}
                 onChange={(value) => setSelectedFilter(value as string)}
                 data={BUSINESS_CATEGORIES}
@@ -176,9 +181,15 @@ const Explore = () => {
               <Text className={"uppercase font-bold"} c="dimmed">
                 Category:{" "}
               </Text>
-              <Badge className="min-w-18 w-fit" radius={"sm"} size="lg">
+              <Pill
+                className="min-w-18 w-fit"
+                radius={"sm"}
+                size="lg"
+                withRemoveButton
+                onRemove={clearFilter}
+              >
                 {selectedFilter}
-              </Badge>
+              </Pill>
             </div>
           )}
         </div>
