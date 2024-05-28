@@ -7,6 +7,7 @@ import {
   Select,
   Pagination,
   Box,
+  Text,
 } from "@mantine/core";
 import {
   IconCircleXFilled,
@@ -128,14 +129,14 @@ const Explore = () => {
   );
 
   return (
-    <div className="w-full min-h-screen bg-gray-900 px-4 relative">
-      <div className="bg-gray-900 sticky top-0 z-10 pt-4 pb-2 flex flex-col gap-2">
+    <div className="w-full min-h-screen bg-white px-4 relative">
+      <div className="bg-white sticky top-0 z-10 pt-4 pb-2 flex flex-col gap-2">
         <TextInput
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.currentTarget.value)}
           classNames={{
             root: "w-full border-none",
-            input: "text-white bg-gray-500",
+            input: "text-white bg-gray-100",
           }}
           rightSection={
             searchQuery ? (
@@ -147,9 +148,9 @@ const Explore = () => {
           placeholder="Search for a business..."
           size="lg"
         />
-        <div className="flex gap-4">
+        <div className="flex gap-4 py-2">
           <ActionIcon className="bg-transparent" onClick={open}>
-            <IconFilter />
+            <IconFilter className="text-gray-900" />
           </ActionIcon>
           <Drawer
             offset={8}
@@ -170,16 +171,16 @@ const Explore = () => {
               />
             </div>
           </Drawer>
-          <div className="flex gap-2 justify-start items-center overflow-scroll hide-scrollbar">
-            {selectedFilter && (
-              <>
-                <span className="text-white font-semibold">Category: </span>
-                <Badge className="min-w-18 w-fit" radius={"sm"} size="lg">
-                  {selectedFilter}
-                </Badge>
-              </>
-            )}
-          </div>
+          {selectedFilter && (
+            <div className="flex-center gap-2">
+              <Text className={"uppercase font-bold"} c="dimmed">
+                Category:{" "}
+              </Text>
+              <Badge className="min-w-18 w-fit" radius={"sm"} size="lg">
+                {selectedFilter}
+              </Badge>
+            </div>
+          )}
         </div>
       </div>
       {isLoading ? (

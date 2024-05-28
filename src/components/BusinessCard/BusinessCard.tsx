@@ -43,7 +43,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
   console.log(business);
   return (
-    <Card withBorder className="rounded-md p-3 bg-white shadow-md">
+    <Card withBorder className="rounded-md p-3 bg-white shadow-sm">
       <Card.Section>
         <Image
           className="h-60"
@@ -55,7 +55,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
         />
       </Card.Section>
 
-      <Card.Section className="mt-4 border-b space-y-2 border-gray-300 px-4 pb-4">
+      <Card.Section className="mt-4 border-b space-y-2 border-gray-200 px-4 pb-4">
         <Group justify="apart">
           <Text fz="lg" fw={500}>
             {business.businessName}
@@ -70,7 +70,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
         </Text>
       </Card.Section>
 
-      <Card.Section className={"mt-2 border-b border-gray-300 px-4 pb-4"}>
+      <Card.Section className={"mt-2 border-b border-gray-200 px-4 pb-4"}>
         <Group gap={"sm"}>
           <Text mt="md" className={"uppercase text-sm font-bold"} c="dimmed">
             Category
