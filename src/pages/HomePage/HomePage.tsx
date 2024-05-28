@@ -25,11 +25,13 @@ import {
   List,
   ThemeIcon,
   Box,
+  Slider,
 } from "@mantine/core";
 import {
   IconArrowBigLeftFilled,
   IconArrowBigRightFilled,
   IconCheck,
+  IconGripHorizontal,
   IconTarget,
 } from "@tabler/icons-react";
 import BusinessCard, {
@@ -90,6 +92,7 @@ const HomePage = () => {
   const [recommendedBusinesses, setRecommendedBusinesses] = useState<
     Array<Business>
   >([]);
+  const [mapRadius, setMapRadius] = useState(1);
 
   const getNearbyBusinesses = async () => {
     const nearbyBusinesses = await axios.get(
@@ -99,7 +102,7 @@ const HomePage = () => {
           latitude: (userLocation as LatLng).lat,
           longitude: (userLocation as LatLng).lng,
           minDistance: 0,
-          maxDistance: 100000,
+          maxDistance: mapRadius * 100000,
         },
       }
     );
@@ -129,7 +132,7 @@ const HomePage = () => {
     if (userLocation) {
       getNearbyBusinesses();
     }
-  }, [userLocation]);
+  }, [userLocation, mapRadius]);
 
   useEffect(() => {
     if (userId) {
@@ -210,10 +213,15 @@ const HomePage = () => {
           align="start"
           draggable
           containScroll="trimSnaps"
-          nextControlIcon={<IconArrowBigRightFilled className="text-gray-900" />}
-          previousControlIcon={<IconArrowBigLeftFilled className="text-gray-900" />}
+          nextControlIcon={
+            <IconArrowBigRightFilled className="text-gray-900" />
+          }
+          previousControlIcon={
+            <IconArrowBigLeftFilled className="text-gray-900" />
+          }
           classNames={{
-            control: "h-full bg-black/10 flex rounded-none p-3 shadow-lg border-0",
+            control:
+              "h-full bg-black/10 flex rounded-none p-3 shadow-lg border-0",
             controls: "h-full top-0 p-0 rounded-md overflow-hidden",
           }}
         >
@@ -285,7 +293,32 @@ const HomePage = () => {
             </Button>
           </div>
         )}
-        <div className="p-28">
+        <div className="w-[540px] flex flex-col items-center gap-8 text-center">
+          <Title order={2}>
+            Discover Nearby Businesses Within{" "}
+            <span className="text-primary">{mapRadius}</span> km
+          </Title>
+          <Slider
+            className="min-w-full"
+            classNames={{
+              thumb:
+                "text-gray-200 bg-white rounded-sm border border-gray-300 w-[1.75rem] h-[1.375rem]",
+            }}
+            thumbChildren={
+              <IconGripHorizontal
+                style={{ width: 20, height: 20 }}
+                stroke={1.5}
+              />
+            }
+            showLabelOnHover
+            value={mapRadius}
+            onChange={(value) => {
+              setMapRadius(value);
+            }}
+            step={1}
+            min={1}
+            max={15}
+          />
           <div className="max-w-[500px] w-[500px] max-h-[500px] h-[500px]">
             <MapContainer
               center={userLocation}
