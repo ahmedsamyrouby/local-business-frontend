@@ -39,12 +39,7 @@ const Explore = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const baseUrl = BASE_URL;
   const [totalPages, setTotalPages] = useState(0);
-  const [page, onPaginationChange] = useState(1);
-  const pagination = usePagination({
-    page,
-    onChange: onPaginationChange,
-    total: totalPages,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
 
   const searchBusinesses = async (
@@ -79,12 +74,11 @@ const Explore = () => {
       setILoading(false);
     }
   };
-
   useEffect(() => {
     // debounce the search and clean up after unmount
     const timeout = setTimeout(() => {
       searchBusinesses(
-        page,
+        currentPage,
         parseInt(paginationLimitSelect),
         selectedFilter,
         searchQuery
@@ -92,12 +86,12 @@ const Explore = () => {
     }, 800);
 
     return () => clearTimeout(timeout);
-  }, [searchQuery, page, selectedFilter, paginationLimitSelect]);
+  }, [searchQuery, currentPage, selectedFilter, paginationLimitSelect]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      pagination.setPage(1);
-    }, 750);
+      setCurrentPage(1);
+    }, 800);
 
     return () => clearTimeout(timeout);
   }, [searchQuery, selectedFilter, paginationLimitSelect]);
@@ -181,9 +175,9 @@ const Explore = () => {
       <Box className="w-full flex-center p-5">
         <Pagination
           size={"xl"}
+          value={currentPage}
           total={totalPages}
-          value={pagination.active}
-          onChange={pagination.setPage}
+          onChange={setCurrentPage}
         />
         <Select
           className="w-24 ml-4"
