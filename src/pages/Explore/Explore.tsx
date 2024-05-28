@@ -14,13 +14,13 @@ import {
   IconMoodSad,
   IconSearch,
 } from "@tabler/icons-react";
-import { BASE_URL, BUSINESS_CATEGORIES } from "./../../constants/index";
-import { useEffect, useState } from "react";
+import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants/index";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
-import { useDisclosure, useMediaQuery, usePagination } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
 
 const paginationLimits = ["10", "25", "50", "100"];
@@ -42,40 +42,42 @@ const Explore = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
 
-  const searchBusinesses = async (
-    page: number,
-    limit: number,
-    category?: (typeof BUSINESS_CATEGORIES)[number],
-    search?: string
-  ) => {
-    // window.scrollTo(0, 0); // scroll to top of the page when searching
-    try {
-      setILoading(true);
-      const res = await axios.get(
-        `${baseUrl}/customer/searchBusinesses/${search || ""}`,
-        {
-          params: {
-            category: category || undefined,
-            page: page,
-            limit: limit,
-          },
-        }
-      );
-      setBusinesses(transformBusinesses(res.data.businesses));
-      setTotalPages(res.data.totalPages);
-      setIsError({ status: false, message: "", code: 0 });
-    } catch (err: any) {
-      setIsError({
-        status: true,
-        message: err.response.data.message,
-        code: err.response.status,
-      });
-    } finally {
-      setILoading(false);
-    }
-  };
+  const searchBusinesses = useCallback(
+    async (
+      page: number,
+      limit: number,
+      category?: (typeof BUSINESS_CATEGORIES)[number],
+      search?: string
+    ) => {
+      try {
+        setILoading(true);
+        const res = await axios.get(
+          `${baseUrl}/customer/searchBusinesses/${search || ""}`,
+          {
+            params: {
+              category: category || undefined,
+              page: page,
+              limit: limit,
+            },
+          }
+        );
+        setBusinesses(transformBusinesses(res.data.businesses));
+        setTotalPages(res.data.totalPages);
+        setIsError({ status: false, message: "", code: 0 });
+      } catch (err: any) {
+        setIsError({
+          status: true,
+          message: err.response?.data?.message || "An error occurred",
+          code: err.response?.status || 500,
+        });
+      } finally {
+        setILoading(false);
+      }
+    },
+    [baseUrl]
+  );
+
   useEffect(() => {
-    // debounce the search and clean up after unmount
     const timeout = setTimeout(() => {
       searchBusinesses(
         currentPage,
@@ -83,22 +85,47 @@ const Explore = () => {
         selectedFilter,
         searchQuery
       );
-    }, 800);
+    }, 500); // Reduced debounce time for better UX
 
     return () => clearTimeout(timeout);
-  }, [searchQuery, currentPage, selectedFilter, paginationLimitSelect]);
+  }, [
+    searchQuery,
+    currentPage,
+    selectedFilter,
+    paginationLimitSelect,
+    searchBusinesses,
+  ]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setCurrentPage(1);
-    }, 800);
+    }, 480);
 
     return () => clearTimeout(timeout);
   }, [searchQuery, selectedFilter, paginationLimitSelect]);
 
   useEffect(() => {
     document.title = "Explore";
-  });
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage, selectedFilter, paginationLimitSelect, businesses]);
+
+  const clearSearch = useCallback(() => {
+    setSearchQuery("");
+  }, []);
+
+  const businessList = useMemo(
+    () => (
+      <div className="pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {businesses.map((business: Business) => (
+          <BusinessCard key={business._id} business={business} />
+        ))}
+      </div>
+    ),
+    [businesses]
+  );
 
   return (
     <div className="w-full min-h-screen bg-gray-900 px-4 relative">
@@ -110,9 +137,12 @@ const Explore = () => {
             root: "w-full border-none",
             input: "text-white bg-gray-500",
           }}
-          rightSection={searchQuery ? <IconCircleXFilled /> : <IconSearch />}
-          rightSectionProps={
-            searchQuery ? { onClick: () => setSearchQuery("") } : {}
+          rightSection={
+            searchQuery ? (
+              <IconCircleXFilled onClick={clearSearch} />
+            ) : (
+              <IconSearch />
+            )
           }
           placeholder="Search for a business..."
           size="lg"
@@ -164,11 +194,7 @@ const Explore = () => {
               <h1 className="text-xl font-semibold">No businesses found</h1>
             </div>
           ) : (
-            <div className="pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {businesses.map((business: Business) => (
-                <BusinessCard key={business._id} business={business} />
-              ))}
-            </div>
+            businessList
           )}
         </div>
       )}
@@ -181,7 +207,7 @@ const Explore = () => {
         />
         <Select
           className="w-24 ml-4"
-          defaultValue={paginationLimitSelect}
+          value={paginationLimitSelect}
           onChange={(value) => {
             setPaginationLimitSelect(value as string);
           }}
