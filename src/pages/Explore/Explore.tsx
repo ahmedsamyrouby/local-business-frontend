@@ -40,7 +40,7 @@ const Explore = () => {
   });
   const [businesses, setBusinesses] = useState<Array<Business>>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>(
-    location.state.category || ""
+    location.state?.category || ""
   );
   const baseUrl = BASE_URL;
   const [totalPages, setTotalPages] = useState(0);
