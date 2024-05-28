@@ -1,5 +1,14 @@
-import { Badge, Button, Image, Rating } from "@mantine/core";
-import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Group,
+  Image,
+  Rating,
+  Text,
+} from "@mantine/core";
+import { IconHeart, IconMapPin } from "@tabler/icons-react";
 
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +23,7 @@ export type Business = {
   country: string;
   logo: string;
   rate?: number;
+  description?: string;
 };
 
 export interface BusinessCardProps {
@@ -31,76 +41,57 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 
 const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
+  console.log(business);
   return (
-    <article
-      key={business._id}
-      className="bg-white rounded-md shadow-lg overflow-hidden"
-      onClick={(e) => {
-        e.preventDefault();
-        navigate(`/explore/${business._id}`);
-      }}
-    >
-      <div className="relative">
-        {business?.logo?.length! > 0 ? (
-          <Image
-            src={`${BASE_URL}/${business.logo}`}
-            alt={business.businessName}
-            className="w-full h-64 object-cover"
-          />
-        ) : (
-          <Image
-            src={marketPlaceholder}
-            alt={business.businessName}
-            className="w-full h-64 object-contain p-4"
-          />
-        )}
-      </div>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">{business.businessName}</h1>
-        <div className="flex items-center mb-2">
-          <IconMapPin size={"18px"} />
-          <p className="text-gray-600 ml-2">{business.country}</p>
-        </div>
-        <div className="flex items-center mb-2">
-          {business.rate ? (
-            <Rating value={business.rate} size={"md"} fractions={2} readOnly />
-          ) : (
-            <span className="h-5"></span>
-          )}
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            {/* <ActionIcon size={32} className="bg-transparent text-primary mr-2">
-              <IconBookmark />
-            </ActionIcon>
-            <ActionIcon size={32} className="bg-transparent text-primary">
-              <IconShare />
-            </ActionIcon> */}
-            <Button
-              rightSection={<IconArrowRight />}
-              className="bg-transparent text-primary mr-2 p-0"
-            >
-              View Business
-            </Button>
-          </div>
-          <Badge
-            radius={"sm"}
-            className="z-2 text-md border border-primary max-w-40"
-            variant="light"
-            size="lg"
-          >
-            {business.category}
+    <Card withBorder className="rounded-md p-3 bg-white shadow-md">
+      <Card.Section>
+        <Image
+          className="h-60"
+          src={
+            business?.logo?.length! > 0
+              ? `${BASE_URL}/${business.logo}`
+              : marketPlaceholder
+          }
+        />
+      </Card.Section>
+
+      <Card.Section className="mt-4 border-b space-y-2 border-gray-300 px-4 pb-4">
+        <Group justify="apart">
+          <Text fz="lg" fw={500}>
+            {business.businessName}
+          </Text>
+          <Badge size="sm" variant="light" color="pink.7">
+            {business.country}
           </Badge>
-          {/* Show different badge for open/closed */}
-          {/* <Badge
-      radius={"sm"}
-      className="text-xs bg-red-700 ml-2 px-2 py-1"
-    >
-      Closed
-    </Badge> */}
-        </div>
-      </div>
-    </article>
+        </Group>
+        <Rating value={business.rate} size={"md"} fractions={2} readOnly />
+        <Text className="text-sm truncate">
+          {business.description || "No description available"}
+        </Text>
+      </Card.Section>
+
+      <Card.Section className={"mt-2 border-b border-gray-300 px-4 pb-4"}>
+        <Group gap={"sm"}>
+          <Text mt="md" className={"uppercase text-sm font-bold"} c="dimmed">
+            Category
+          </Text>
+        </Group>
+        <Badge variant="light">{business.category}</Badge>
+      </Card.Section>
+
+      <Group mt="xs">
+        <Button
+          radius="md"
+          style={{ flex: 1 }}
+          onClick={() => navigate(`/explore/${business._id}`)}
+        >
+          Show details
+        </Button>
+        <ActionIcon variant="default" radius="md" size={36}>
+          <IconHeart className={"text-pink-600"} stroke={1.5} />
+        </ActionIcon>
+      </Group>
+    </Card>
   );
 };
 

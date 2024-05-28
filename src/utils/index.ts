@@ -17,6 +17,7 @@ export const transformBusinesses = (businesses: any[]): Array<Business> => {
       country: business.Country || business.country,
       logo: business.logo[0] || business.logo,
       rate: business.totalRate,
+      description: business.description,
     };
   });
 };
