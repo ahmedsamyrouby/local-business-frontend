@@ -232,6 +232,7 @@ const HomePage = () => {
                   className="flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px]"
                   shadow="sm"
                   radius="md"
+                  onClick={() => navigate("/explore", { state: { category } })}
                 >
                   <Text>{category}</Text>
                   <div>

@@ -23,10 +23,12 @@ import BusinessCard, {
 } from "../../components/BusinessCard/BusinessCard";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
+import { useLocation } from "react-router-dom";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
 const Explore = () => {
+  const location = useLocation();
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery("(max-width: 56.25em)");
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +39,9 @@ const Explore = () => {
     code: 0,
   });
   const [businesses, setBusinesses] = useState<Array<Business>>([]);
-  const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState<string>(
+    location.state.category || ""
+  );
   const baseUrl = BASE_URL;
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -196,12 +200,12 @@ const Explore = () => {
       </div>
       {isLoading ? (
         <div className="w-full min-h-screen flex justify-center items-center">
-          <Loader />
+          <Loader size={"lg"} />
         </div>
       ) : (
         <div className="w-full min-h-screen">
           {isError.status && isError.code === 404 ? (
-            <div className="flex flex-col gap-1 justify-center items-center text-white">
+            <div className="min-h-screen flex-center flex-col gap-1 justify-center items-center text-gray-900">
               <IconMoodSad size={64} />
               <h1 className="text-xl font-semibold">No businesses found</h1>
             </div>
