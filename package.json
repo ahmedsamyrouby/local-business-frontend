@@ -20,6 +20,7 @@
     "@sweetalert2/theme-dark": "^5.0.16",
     "@tabler/icons-react": "^2.46.0",
     "axios": "^1.6.5",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
     "embla-carousel-react": "^7.1.0",
     "leaflet": "^1.9.4",
