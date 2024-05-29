@@ -57,6 +57,7 @@ import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
 import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 
 import heroImage from "../../assets/hero-image.svg";
+import { useForm } from "@mantine/form";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -75,8 +76,6 @@ const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
     </ActionIcon>
   );
 };
-
-// TODO: Add types for businesses
 // TODO: Refine the Popup
 // TODO: Handle Loading and Error states
 
@@ -93,6 +92,12 @@ const HomePage = () => {
     Array<Business>
   >([]);
   const [mapRadius, setMapRadius] = useState(1);
+  const searchForm = useForm({
+    initialValues: {
+      searchQuery: "",
+      category: "",
+    },
+  });
 
   const getNearbyBusinesses = async () => {
     const nearbyBusinesses = await axios.get(
@@ -115,6 +120,18 @@ const HomePage = () => {
       `${BASE_URL}/Customer/recommend/${userId}`
     );
     setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
+  };
+
+  const searchFormSubmit = (values: {
+    searchQuery: string;
+    category: string;
+  }) => {
+    navigate("/explore", {
+      state: {
+        search: values.searchQuery,
+        category: values.category,
+      },
+    });
   };
 
   useEffect(() => {
@@ -195,11 +212,22 @@ const HomePage = () => {
               </List.Item>
             </List>
           </div>
-          <div className="p-3 rounded-md bg-black/5 flex gap-1">
-            <Input placeholder="Enter business name..." className="flex-grow" />
-            <Select placeholder="Category" data={[...BUSINESS_CATEGORIES]} />
-            <Button>Search</Button>
-          </div>
+          <form
+            className="p-3 rounded-md bg-black/5 flex gap-1"
+            onSubmit={searchForm.onSubmit(searchFormSubmit)}
+          >
+            <Input
+              {...searchForm.getInputProps("searchQuery")}
+              placeholder="Enter business name..."
+              className="flex-grow"
+            />
+            <Select
+              {...searchForm.getInputProps("category")}
+              placeholder="Category"
+              data={[...BUSINESS_CATEGORIES]}
+            />
+            <Button type="submit">Search</Button>
+          </form>
         </div>
         <div className="w-[600px]">
           <Image src={heroImage} />

@@ -31,7 +31,7 @@ const Explore = () => {
   const location = useLocation();
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery("(max-width: 56.25em)");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(location.state?.search || "");
   const [isLoading, setILoading] = useState(true);
   const [isError, setIsError] = useState({
     status: false,
