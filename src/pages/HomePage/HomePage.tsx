@@ -8,6 +8,7 @@ import {
   Popup,
   TileLayer,
   useMap,
+  Circle
 } from "react-leaflet";
 import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants";
 import {
@@ -107,7 +108,7 @@ const HomePage = () => {
           latitude: (userLocation as LatLng).lat,
           longitude: (userLocation as LatLng).lng,
           minDistance: 0,
-          maxDistance: mapRadius * 100000,
+          maxDistance: mapRadius * 1000,
         },
       }
     );
@@ -353,7 +354,7 @@ const HomePage = () => {
               center={userLocation}
               className="w-full h-full"
               zoom={17}
-              minZoom={12}
+              // minZoom={12}
               ref={mapRef}
             >
               <TileLayer
@@ -391,6 +392,7 @@ const HomePage = () => {
                 );
               })}
               <ResetButton userLocation={userLocation as LatLngExpression} />
+              <Circle center={userLocation!} radius={mapRadius * 1000} color="white" />
             </MapContainer>
           </div>
         </div>
