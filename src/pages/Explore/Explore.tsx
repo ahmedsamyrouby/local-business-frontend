@@ -1,5 +1,4 @@
 import {
-  Loader,
   TextInput,
   // ActionIcon,
   // Drawer,
@@ -11,6 +10,7 @@ import {
   Card,
   Image,
   Title,
+  rem,
 } from "@mantine/core";
 import {
   IconArrowBigLeftFilled,
@@ -44,6 +44,7 @@ import RealEstateAndConstructionIll from "../../assets/categories-art/real-estat
 import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
 import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
 import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
+import { useHeadroom } from "@mantine/hooks";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
@@ -66,6 +67,7 @@ const Explore = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
+  const pinned = useHeadroom({ fixedAt: 140 });
 
   const searchBusinesses = useCallback(
     async (
@@ -158,7 +160,19 @@ const Explore = () => {
 
   return (
     <div className="w-full min-h-screen bg-white px-4 relative">
-      <div className="bg-white sticky top-0 z-10 pt-4 pb-2 flex flex-col gap-2">
+      <div style={{ height: rem(82+70), width: "100%" }} />
+      <div
+        className="bg-white p-4"
+        style={{
+          position: "fixed",
+          top: "70px",
+          left: 0,
+          right: 0,
+          zIndex: 1000000,
+          transform: `translate3d(0, ${pinned ? 0 : rem(-70)}, 0)`,
+          transition: "transform 150ms ease",
+        }}
+      >
         <TextInput
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.currentTarget.value)}

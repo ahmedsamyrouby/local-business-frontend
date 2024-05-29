@@ -27,6 +27,7 @@ import {
   ThemeIcon,
   Box,
   Slider,
+  rem,
 } from "@mantine/core";
 import {
   // IconArrowBigLeftFilled,
@@ -167,6 +168,7 @@ const HomePage = () => {
 
   return (
     <Container fluid className="bg-white p-8">
+      <div style={{ height: rem(70), width: "100%" }} />
       <Box className="flex justify-around items-center mb-10">
         <div className="w-1/2 flex flex-col gap-8">
           <div>
