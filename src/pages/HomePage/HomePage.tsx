@@ -13,7 +13,7 @@ import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants";
 import {
   ActionIcon,
   Button,
-  Card,
+  // Card,
   Divider,
   Loader,
   Title,
@@ -28,8 +28,8 @@ import {
   Slider,
 } from "@mantine/core";
 import {
-  IconArrowBigLeftFilled,
-  IconArrowBigRightFilled,
+  // IconArrowBigLeftFilled,
+  // IconArrowBigRightFilled,
   IconCheck,
   IconGripHorizontal,
   IconTarget,
@@ -44,17 +44,17 @@ import { getLocalStorage } from "../../services/LocalStorageService";
 import { transformBusinesses } from "../../utils";
 
 // Business Category Illustrations
-import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
-import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
-import BookStoreIll from "../../assets/categories-art/book-store.svg";
-import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
-import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
-import HomeServicesIll from "../../assets/categories-art/home-services.svg";
-import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
-import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
-import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
-import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
-import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
+// import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
+// import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
+// import BookStoreIll from "../../assets/categories-art/book-store.svg";
+// import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
+// import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
+// import HomeServicesIll from "../../assets/categories-art/home-services.svg";
+// import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
+// import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
+// import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
+// import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
+// import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 
 import heroImage from "../../assets/hero-image.svg";
 import { useForm } from "@mantine/form";
@@ -233,7 +233,7 @@ const HomePage = () => {
           <Image src={heroImage} />
         </div>
       </Box>
-      <Box className="space-y-4 px-10 mb-10">
+      {/* <Box className="space-y-4 px-10 mb-10">
         <Title order={2}>Categories</Title>
         <Carousel
           slideSize={"auto"}
@@ -292,7 +292,7 @@ const HomePage = () => {
             )
           )}
         </Carousel>
-      </Box>
+      </Box> */}
       <Divider className="border-t-white/80" />
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (

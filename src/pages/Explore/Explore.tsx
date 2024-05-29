@@ -1,17 +1,22 @@
 import {
   Loader,
   TextInput,
-  ActionIcon,
-  Drawer,
+  // ActionIcon,
+  // Drawer,
   Select,
   Pagination,
   Box,
   Text,
-  Pill,
+  // Pill,
+  Card,
+  Image,
+  Title,
 } from "@mantine/core";
 import {
+  IconArrowBigLeftFilled,
+  IconArrowBigRightFilled,
   IconCircleXFilled,
-  IconFilter,
+  // IconFilter,
   IconMoodSad,
   IconSearch,
 } from "@tabler/icons-react";
@@ -21,16 +26,30 @@ import axios from "axios";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+// import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
 import { useLocation } from "react-router-dom";
+import { Carousel } from "@mantine/carousel";
+import clsx from "clsx";
+
+import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
+import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
+import BookStoreIll from "../../assets/categories-art/book-store.svg";
+import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
+import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
+import HomeServicesIll from "../../assets/categories-art/home-services.svg";
+import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
+import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
+import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
+import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
+import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
 const Explore = () => {
   const location = useLocation();
-  const [opened, { open, close }] = useDisclosure(false);
-  const isMobile = useMediaQuery("(max-width: 56.25em)");
+  // const [opened, { open, close }] = useDisclosure(false);
+  // const isMobile = useMediaQuery("(max-width: 56.25em)");
   const [searchQuery, setSearchQuery] = useState(location.state?.search || "");
   const [isLoading, setILoading] = useState(true);
   const [isError, setIsError] = useState({
@@ -156,7 +175,7 @@ const Explore = () => {
           placeholder="Search for a business..."
           size="lg"
         />
-        <div className="flex gap-4 py-2">
+        {/* <div className="flex gap-4 py-2">
           <ActionIcon className="bg-transparent" onClick={open}>
             <IconFilter className="text-gray-900" />
           </ActionIcon>
@@ -196,8 +215,77 @@ const Explore = () => {
               </Pill>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
+      <Box className="space-y-4 mb-10">
+        <Title order={2}>Categories</Title>
+        <Carousel
+          slideSize={"auto"}
+          slideGap={{ base: "xl", sm: "md" }}
+          align="start"
+          draggable
+          containScroll="trimSnaps"
+          nextControlIcon={
+            <IconArrowBigRightFilled className="text-gray-900" />
+          }
+          previousControlIcon={
+            <IconArrowBigLeftFilled className="text-gray-900" />
+          }
+          classNames={{
+            control:
+              "h-full bg-black/10 flex rounded-none p-3 shadow-lg border-0",
+            controls: "h-full top-0 p-0 rounded-md overflow-hidden",
+          }}
+        >
+          {BUSINESS_CATEGORIES.slice(0, BUSINESS_CATEGORIES.length - 1).map(
+            (category, idx) => (
+              <Carousel.Slide key={idx} className="flex">
+                <Card
+                  className={clsx({
+                    "flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px] hover:bg-primary/30 border hover:border-primary":
+                      true,
+                    "bg-primary/20 border-primary": selectedFilter === category,
+                  })}
+                  shadow="sm"
+                  radius="md"
+                  onClick={() =>
+                    selectedFilter === category
+                      ? clearFilter()
+                      : setSelectedFilter(category)
+                  }
+                  // onClick={() => navigate("/explore", { state: { category } })}
+                >
+                  <Text>{category}</Text>
+                  <div>
+                    <Image
+                      className="w-24 h-24 object-contain"
+                      src={
+                        {
+                          "Restaurants and Cafés": RestaurantsAndCafesIll,
+                          "Retail Stores": RetailStoresIll,
+                          "Health and Beauty Services": HealthAndBeautyIll,
+                          "Medical and Healthcare Services":
+                            MedicalAndHealthcareIll,
+                          "Tourism and Hospitality": TourismAndHospitalityIll,
+                          "Education and Training Centers":
+                            EducationAndTrainingIll,
+                          "Real Estate and Construction":
+                            RealEstateAndConstructionIll,
+                          "Arts and Entertainment": ArtsAndEntertainmentIll,
+                          "Home Services": HomeServicesIll,
+                          "Auto Services": AutoServicesIll,
+                          "Book Store": BookStoreIll,
+                        }[category]
+                      }
+                      alt={category}
+                    />
+                  </div>
+                </Card>
+              </Carousel.Slide>
+            )
+          )}
+        </Carousel>
+      </Box>
       {isLoading ? (
         <div className="w-full min-h-screen flex justify-center items-center">
           <Loader size={"lg"} />
