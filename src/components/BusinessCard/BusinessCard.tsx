@@ -41,7 +41,6 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 
 const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
-  console.log(business);
   return (
     <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
       <Card.Section>
