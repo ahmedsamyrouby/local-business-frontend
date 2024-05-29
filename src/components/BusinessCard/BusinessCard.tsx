@@ -6,6 +6,7 @@ import {
   Group,
   Image,
   Rating,
+  Skeleton,
   Text,
 } from "@mantine/core";
 import { IconHeart, IconMapPin } from "@tabler/icons-react";
@@ -161,5 +162,31 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
   );
 };
 
+const BusinessCardSkeleton = () => {
+  return (
+    <Card withBorder className="rounded-md p-3 bg-gray- 100/50 shadow-sm">
+      <Card.Section>
+        <Skeleton className="h-60 rounded-md" />
+      </Card.Section>
+
+      <Card.Section className="mt-4 border-b space-y-2 border-gray-200 px-4 pb-4">
+        <Skeleton className="h-4 rounded-md" />
+        <Skeleton className="h-4 rounded-md" />
+        <Skeleton className="h-4 rounded-md" />
+      </Card.Section>
+
+      <Card.Section className={"mt-2 border-b space-y-2 border-gray-200 px-4 pb-4"}>
+        <Skeleton className="h-4 w-1/2 rounded-md" />
+        <Skeleton className="h-4 rounded-md" />
+      </Card.Section>
+
+      <Group mt="xs">
+        <Skeleton className="h-10 w-3/4 rounded-md" />
+        <Skeleton className="h-10 w-1/5 rounded-md" />
+      </Group>
+    </Card>
+  );
+};
+
 export default BusinessCard;
-export { DesktopBusinessCard, MobileBusinessCard };
+export { DesktopBusinessCard, MobileBusinessCard, BusinessCardSkeleton };

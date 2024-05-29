@@ -25,6 +25,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import BusinessCard, {
   Business,
+  BusinessCardSkeleton,
 } from "../../components/BusinessCard/BusinessCard";
 // import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
@@ -287,8 +288,8 @@ const Explore = () => {
         </Carousel>
       </Box>
       {isLoading ? (
-        <div className="w-full min-h-screen flex justify-center items-center">
-          <Loader size={"lg"} />
+        <div className="w-full min-h-screen">
+          <SkeletonGrid />
         </div>
       ) : (
         <div className="w-full min-h-screen">
@@ -322,6 +323,16 @@ const Explore = () => {
           />
         </Box>
       )}
+    </div>
+  );
+};
+
+const SkeletonGrid = () => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {[...Array(10)].map((_, idx) => (
+        <BusinessCardSkeleton key={idx} />
+      ))}
     </div>
   );
 };
