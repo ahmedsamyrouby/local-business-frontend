@@ -298,29 +298,29 @@ const Explore = () => {
               <h1 className="text-xl font-semibold">No businesses found</h1>
             </div>
           ) : (
-            <>
-              {businessList}
-              <Box className="w-full flex-center p-5">
-                <Pagination
-                  size={"xl"}
-                  value={currentPage}
-                  total={totalPages}
-                  onChange={setCurrentPage}
-                />
-                <Select
-                  className="w-24 ml-4"
-                  value={paginationLimitSelect}
-                  onChange={(value) => {
-                    setPaginationLimitSelect(value as string);
-                  }}
-                  data={paginationLimits}
-                  size="md"
-                  checkIconPosition="right"
-                />
-              </Box>
-            </>
+            businessList
           )}
         </div>
+      )}
+      {!isError.status && isError.code !== 404 && (
+        <Box className="w-full flex-center p-5">
+          <Pagination
+            size={"xl"}
+            value={currentPage}
+            total={totalPages}
+            onChange={setCurrentPage}
+          />
+          <Select
+            className="w-24 ml-4"
+            value={paginationLimitSelect}
+            onChange={(value) => {
+              setPaginationLimitSelect(value as string);
+            }}
+            data={paginationLimits}
+            size="md"
+            checkIconPosition="right"
+          />
+        </Box>
       )}
     </div>
   );
