@@ -8,7 +8,7 @@ import {
   Popup,
   TileLayer,
   useMap,
-  Circle
+  Circle,
 } from "react-leaflet";
 import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants";
 import {
@@ -60,6 +60,7 @@ import { transformBusinesses } from "../../utils";
 
 import heroImage from "../../assets/hero-image.svg";
 import { useForm } from "@mantine/form";
+import CategoriesGrid from "../../components/CategoriesGrid/CategoriesGrid";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -169,6 +170,7 @@ const HomePage = () => {
   return (
     <Container fluid className="bg-white p-8">
       <div style={{ height: rem(70), width: "100%" }} />
+      {/* HERO SECTION */}
       <Box className="flex justify-around items-center mb-10">
         <div className="w-1/2 flex flex-col gap-8">
           <div>
@@ -297,6 +299,8 @@ const HomePage = () => {
         </Carousel>
       </Box> */}
       <Divider className="border-t-white/80" />
+
+      {/* NEARBY BUSINESSES SECTION */}
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (
           <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-black/5">
@@ -394,13 +398,19 @@ const HomePage = () => {
                 );
               })}
               <ResetButton userLocation={userLocation as LatLngExpression} />
-              <Circle center={userLocation!} radius={mapRadius * 1000} color="white" />
+              <Circle
+                center={userLocation!}
+                radius={mapRadius * 1000}
+                color="white"
+              />
             </MapContainer>
           </div>
         </div>
       </div>
       <Divider className="border-t-white/80" />
-      <div className="py-6 flex flex-col gap-6">
+
+      {/* RECOMMENDED BUSINESSES SECTION */}
+      <Box className="py-6 flex flex-col gap-6">
         <h2 className="text-3xl font-bold">
           Recommended <span className="text-primary">For You</span>
         </h2>
@@ -418,7 +428,15 @@ const HomePage = () => {
             </Carousel.Slide>
           ))}
         </Carousel>
-      </div>
+      </Box>
+
+      {/* CATEGORIES SECTION */}
+      <Box className="my-12 flex-center flex-col gap-6">
+        <Title>Categories</Title>
+        <Box className="w-1/2">
+          <CategoriesGrid />
+        </Box>
+      </Box>
     </Container>
   );
 };
