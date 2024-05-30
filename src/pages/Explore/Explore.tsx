@@ -45,6 +45,7 @@ import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-
 import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
 import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 import { useHeadroom } from "@mantine/hooks";
+import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
@@ -160,7 +161,7 @@ const Explore = () => {
 
   return (
     <div className="w-full min-h-screen bg-white px-4 relative">
-      <div style={{ height: rem(82+70), width: "100%" }} />
+      <div style={{ height: rem(82 + 70), width: "100%" }} />
       <div
         className="bg-white p-4"
         style={{
@@ -303,7 +304,7 @@ const Explore = () => {
       </Box>
       {isLoading ? (
         <div className="w-full min-h-screen">
-          <SkeletonGrid />
+          <SkeletonGrid cardsCount={10} />
         </div>
       ) : (
         <div className="w-full min-h-screen">
@@ -337,16 +338,6 @@ const Explore = () => {
           />
         </Box>
       )}
-    </div>
-  );
-};
-
-const SkeletonGrid = () => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {[...Array(10)].map((_, idx) => (
-        <BusinessCardSkeleton key={idx} />
-      ))}
     </div>
   );
 };

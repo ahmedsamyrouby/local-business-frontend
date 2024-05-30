@@ -61,6 +61,7 @@ import { transformBusinesses } from "../../utils";
 import heroImage from "../../assets/hero-image.svg";
 import { useForm } from "@mantine/form";
 import CategoriesGrid from "../../components/CategoriesGrid/CategoriesGrid";
+import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -87,6 +88,7 @@ const HomePage = () => {
     LatLngExpression | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
+  const [isFetchingRecommended, setIsFetchingRecommended] = useState(false);
   const [nearbyBusinesses, setNearbyBusinesses] = useState([] as any[]);
   const mapRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -119,10 +121,17 @@ const HomePage = () => {
   };
 
   const getRecommendedBusinesses = async () => {
-    const recommendedBusinesses = await axios.get(
-      `${BASE_URL}/Customer/recommend/${userId}`
-    );
-    setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
+    try {
+      setIsFetchingRecommended(true);
+      const recommendedBusinesses = await axios.get(
+        `${BASE_URL}/Customer/recommend/${userId}`
+      );
+      setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsFetchingRecommended(false);
+    }
   };
 
   const searchFormSubmit = (values: {
@@ -414,20 +423,24 @@ const HomePage = () => {
         <h2 className="text-3xl font-bold">
           Recommended <span className="text-primary">For You</span>
         </h2>
-        <Carousel
-          slideSize={{ base: "100%", xs: "50%", md: "20%" }}
-          slideGap={{ base: 0, xs: "md" }}
-          align="start"
-          draggable
-          containScroll="trimSnaps"
-          withControls={recommendedBusinesses.length > 5}
-        >
-          {recommendedBusinesses.map((business, idx) => (
-            <Carousel.Slide key={idx}>
-              <BusinessCard key={business._id} business={business} />
-            </Carousel.Slide>
-          ))}
-        </Carousel>
+        {isFetchingRecommended ? (
+          <SkeletonGrid cardsCount={5} />
+        ) : (
+          <Carousel
+            slideSize={{ base: "100%", xs: "50%", md: "20%" }}
+            slideGap={{ base: 0, xs: "md" }}
+            align="start"
+            draggable
+            containScroll="trimSnaps"
+            withControls={recommendedBusinesses.length > 5}
+          >
+            {recommendedBusinesses.map((business, idx) => (
+              <Carousel.Slide key={idx}>
+                <BusinessCard key={business._id} business={business} />
+              </Carousel.Slide>
+            ))}
+          </Carousel>
+        )}
       </Box>
 
       {/* CATEGORIES SECTION */}
