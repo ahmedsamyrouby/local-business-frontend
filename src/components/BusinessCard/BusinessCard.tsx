@@ -46,7 +46,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
     <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
       <Card.Section>
         <Image
-          className="h-60"
+          className="h-80"
           src={
             business?.logo?.length! > 0
               ? `${BASE_URL}/${business.logo}`
@@ -166,7 +166,7 @@ const BusinessCardSkeleton = () => {
   return (
     <Card withBorder className="rounded-md p-3 bg-gray- 100/50 shadow-sm">
       <Card.Section>
-        <Skeleton className="h-60 rounded-md" />
+        <Skeleton className="h-80 rounded-md" />
       </Card.Section>
 
       <Card.Section className="mt-4 border-b space-y-2 border-gray-200 px-4 pb-4">
