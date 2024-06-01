@@ -95,7 +95,7 @@ function OwnerInfo({
         )}
       </Modal>
       <div
-        className="flex flex-col bg-gray-900 rounded-lg overflow-hidden drop-shadow-lg"
+        className="flex flex-col bg-gray-100 rounded-lg overflow-hidden drop-shadow-lg"
         style={{
           height: "100%",
           width: isSmall
@@ -113,7 +113,7 @@ function OwnerInfo({
               ? "bg-gradient-to-b from-gray-300 to-bg-gray-900 w-full h-44"
               : isIphoneHeight
               ? "bg-gradient-to-b from-gray-300 to-bg-gray-900 w-full h-36"
-              : "bg-gradient-to-b from-gray-300 to-bg-gray-900 w-full h-24"
+              : "bg-gradient-to-b from-primary to-bg-gray-300 w-full h-24"
           }
         ></div>
         {/* //Image */}
@@ -129,7 +129,7 @@ function OwnerInfo({
                 ? "flex-none rounded-full h-48 w-48 p-1 bg-gray-900 cursor-pointer"
                 : isIphoneHeight
                 ? "flex-none rounded-full h-32 w-32 p-1 bg-gray-900 cursor-pointer"
-                : "flex-none rounded-full h-36 w-36 p-1 bg-gray-900 cursor-pointer"
+                : "flex-none rounded-full h-36 w-36 p-1 bg-gray-100 cursor-pointer"
             }
             style={{
               marginTop: isIpadHeight ? "-90px" : "-70px",
@@ -141,7 +141,7 @@ function OwnerInfo({
               className={
                 isIpadHeight
                   ? "w-9 h-9 mt-12 bg-gray-900 rounded-full border-2 border-white text-gray-300 cursor-pointer"
-                  : "w-6 h-6 mt-9 bg-gray-900 rounded-full border-2 border-white text-gray-300 cursor-pointer"
+                  : "w-6 h-6 mt-9 bg-gray-100 rounded-full border-2 border-white text-gray-300 cursor-pointer"
               }
               style={{ marginLeft: "-40px" }}
               onClick={open}
@@ -152,7 +152,7 @@ function OwnerInfo({
           className={
             isIpadHeight
               ? "pl-6 mt-6 text-gray-300 text-4xl"
-              : "pl-6 text-gray-300 text-2xl"
+              : "pl-6 text-primary text-2xl"
           }
         >
           {data.name}
@@ -174,7 +174,7 @@ function OwnerInfo({
                   ? "text-2xl text-gray-300"
                   : isIphoneHeight
                   ? "text-lg text-gray-300"
-                  : "text-sm text-gray-300"
+                  : "text-sm text-primary"
               }
             >
               User:{" "}
@@ -198,7 +198,7 @@ function OwnerInfo({
                   ? "text-2xl text-gray-300"
                   : isIphoneHeight
                   ? "text-lg text-gray-300"
-                  : "text-sm text-gray-300"
+                  : "text-sm text-primary"
               }
             >
               Date of Birth:{" "}
@@ -222,7 +222,7 @@ function OwnerInfo({
                   ? "text-2xl text-gray-300"
                   : isIphoneHeight
                   ? "text-lg text-gray-300"
-                  : "text-sm text-gray-300"
+                  : "text-sm text-primary"
               }
             >
               Gender:{" "}
@@ -255,7 +255,7 @@ function OwnerInfo({
             className={
               isIpadHeight
                 ? "text-gray-300 text-3xl mt-8 mb-4"
-                : "text-gray-300 text-2xl mt-4"
+                : "text-primary text-2xl mt-4"
             }
           >
             CONTACT
@@ -267,7 +267,7 @@ function OwnerInfo({
                   ? "w-9 h-9 text-gray-300 pr-1"
                   : isIphoneHeight
                   ? "w-7 h-7 text-gray-300 pr-1"
-                  : "w-6 h-6 text-gray-300 pr-1"
+                  : "w-6 h-6 text-primary pr-1"
               }
             />
             <CopyToClipboard
@@ -295,7 +295,7 @@ function OwnerInfo({
                   ? "w-9 h-9 text-gray-300 pr-1"
                   : isIphoneHeight
                   ? "w-7 h-7 text-gray-300 pr-1"
-                  : "w-6 h-6 text-gray-300 pr-1"
+                  : "w-6 h-6 text-primary pr-1"
               }
             />
             <CopyToClipboard

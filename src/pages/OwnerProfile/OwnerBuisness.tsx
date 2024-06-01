@@ -116,7 +116,7 @@ function OwnerBuisness({
     >
       <div className="text-center text-gray-300 mb-4">
         <Title
-          className={isIpadHeight ? "text-gray-300 text-5xl" : "text-gray-300"}
+          className={isIpadHeight ? "text-primary text-5xl" : "text-primary"}
         >
           Your Buisness
         </Title>

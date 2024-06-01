@@ -1,4 +1,11 @@
-import { ActionIcon, Button, Drawer, Menu } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Divider,
+  Drawer,
+  Menu,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -28,6 +35,10 @@ const NavBar = () => {
   function logOut() {
     removeLocalStorage("userId");
     removeLocalStorage("userToken");
+    removeLocalStorage("email");
+    removeLocalStorage("role");
+    removeLocalStorage("phone");
+    removeLocalStorage("name");
     navigate("/login");
   }
 

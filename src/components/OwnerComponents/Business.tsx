@@ -41,7 +41,7 @@ function Business({
     <div
       className={
         onClose
-          ? "bg-black w-full rounded-xl "
+          ? "bg-gray-500 w-full rounded-xl "
           : "w-full hover:ease-in delay-150 duration-200 hover:p-1 rounded "
       }
     >
@@ -60,9 +60,7 @@ function Business({
         fit="-moz-initial"
         onClick={handelOpenImage}
       />
-      {isContent == businesses._id &&
-      onClose &&
-      businesses.status === "accepted" ? (
+      {isContent == businesses._id && onClose ? (
         <Content
           content={businesses}
           onDelete={onDelete}

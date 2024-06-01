@@ -154,7 +154,7 @@ function Content({
           >
             <span className="text-end mb-10">
               <IoNotifications
-                className="hover:opacity-80 h-8 w-8"
+                className="hover:opacity-80 hover:text-primary h-8 w-8 text-white"
                 onClick={() => {}}
                 style={{ color: "#584D3A" }}
               />

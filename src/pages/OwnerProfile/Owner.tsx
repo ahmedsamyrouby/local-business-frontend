@@ -50,24 +50,24 @@ function OwnerProfile() {
       <div className="flex flex-col gap-y-7">
         {" "}
         <nav
-          className="flex justify-between w-full p-2 md:px-10 "
-          style={{
-            background: " linear-gradient(to right, #584D3A , #d1d5db)",
-          }}
+          className="flex justify-between w-full p-2 md:px-10 bg-gradient-to-r from-primary to-bg-white"
+          // style={{
+          //   background: " linear-gradient(to right, #584D3A , #d1d5db)",
+          // }}
         >
           <div className="flex md:gap-x-4 gap-x-1">
-            <SiGooglemybusiness className="text-gray-300 h-8 w-8" />
-            <Text className="text-gray-300 font-serif font-bold text-base pt-1 pl-1">
+            <SiGooglemybusiness className="text-white h-8 w-8" />
+            <Text className="text-white font-serif font-bold text-base pt-1 pl-1">
               Local Business
             </Text>
           </div>
           <div className="flex md:gap-x-8 gap-x-2">
             <AiFillMessage
-              className="hover:opacity-80 h-8 w-8"
+              className="hover:opacity-80 h-8 w-8 text-gray-400"
               onClick={() => {
                 navigate("/chat");
               }}
-              style={{ color: "#584D3A" }}
+              // style={{ color: "#584D3A" }}
             />
 
             <Menu
@@ -83,8 +83,8 @@ function OwnerProfile() {
               <Menu.Target>
                 <UnstyledButton className="hover:opacity-80">
                   <IoSettings
-                    className=" h-8 w-8"
-                    style={{ color: "#584D3A" }}
+                    className=" h-8 w-8 text-gray-400"
+                    // style={{ color: "#584D3A" }}
                   />
                 </UnstyledButton>
               </Menu.Target>
@@ -132,7 +132,7 @@ function OwnerProfile() {
             />
           ) : null}
           <div
-            className="bg-gray-900 rounded-lg"
+            className="bg-gray-100 rounded-lg"
             style={{
               height: isIpadHeight
                 ? "55rem"
