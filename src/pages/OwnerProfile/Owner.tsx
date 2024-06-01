@@ -122,6 +122,7 @@ function OwnerProfile() {
               ? "flex w-full h-screen px-3 "
               : "flex justify-center lg:gap-24 w-screen px-2 "
           }
+          style={{ height: "39.39rem" }}
         >
           {isLarge ? (
             <OwnerInfo

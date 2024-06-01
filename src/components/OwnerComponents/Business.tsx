@@ -50,9 +50,9 @@ function Business({
           businesses.status == "pending"
             ? pending
             : businesses.status === "accepted"
-            ? businesses.logo
-              ? `${BASE_URL}/${businesses.logo}`
-              : approved
+            ? businesses.logo.length === 0
+              ? approved
+              : `${BASE_URL}/${businesses.logo}`
             : rejected
         }
         radius="md"

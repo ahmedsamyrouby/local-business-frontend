@@ -97,13 +97,13 @@ function OwnerInfo({
       <div
         className="flex flex-col bg-gray-900 rounded-lg overflow-hidden drop-shadow-lg"
         style={{
-          height: isIpadHeight ? "100%" : isIphoneHeight ? "100%" : "39.39rem",
+          height: "100%",
           width: isSmall
             ? isIpadHeight
               ? "100%"
               : isIphoneHeight
               ? "100%"
-              : "25rem"
+              : "28.1rem"
             : "19.5rem",
         }}
       >
