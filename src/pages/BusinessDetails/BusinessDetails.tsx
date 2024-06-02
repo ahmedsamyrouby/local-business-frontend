@@ -443,15 +443,15 @@ const BusinessDetails = () => {
         </div>
         <div>
           {business.business && (
-            <div className="sticky top-[70px] flex flex-col gap-3">
+            <div className="sticky top-[70px] flex flex-col gap-3 border p-5 rounded-md">
               <a
-                href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[1]},${business.business.coordinates[0]}`}
+                href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
                 target="_blank"
               >
                 <StaticMap
                   location={{
-                    lat: business.business.coordinates[1],
-                    lng: business.business.coordinates[0],
+                    lat: business.business.coordinates[0],
+                    lng: business.business.coordinates[1],
                   }}
                 />
               </a>
