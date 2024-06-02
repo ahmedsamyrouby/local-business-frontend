@@ -56,7 +56,7 @@ const NavBar = () => {
           zIndex: 1000000,
           height: rem(70),
           transform: `translate3d(0, ${pinned ? 0 : rem(-110)}, 0)`,
-          transition: `transform ${pinned ? '110ms' : '300ms'} ease`,
+          transition: `transform ${pinned ? "110ms" : "300ms"} ease`,
         }}
       >
         <div>
@@ -78,6 +78,9 @@ const NavBar = () => {
             classNames={{
               dropdown: "z-[99999999]",
             }}
+            offset={{
+              crossAxis: -50,
+            }}
           >
             <Menu.Target>
               <Button
@@ -92,7 +95,7 @@ const NavBar = () => {
               </Button>
             </Menu.Target>
 
-            <Menu.Dropdown>
+            <Menu.Dropdown className="w-[250px]">
               <Menu.Item disabled>
                 <div className="mb-4">
                   <p className="text-black">
