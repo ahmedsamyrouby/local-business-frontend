@@ -41,6 +41,7 @@ import BusinessCard, {
 } from "../../components/BusinessCard/BusinessCard";
 import marketPlaceholder from "../../assets/images/market.png";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
+import CustomerChat from "../CustomerChat/CustomerChat";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -70,6 +71,8 @@ const BusinessDetails = () => {
     requestServiceOpened,
     { open: openRequestService, close: closeRequestService },
   ] = useDisclosure(false);
+  const [chatOpened, { open: openChat, close: closeChat }] =
+    useDisclosure(false);
   const customerId = getLocalStorage("userId");
   const [addReviewLoading, setAddReviewLoading] = useState(false);
   const userId = getLocalStorage("userId");
@@ -280,10 +283,8 @@ const BusinessDetails = () => {
   ]);
 
   useEffect(() => {
-    setTimeout(() => {
-      document.title = business.businessName;
-    }, 1000);
-  }, [business]);
+    document.title = business.businessName;
+  }, [business.businessName]);
   return (
     <div>
       <div style={{ height: rem(70), width: "100%" }} />
@@ -300,7 +301,7 @@ const BusinessDetails = () => {
           ))}
         </Carousel>
       )}
-      <div className="max-w-[1350px] mx-auto relative mt-5 flex gap-10">
+      <div className="max-w-[1350px] mx-auto relative my-10 flex gap-10">
         <div className="w-full flex flex-col gap-12 justify-between">
           <div className="flex flex-col gap-6">
             <div className="flex gap-6">
@@ -332,7 +333,7 @@ const BusinessDetails = () => {
                     >
                       {isFavorite ? <IconHeartFilled /> : <IconHeart />}
                     </ActionIcon>
-                    <ActionIcon size={"xl"}>
+                    <ActionIcon size={"xl"} onClick={openChat}>
                       <IconMessage />
                     </ActionIcon>
                     <CopyToClipboard
@@ -420,7 +421,7 @@ const BusinessDetails = () => {
                 </Button>
               </div>
               {business.reviews.length ? (
-                <div className="py-2 px-5 overflow-hidden mb-10 rounded-md bg-gray-100">
+                <div className="py-2 px-5 overflow-hidden rounded-md bg-gray-100">
                   {business.reviews.map(
                     (review: Review, idx: number) =>
                       review.content && (
@@ -434,7 +435,7 @@ const BusinessDetails = () => {
                   )}
                 </div>
               ) : (
-                <div className="w-full h-40 flex items-center justify-center">
+                <div className="w-full h-40 flex-center rounded-md bg-gray-100">
                   <p className="text-gray-900 text-lg">No reviews yet</p>
                 </div>
               )}
@@ -476,7 +477,7 @@ const BusinessDetails = () => {
       </div>
 
       {/* RECOMMENDED BUSINESSES SECTION */}
-      <Box className="p-6 flex flex-col gap-6">
+      <Box className="p-12 flex flex-col gap-6">
         <h2 className="text-3xl font-bold">
           Recommended <span className="text-primary">For You</span>
         </h2>
@@ -579,6 +580,21 @@ const BusinessDetails = () => {
             Submit
           </Button>
         </form>
+      </Modal>
+
+      <Modal
+        title={business.businessName}
+        opened={chatOpened}
+        onClose={closeChat}
+        size={"xl"}
+        centered
+        classNames={{
+          title: "text-primary text-center ms-7 text-[1.25rem] w-full",
+          inner: "z-[1200]",
+          overlay: "z-[1100]",
+        }}
+      >
+        <CustomerChat customerId={userId!} businessId={id!} />
       </Modal>
     </div>
   );

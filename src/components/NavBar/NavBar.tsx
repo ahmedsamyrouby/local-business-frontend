@@ -71,7 +71,6 @@ const NavBar = () => {
             Home
           </NavLink>
           <NavLink to={"/explore"}>Explore</NavLink>
-          <NavLink to={"/customer-chat"}>Chat</NavLink>
           <Menu
             shadow="sm"
             width={200}
@@ -174,13 +173,6 @@ const NavBar = () => {
                 onClick={close}
               >
                 <IconSearch /> Explore
-              </NavLink>
-              <NavLink
-                to={"/customer-chat"}
-                className={"flex gap-1 items-center"}
-                onClick={close}
-              >
-                <IconMessage /> Chat
               </NavLink>
               <NavLink
                 to={"/favorites"}

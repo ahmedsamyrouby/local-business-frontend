@@ -1,24 +1,13 @@
-import { Avatar } from "@mantine/core";
+import dayjs from "dayjs";
 
-const LeftMessage = ({
-  message,
-  isFirstMessage,
-}: {
-  message: string;
-  isFirstMessage: boolean;
-}) => {
+const LeftMessage = ({ message, time }: { message: string; time: string }) => {
   return (
-    <div className="flex gap-4 pb-0.5">
-      {isFirstMessage && <Avatar color="#99896B" />}
-      {!isFirstMessage && (
-        <div
-          style={{
-            width: "38px",
-          }}
-        />
-      )}
-      <div className="bg-gray-100 p-2 rounded">
-        <p>{message}</p>
+    <div className="flex flex-col items-start my-1">
+      <div className="bg-gray-200 p-2 rounded-md max-w-3/4">
+        <p className="text-sm">{message}</p>
+        <div className="text-xs text-gray-500 mt-1">
+          {dayjs(time).format("h:mm A")}
+        </div>
       </div>
     </div>
   );

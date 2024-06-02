@@ -3,18 +3,14 @@ import { IconBriefcase } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 
 const links = [
+  { link: "/", label: "Home" },
   { link: "/explore", label: "Explore" },
   { link: "/favorites", label: "Favorites" },
-  { link: "/customer-chat", label: "Chat" },
 ];
 
 const Footer = () => {
   const items = links.map((link) => (
-    <Link
-      className="hover:underline"
-      key={link.label}
-      to={link.link}
-    >
+    <Link className="hover:underline" key={link.label} to={link.link}>
       {link.label}
     </Link>
   ));

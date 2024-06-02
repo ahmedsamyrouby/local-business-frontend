@@ -115,7 +115,6 @@ const Explore = () => {
   }, []);
 
   const isFavorite = (businessId: string) => {
-    console.log(favoriteBusinesses);
     return favoriteBusinesses.some((business) => business._id === businessId);
   };
 
