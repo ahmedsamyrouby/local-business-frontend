@@ -18,6 +18,7 @@ export const transformBusinesses = (businesses: any[]): Array<Business> => {
       logo: business.logo[0] || business.logo,
       rate: business.totalRate,
       description: business.description,
+      isFavorite: business.isFavorite,
     };
   });
 };

@@ -25,7 +25,6 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import BusinessCard, {
   Business,
-  BusinessCardSkeleton,
 } from "../../components/BusinessCard/BusinessCard";
 // import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
@@ -46,6 +45,7 @@ import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
 import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 import { useHeadroom } from "@mantine/hooks";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
+import { getLocalStorage } from "../../services/LocalStorageService";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
@@ -61,6 +61,9 @@ const Explore = () => {
     code: 0,
   });
   const [businesses, setBusinesses] = useState<Array<Business>>([]);
+  const [favoriteBusinesses, setFavoriteBusinesses] = useState<Array<Business>>(
+    []
+  );
   const [selectedFilter, setSelectedFilter] = useState<string>(
     location.state?.category || ""
   );
@@ -69,6 +72,7 @@ const Explore = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
   const pinned = useHeadroom({ fixedAt: 140 });
+  const userId = getLocalStorage("userId");
 
   const searchBusinesses = useCallback(
     async (
@@ -105,6 +109,16 @@ const Explore = () => {
     [baseUrl]
   );
 
+  const getFavoriteBusinesses = useCallback(async () => {
+    const res = await axios.get(`${BASE_URL}/customer/GetFavorites/${userId}`);
+    setFavoriteBusinesses(transformBusinesses(res.data.favoriteBusinesses));
+  }, []);
+
+  const isFavorite = (businessId: string) => {
+    console.log(favoriteBusinesses);
+    return favoriteBusinesses.some((business) => business._id === businessId);
+  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       searchBusinesses(
@@ -123,6 +137,10 @@ const Explore = () => {
     paginationLimitSelect,
     searchBusinesses,
   ]);
+
+  useEffect(() => {
+    getFavoriteBusinesses();
+  }, [businesses]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -152,7 +170,10 @@ const Explore = () => {
     () => (
       <div className="pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {businesses.map((business: Business) => (
-          <BusinessCard key={business._id} business={business} />
+          <BusinessCard
+            key={business._id}
+            business={{ ...business, isFavorite: isFavorite(business._id) }}
+          />
         ))}
       </div>
     ),

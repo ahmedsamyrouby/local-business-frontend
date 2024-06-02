@@ -9,13 +9,16 @@ import {
   Skeleton,
   Text,
 } from "@mantine/core";
-import { IconHeart, IconMapPin } from "@tabler/icons-react";
+import { IconHeart, IconHeartFilled, IconMapPin } from "@tabler/icons-react";
 
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../constants";
 
 import marketPlaceholder from "../../assets/images/market.png";
+import { getLocalStorage } from "../../services/LocalStorageService";
+import axios from "axios";
+import { useState } from "react";
 
 export type Business = {
   _id: string;
@@ -25,6 +28,7 @@ export type Business = {
   logo: string;
   rate?: number;
   description?: string;
+  isFavorite?: boolean;
 };
 
 export interface BusinessCardProps {
@@ -42,6 +46,30 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 
 const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
+  const userId = getLocalStorage("userId");
+  const [isFavorite, setIsFavorite] = useState(business.isFavorite);
+
+  const addToFavorites = () => {
+    try {
+      const res = axios.post(
+        `${BASE_URL}/customer/addtofavorites/${userId}/${business._id}`
+      );
+      setIsFavorite(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteFromFavorites = () => {
+    try {
+      const res = axios.delete(
+        `${BASE_URL}/customer/DeleteFavorites/${userId}/${business._id}`
+      );
+      setIsFavorite(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
       <Card.Section>
@@ -87,8 +115,17 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
         >
           Show details
         </Button>
-        <ActionIcon variant="default" radius="md" size={36}>
-          <IconHeart className={"text-pink-600"} stroke={1.5} />
+        <ActionIcon
+          variant="default"
+          radius="md"
+          size={36}
+          onClick={business.isFavorite ? deleteFromFavorites : addToFavorites}
+        >
+          {isFavorite ? (
+            <IconHeartFilled className={"text-pink-600"} stroke={1.5} />
+          ) : (
+            <IconHeart className={"text-pink-600"} stroke={1.5} />
+          )}
         </ActionIcon>
       </Group>
     </Card>
@@ -164,7 +201,7 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
 
 const BusinessCardSkeleton = () => {
   return (
-    <Card withBorder className="rounded-md p-3 bg-gray- 100/50 shadow-sm">
+    <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
       <Card.Section>
         <Skeleton className="h-80 rounded-md" />
       </Card.Section>
@@ -175,7 +212,9 @@ const BusinessCardSkeleton = () => {
         <Skeleton className="h-4 rounded-md" />
       </Card.Section>
 
-      <Card.Section className={"mt-2 border-b space-y-2 border-gray-200 px-4 pb-4"}>
+      <Card.Section
+        className={"mt-2 border-b space-y-2 border-gray-200 px-4 pb-4"}
+      >
         <Skeleton className="h-4 w-1/2 rounded-md" />
         <Skeleton className="h-4 rounded-md" />
       </Card.Section>
