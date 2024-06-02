@@ -12,8 +12,15 @@ function StaticMap({ location: center }: StaticMapProps) {
       <MapContainer
         center={center}
         zoom={17}
+        touchZoom={false}
         className="w-full h-full"
         dragging={false}
+        doubleClickZoom={false}
+        closePopupOnClick={false}
+        zoomSnap={0}
+        zoomDelta={0}
+        trackResize={false}
+        scrollWheelZoom={false}
         zoomControl={false}
         style={{
           zIndex: "0",
