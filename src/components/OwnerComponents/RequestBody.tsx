@@ -12,6 +12,7 @@ import { useDisclosure } from "@mantine/hooks";
 import StaticMap from "../StaticMap/StaticMap";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
+import clsx from "clsx";
 
 function RequestBody({
   data,
@@ -102,7 +103,17 @@ function RequestBody({
           )}
         </Table.Td>
         <Table.Td>
-          <Pill className="bg-primary text-white">{data.status}</Pill>
+          <Pill
+            className={clsx({
+              "text-white": true,
+              "bg-green-500": data.status === "Completed",
+              "bg-red-500": data.status === "Declined",
+              "bg-gray-400": data.status === "In Progress",
+              "bg-sky-500": data.status === "Pending",
+            })}
+          >
+            {data.status}
+          </Pill>
         </Table.Td>
         <Table.Td>
           {" "}
