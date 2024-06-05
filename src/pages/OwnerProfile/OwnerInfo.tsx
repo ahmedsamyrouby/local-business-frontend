@@ -117,7 +117,7 @@ function OwnerInfo({
           }
         ></div>
         {/* //Image */}
-        <div className="flex px-6 pb-2">
+        <div className="flex px-6 pb-2 drop-shadow-lg">
           <Image
             src={
               data.userProfile === "Null"

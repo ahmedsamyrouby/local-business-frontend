@@ -4,6 +4,9 @@ import { Drawer, Button, Menu, Text, UnstyledButton } from "@mantine/core";
 import { MdMenu } from "react-icons/md";
 import { SiGooglemybusiness } from "react-icons/si";
 // import { IoNotifications } from "react-icons/io5";
+import { MdBusinessCenter } from "react-icons/md";
+import { MdEvent } from "react-icons/md";
+import { HiDotsVertical } from "react-icons/hi";
 import { IoSettings } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
 import { CgArrowsExchangeAlt } from "react-icons/cg";
@@ -13,9 +16,11 @@ import OwnerInfo from "./OwnerInfo";
 import OwnerBuisness from "./OwnerBuisness";
 import { useNavigate } from "react-router-dom";
 import { removeLocalStorage } from "../../services/LocalStorageService";
+import { useState } from "react";
 
 function OwnerProfile() {
   const navigate = useNavigate();
+  const [businessType, setBusinessType] = useState("all");
   const [opened, { open, close }] = useDisclosure(false);
   const isLarge = useMediaQuery({ query: "(min-width: 1024px)" });
   const isSmall = useMediaQuery({ query: "(min-width: 484px)" });
@@ -132,7 +137,7 @@ function OwnerProfile() {
             />
           ) : null}
           <div
-            className="bg-gray-100 rounded-lg"
+            className="bg-gray-100 rounded-lg drop-shadow-lg"
             style={{
               height: isIpadHeight
                 ? "55rem"
@@ -142,31 +147,76 @@ function OwnerProfile() {
               width: "55rem",
             }}
           >
-            {!isLarge && (
-              <Button
-                className={
-                  isIpadHeight
-                    ? "bg-gray-900 mt-5"
-                    : isIphoneHeight
-                    ? "bg-gray-900 mt-3 pl-1"
-                    : "bg-gray-900 pr-4 pl-2"
-                }
-                onClick={open}
-              >
-                <MdMenu
-                  className={
-                    isIpadHeight
-                      ? "w-14 h-14 hover:opacity-80"
-                      : isIphoneHeight
-                      ? "w-12 h-12 hover:opacity-80"
-                      : "w-8 h-8 hover:opacity-80"
-                  }
-                />
-              </Button>
-            )}
+            <div className="flex w-full">
+              <div className="w-full">
+                {" "}
+                {!isLarge && (
+                  <Button
+                    className={
+                      isIpadHeight
+                        ? "bg-gray-900 mt-5"
+                        : isIphoneHeight
+                        ? "bg-gray-900 mt-3 pl-1"
+                        : "bg-gray-100"
+                    }
+                    onClick={open}
+                  >
+                    <MdMenu
+                      className={
+                        isIpadHeight
+                          ? "w-14 h-14 hover:opacity-80"
+                          : isIphoneHeight
+                          ? "w-12 h-12 hover:opacity-80"
+                          : "w-8 h-8 hover:opacity-80 text-primary"
+                      }
+                    />
+                  </Button>
+                )}
+              </div>
+              <div className="flex w-full justify-end p-2">
+                <Menu
+                  shadow="md"
+                  width={200}
+                  position="bottom-end"
+                  withArrow
+                  arrowPosition="center"
+                >
+                  <Menu.Target>
+                    <UnstyledButton className="hover:opacity-80">
+                      <HiDotsVertical className="w-6 h-6 hover:opacity-80 text-primary" />
+                    </UnstyledButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      // leftSection={<MdEvent className="text-primary" />}
+                      onClick={() => setBusinessType("all")}
+                    >
+                      All
+                    </Menu.Item>
+                    <Menu.Item
+                      leftSection={
+                        <MdBusinessCenter className="text-primary" />
+                      }
+                      onClick={() => setBusinessType("services")}
+                    >
+                      Services
+                    </Menu.Item>
+
+                    <Menu.Item
+                      leftSection={<MdEvent className="text-primary" />}
+                      onClick={() => setBusinessType("events")}
+                    >
+                      Events
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </div>
+            </div>
+
             <OwnerBuisness
               isIpadHeight={isIpadHeight}
               isIphoneHeight={isIphoneHeight}
+              businessType={businessType}
             />
           </div>
         </div>

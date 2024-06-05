@@ -37,6 +37,7 @@ function ReviewBody({
       });
     }
     console.log(reviewId);
+    console.log(text);
     await axios({
       method: "post",
       url: `${BASE_URL}/report/${reviewId}/${content._id}/${customerId}`,

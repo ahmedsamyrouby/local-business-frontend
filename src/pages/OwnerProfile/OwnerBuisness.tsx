@@ -26,6 +26,7 @@ import { IconSquareCheck } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import Business from "../../components/OwnerComponents/Business";
+import Swal from "sweetalert2";
 // import { useDisclosure } from "@mantine/hooks";
 // import { MdStar } from "react-icons/md";
 // import { MdStarBorder } from "react-icons/md";
@@ -35,31 +36,49 @@ import Business from "../../components/OwnerComponents/Business";
 function OwnerBuisness({
   isIpadHeight,
   isIphoneHeight,
+  businessType,
 }: {
   isIpadHeight?: boolean;
   isIphoneHeight?: boolean;
+  businessType: string;
 }) {
   const isLarge = useMediaQuery({ query: "(min-width: 1024px)" });
   const navigate = useNavigate();
   const [isContent, setIsContent] = useState("");
   const [onClose, setOnClose] = useState(false);
-  // const [content, setContent] = useState(0);
   const userId = getLocalStorage("userId");
   const [data, setData] = useState([]);
   async function deleteBusiness(_id: string) {
-    await axios({
-      method: "delete",
-      url: `${BASE_URL}/businessOwner/deleteBusiness/${_id}`,
-    }).then((res) => {
-      getBusinesses();
-      notifications.show({
-        message: res.data.message,
-        autoClose: 2000,
-        icon: <IconSquareCheck />,
-        classNames: {
-          icon: "bg-transparent text-green-600",
-        },
-      });
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios({
+          method: "delete",
+          url: `${BASE_URL}/businessOwner/deleteBusiness/${_id}`,
+        }).then((res) => {
+          getBusinesses();
+          notifications.show({
+            message: res.data.message,
+            autoClose: 2000,
+            icon: <IconSquareCheck />,
+            classNames: {
+              icon: "bg-transparent text-green-600",
+            },
+          });
+        });
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+      }
     });
   }
   async function uploadLogo(file: File, _id: string) {
@@ -98,7 +117,6 @@ function OwnerBuisness({
         `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
       );
       setData(response.data.data.businesses);
-      console.log(data);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -123,26 +141,122 @@ function OwnerBuisness({
       </div>
       <div>
         <ScrollArea
-          h={isIpadHeight ? 640 : isIphoneHeight ? 600 : 460}
+          h={isIpadHeight ? 640 : isIphoneHeight ? 600 : 420}
           offsetScrollbars
           scrollbarSize={6}
           className="rounded-lg"
         >
-          <div className="flex flex-col gap-2">
-            {data.map((business: businessContent) => (
-              <Business
-                key={business._id}
-                onDelete={deleteBusiness}
-                onUpdateMedia={updateMedia}
-                onUploadLogo={uploadLogo}
-                isContent={isContent}
-                setIsContent={setIsContent}
-                businesses={business}
-                onClose={onClose}
-                setOnClose={setOnClose}
-                onNavigate={navigate}
-              />
-            ))}
+          <div
+            className={
+              businessType === "events" &&
+              data.filter(
+                (business: businessContent) => business.eventOrNot == "Event"
+              ).length === 0
+                ? "flex flex-col items-center justify-center h-64"
+                : businessType === "services" &&
+                  data.filter(
+                    (business: businessContent) =>
+                      business.eventOrNot == "notEvent"
+                  ).length === 0
+                ? "flex flex-col items-center justify-center h-64"
+                : data.length === 0
+                ? "flex flex-col items-center justify-center h-64"
+                : "flex flex-col gap-2"
+            }
+          >
+            {businessType === "events" &&
+              (data.filter(
+                (business: businessContent) => business.eventOrNot === "Event"
+              ).length === 0 ? (
+                <div className="">
+                  <Text className="text-xl text-center font-semibold text-gray-200">
+                    No events yet
+                  </Text>
+                  <Text className="text-xl font-semibold text-gray-200">
+                    You can add by clicking on +Add
+                  </Text>
+                </div>
+              ) : (
+                data
+                  .filter(
+                    (business: businessContent) =>
+                      business.eventOrNot == "Event"
+                  )
+                  .map((business: businessContent) => (
+                    <Business
+                      key={business._id}
+                      onDelete={deleteBusiness}
+                      onUpdateMedia={updateMedia}
+                      onUploadLogo={uploadLogo}
+                      isContent={isContent}
+                      setIsContent={setIsContent}
+                      businesses={business}
+                      onClose={onClose}
+                      setOnClose={setOnClose}
+                      onNavigate={navigate}
+                    />
+                  ))
+              ))}
+            {businessType === "services" &&
+              (data.filter(
+                (business: businessContent) =>
+                  business.eventOrNot === "notEvent"
+              ).length !== 0 ? (
+                data
+                  .filter(
+                    (business: businessContent) =>
+                      business.eventOrNot == "notEvent"
+                  )
+                  .map((business: businessContent) => (
+                    <Business
+                      key={business._id}
+                      onDelete={deleteBusiness}
+                      onUpdateMedia={updateMedia}
+                      onUploadLogo={uploadLogo}
+                      isContent={isContent}
+                      setIsContent={setIsContent}
+                      businesses={business}
+                      onClose={onClose}
+                      setOnClose={setOnClose}
+                      onNavigate={navigate}
+                    />
+                  ))
+              ) : (
+                <div className="">
+                  <Text className="text-xl text-center font-semibold text-gray-200">
+                    No services yet
+                  </Text>
+                  <Text className="text-xl font-semibold text-gray-200">
+                    You can add by clicking on +Add
+                  </Text>
+                </div>
+              ))}
+            {businessType === "all" &&
+              (data.length !== 0 ? (
+                data.map((business: businessContent) => (
+                  <Business
+                    key={business._id}
+                    onDelete={deleteBusiness}
+                    onUpdateMedia={updateMedia}
+                    onUploadLogo={uploadLogo}
+                    isContent={isContent}
+                    setIsContent={setIsContent}
+                    businesses={business}
+                    onClose={onClose}
+                    setOnClose={setOnClose}
+                    onNavigate={navigate}
+                  />
+                ))
+              ) : (
+                <div className="">
+                  <Text className="text-xl text-center font-semibold text-gray-200">
+                    Empty of business
+                  </Text>
+                  <Text className="text-xl font-semibold text-gray-200">
+                    You can add by clicking on +Add
+                  </Text>
+                </div>
+              ))}
           </div>
         </ScrollArea>
       </div>
@@ -160,6 +274,8 @@ function OwnerBuisness({
               state: {
                 method: "post",
                 api: `${BASE_URL}/businessOwner/addMultipleBusinesses/${userId}`,
+                type: businessType,
+                status: "pending",
               },
             });
           }}
@@ -173,7 +289,7 @@ function OwnerBuisness({
                 : "font-serif italic font-bold "
             }
           >
-            + Add
+            + Add {businessType === "all" ? "" : businessType}
           </Text>
         </Button>
       </div>

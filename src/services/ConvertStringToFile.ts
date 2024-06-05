@@ -10,6 +10,8 @@ export interface businessContent {
   userId: string;
   media: [];
   attachment: string;
+  eventOrNot: string;
+  expirationDate: string;
   description: string;
   address: string;
   logo: string;
