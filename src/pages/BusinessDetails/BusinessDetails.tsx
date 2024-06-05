@@ -25,7 +25,6 @@ import {
   rem,
   Title,
 } from "@mantine/core";
-import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { useCallback, useEffect, useState } from "react";
 import ReviewCard, { Review } from "../../components/ReviewCard/ReviewCard";
@@ -42,6 +41,7 @@ import BusinessCard, {
 import marketPlaceholder from "../../assets/images/market.png";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 import CustomerChat from "../CustomerChat/CustomerChat";
+import axiosInstance from "../../services/AxiosService";
 
 const BusinessDetails = () => {
   const { id } = useParams();
@@ -85,18 +85,18 @@ const BusinessDetails = () => {
   const location = useLocation();
 
   const getBusiness = useCallback(async () => {
-    const res = await axios.get(`${BASE_URL}/customer/getBusinessById/${id}`);
+    const res = await axiosInstance.get(`/customer/getBusinessById/${id}`);
     setBusiness(res.data.data);
   }, [id]);
 
   const getBusinessRating = useCallback(async () => {
-    const res = await axios.get(`${BASE_URL}/businessOwner/rating/${id}`);
+    const res = await axiosInstance.get(`/businessOwner/rating/${id}`);
     setBusinessRating(res.data.rating);
   }, [id]);
 
   const requestAService = async (values: { request: string }) => {
-    const res = await axios.post(
-      `${BASE_URL}/customer/${customerId}/serviceRequest/${id}`,
+    const res = await axiosInstance.post(
+      `/customer/${customerId}/serviceRequest/${id}`,
       {
         requestDetails: values.request,
       }
@@ -118,7 +118,7 @@ const BusinessDetails = () => {
   const getRecommendedBusinesses = useCallback(async () => {
     try {
       setIsFetchingRecommended(true);
-      const res = await axios.get(`${BASE_URL}/Customer/recommend/${userId}`);
+      const res = await axiosInstance.get(`/Customer/recommend/${userId}`);
       setRecommendedBusinesses(transformBusinesses(res.data));
     } catch (e) {
       console.error(e);
@@ -131,8 +131,8 @@ const BusinessDetails = () => {
     review: string;
     rating: number | null;
   }) => {
-    const reviewRes = await axios.post(
-      `${BASE_URL}/customer/${customerId}/writeReview/${id}`,
+    const reviewRes = await axiosInstance.post(
+      `/customer/${customerId}/writeReview/${id}`,
       {
         review: values.review,
       }
@@ -144,8 +144,8 @@ const BusinessDetails = () => {
     review: string;
     rating: number | null;
   }) => {
-    const ratingRes = await axios.post(
-      `${BASE_URL}/customer/${customerId}/rate/${id}`,
+    const ratingRes = await axiosInstance.post(
+      `/customer/${customerId}/rate/${id}`,
       {
         starRating: values.rating,
       }
@@ -207,8 +207,8 @@ const BusinessDetails = () => {
 
   const addToFavorites = async () => {
     try {
-      const res = await axios.post(
-        `${BASE_URL}/Customer/addtofavorites/${customerId}/${id}`
+      const res = await axiosInstance.post(
+        `/Customer/addtofavorites/${customerId}/${id}`
       );
 
       if (res.status === 201) {
@@ -235,15 +235,15 @@ const BusinessDetails = () => {
   };
 
   const getFavorites = useCallback(async () => {
-    const res = await axios.get(`${BASE_URL}/customer/GetFavorites/${userId}`);
+    const res = await axiosInstance.get(`/customer/GetFavorites/${userId}`);
     const favoriteBusiness = transformBusinesses(res.data.favoriteBusinesses);
     setIsFavorites(favoriteBusiness.some((business) => business._id === id));
   }, [userId, id]);
 
   const deleteFromFavorites = async () => {
     try {
-      const res = await axios.delete(
-        `${BASE_URL}/Customer/DeleteFavorites/${customerId}/${id}`
+      const res = await axiosInstance.delete(
+        `/Customer/DeleteFavorites/${customerId}/${id}`
       );
 
       if (res.status === 200) {
