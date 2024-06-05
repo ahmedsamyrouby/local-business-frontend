@@ -6,7 +6,7 @@ import { BASE_URL } from "../../../constants";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import { IconAlertSquare } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const OTP = () => {
   const navigate = useNavigate();
@@ -48,6 +48,10 @@ const OTP = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    document.title = "Enter OTP - Local Linker";
+  }, []);
 
   return (
     <AuthenticationLayout>

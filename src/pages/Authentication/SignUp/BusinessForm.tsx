@@ -27,8 +27,6 @@ import { LatLngExpression } from "leaflet";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
 import { getLocalStorage } from "../../../services/LocalStorageService";
-import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
-import image from "../../../assets/images/forgot-password-art.jpg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 function BusinessForm() {
@@ -142,6 +140,10 @@ function BusinessForm() {
   };
   useEffect(() => {
     getBusinesses();
+  }, []);
+
+  useEffect(() => {
+    document.title = "Business Form - Local Linker";
   }, []);
 
   type FormValues = typeof businessForm.values;

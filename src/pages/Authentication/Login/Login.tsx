@@ -6,7 +6,7 @@ import axios from "axios";
 import { setLocalStorage } from "../../../services/LocalStorageService";
 import { notifications } from "@mantine/notifications";
 import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../../../constants";
 
 const Login = () => {
@@ -69,6 +69,10 @@ const Login = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    document.title = "Login - Local Linker";
+  }, []);
 
   return (
     <AuthenticationLayout>

@@ -19,7 +19,7 @@ import {
   Radio,
   Group,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
 
@@ -123,6 +123,10 @@ const SignUp = () => {
       })
       .finally(() => setIsLoading(false));
   };
+
+  useEffect(() => {
+    document.title = "Sign Up - Local Linker";
+  }, []);
 
   return (
     <AuthenticationLayout>

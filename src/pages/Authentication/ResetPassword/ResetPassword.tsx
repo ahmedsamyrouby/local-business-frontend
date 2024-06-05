@@ -6,7 +6,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../constants";
 import { notifications } from "@mantine/notifications";
 import { IconSquareCheck } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = z
@@ -61,6 +61,10 @@ const ResetPassword = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    document.title = "Reset Password - Local Linker";
+  }, []);
 
   return (
     <AuthenticationLayout>

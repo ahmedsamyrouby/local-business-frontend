@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
 import { BASE_URL } from "../../../constants";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { IconAlertSquare, IconSquareCheck } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
@@ -55,6 +55,10 @@ const ForgotPassword = () => {
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    document.title = "Forgot Password - Local Linker";
+  }, []);
 
   return (
     <AuthenticationLayout>
