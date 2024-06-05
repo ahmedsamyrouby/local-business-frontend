@@ -2,11 +2,10 @@ import { Button, Input } from "@mantine/core";
 import LeftMessage from "../../components/CustomerChat/LeftMessage";
 import RightMessage from "../../components/CustomerChat/RightMessage";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../constants";
 import { notifications } from "@mantine/notifications";
 import { IconAlertSquare } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import axiosInstance from "../../services/AxiosService";
 
 interface ChatMessage {
   businessId: string;
@@ -36,8 +35,8 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
   const sendMessage = async () => {
     try {
       setIsSending(true);
-      const res = await axios.post(
-        `${BASE_URL}/customer/sendMessageToBusinessOwner/${customerId}/${businessId}`,
+      const res = await axiosInstance.post(
+        `/customer/sendMessageToBusinessOwner/${customerId}/${businessId}`,
         {
           message: message,
         }
@@ -59,8 +58,8 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
   };
 
   const getAllMessages = async () => {
-    const res = await axios.get(
-      `${BASE_URL}/customer/getAllMessages/${customerId}/${businessId}`
+    const res = await axiosInstance.get(
+      `/customer/getAllMessages/${customerId}/${businessId}`
     );
     setMessages(res.data.messages);
     scrollToBottom();
