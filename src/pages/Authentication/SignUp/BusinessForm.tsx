@@ -8,9 +8,16 @@ import {
   Button,
   InputLabel,
   MultiSelect,
+  Radio,
+  Group,
 } from "@mantine/core";
-import { IconClock, IconSquareCheck } from "@tabler/icons-react";
-import { TimeInput } from "@mantine/dates";
+import {
+  IconAlertSquare,
+  IconCalendar,
+  IconClock,
+  IconSquareCheck,
+} from "@tabler/icons-react";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { useEffect, useMemo, useState } from "react";
 import countryList from "react-select-country-list";
@@ -49,17 +56,76 @@ function BusinessForm() {
 
   const businessForm = useForm({
     initialValues: {
-      businessName: "",
-      country: "Egypt",
-      category: "",
+      businessName:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.businessName
+            : ""
+          : "",
+      country:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.country
+            : "Egypt"
+          : "Egypt",
+      category:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.category
+            : ""
+          : "",
       timeActive: "",
-      activeFrom: "",
-      activeTo: "",
+      activeFrom:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.workTime.startTime
+            : ""
+          : "",
+      activeTo:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.workTime.endTime
+            : ""
+          : "",
       businessPhoto: "",
-      businessLicense: "",
-      description: "",
-      address: "",
-      days: [],
+      businessLicense:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.attachment
+            : ""
+          : "",
+      description:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.description
+            : ""
+          : "",
+      address:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.address
+            : ""
+          : "",
+      days:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.days
+            : []
+          : [],
+      eventOrNot:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? comingData.data.eventOrNot
+            : comingData.type === "events"
+            ? "Event"
+            : "notEvent"
+          : "notEvent",
+      expirationDate:
+        comingData !== null
+          ? comingData.operation === "edit"
+            ? new Date(comingData.data.expirationDate)
+            : ""
+          : "",
     },
   });
   const getBusinesses = async () => {
@@ -68,7 +134,8 @@ function BusinessForm() {
         `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
       );
       setData(response.data.data.businesses);
-      console.log(data);
+      // console.log(data);
+      // console.log(comingData.data);
     } catch (error) {
       console.error(`Error fetching data: ${error}`);
     }
@@ -84,8 +151,9 @@ function BusinessForm() {
     if (values.timeActive == "24hour") {
       businessForm.setFieldValue("activeFrom", "24hour");
     }
+    console.log(comingData);
+    // console.log(coordinates);
     console.log(values);
-    console.log(coordinates);
     setIsLoading(true);
     await axios({
       method: comingData != null ? comingData.method : "put",
@@ -104,7 +172,17 @@ function BusinessForm() {
         category: values.category,
         description: values.description,
         address: values.address,
+        eventOrNot: values.eventOrNot,
+        expirationDate: values.expirationDate,
         days: values.days,
+        status:
+          comingData !== null
+            ? comingData.status !== undefined
+              ? comingData.status
+              : comingData.data.status === "rejected"
+              ? "pending"
+              : "accepted"
+            : "pending",
       },
     })
       .then((res) => {
@@ -125,7 +203,17 @@ function BusinessForm() {
       })
       .catch((err) => {
         console.log(err);
-      });
+        notifications.show({
+          message: "Something went wrong",
+          color: "red",
+          autoClose: 2000,
+          icon: <IconAlertSquare />,
+          classNames: {
+            icon: "bg-transparent text-red-500",
+          },
+        });
+      })
+      .finally(() => setIsLoading(false));
   };
   async function updateAttachment(file: string, _id: string) {
     const formData = new FormData();
@@ -151,10 +239,103 @@ function BusinessForm() {
           <Title className="text-xl text-white">Business Informations</Title>
         </div>
         <div className="flex flex-col gap-y-2.5 justify-center">
+          {comingData === null ? (
+            <div>
+              <Radio.Group
+                name="favoriteFramework"
+                label="Type: "
+                className="text-start text-white  mt-3 md:mt-1"
+                withAsterisk
+              >
+                <Group
+                  mt="xs"
+                  className="text-white flex-col md:flex-row items-start"
+                >
+                  <Radio
+                    value="Event"
+                    label="Event"
+                    className=""
+                    color="#99896B"
+                    classNames={{ label: "pl-1 " }}
+                    onClick={(e) => {
+                      businessForm.setFieldValue(
+                        "eventOrNot",
+                        e.currentTarget.value
+                      );
+                    }}
+                  />
+                  <Radio
+                    value="notEvent"
+                    label="Service"
+                    color="#99896B"
+                    classNames={{ label: "pl-1" }}
+                    onClick={(e) => {
+                      businessForm.setFieldValue(
+                        "eventOrNot",
+                        e.currentTarget.value
+                      );
+                    }}
+                  />
+                </Group>
+              </Radio.Group>
+            </div>
+          ) : comingData.type === "all" ? (
+            <div>
+              <Radio.Group
+                name="favoriteFramework"
+                label="Type: "
+                className="text-start text-white  mt-3 md:mt-1"
+                withAsterisk
+              >
+                <Group
+                  mt="xs"
+                  className="text-white flex-col md:flex-row items-start"
+                >
+                  <Radio
+                    value="Event"
+                    label="Event"
+                    className=""
+                    color="#99896B"
+                    classNames={{ label: "pl-1 " }}
+                    onClick={(e) => {
+                      businessForm.setFieldValue(
+                        "eventOrNot",
+                        e.currentTarget.value
+                      );
+                    }}
+                  />
+                  <Radio
+                    value="notEvent"
+                    label="Service"
+                    color="#99896B"
+                    classNames={{ label: "pl-1" }}
+                    onClick={(e) => {
+                      businessForm.setFieldValue(
+                        "eventOrNot",
+                        e.currentTarget.value
+                      );
+                    }}
+                  />
+                </Group>
+              </Radio.Group>
+            </div>
+          ) : null}
           <div className="flex gap-x-1">
             <TextInput
-              required
-              withAsterisk
+              required={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              withAsterisk={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
               label="Business name"
               placeholder="Your business name"
               className="text-start text-white w-full"
@@ -176,12 +357,40 @@ function BusinessForm() {
               maxDropdownHeight={200}
               className="text-start text-white"
               {...businessForm.getInputProps("category")}
+              required={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              withAsterisk={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
             />
             <Select
               data={options}
               label="Country"
-              placeholder="Your business name"
+              placeholder="Your Country"
               className="text-start text-white"
+              required={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              withAsterisk={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
               {...businessForm.getInputProps("country")}
             />
           </div>
@@ -193,43 +402,141 @@ function BusinessForm() {
               />
             }
             className="w-full text-start text-white"
-            required
+            required={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            withAsterisk={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
             description="only one license"
             label="Business's license"
             placeholder="Your business's license"
             {...businessForm.getInputProps("businessLicense")}
           />
-
           <div className="mt-3">
             <InputLabel className="text-white font-bold">
               Business Location
             </InputLabel>
             <Map setLocation={setLocation} location={location!} />
-          </div>
-          <div>
-            {" "}
-            <MultiSelect
-              className="text-start text-white"
-              label="Days"
-              placeholder="Pick Your days"
-              data={[
-                "Saturday",
-                "Sunday",
-                "Monday",
-                "Tuesday",
-                "Wedensday",
-                "Thursday",
-                "Friday",
-                "All Days",
-              ]}
-              {...businessForm.getInputProps("days")}
+          </div>{" "}
+          <MultiSelect
+            className="text-start text-white w-full"
+            label="Days"
+            placeholder="Pick Your days"
+            data={[
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ]}
+            required={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            withAsterisk={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            {...businessForm.getInputProps("days")}
+          />
+          {businessForm.values.eventOrNot === "Event" ? (
+            <DatePickerInput
+              className="text-start text-white w-full"
+              classNames={{
+                day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
+              }}
+              valueFormat="DD MMM YYYY"
+              leftSection={
+                <IconCalendar className="cursor-pointer" stroke={1.5} />
+              }
+              leftSectionPointerEvents="none"
+              label="Expire Date"
+              placeholder="Pick date"
+              required={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              withAsterisk={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              // maxDate={new Date()}
+              {...businessForm.getInputProps("expirationDate")}
             />
-          </div>
-          <div className="grid grid-cols-2 gap-x-1.5">
+          ) : comingData !== null ? (
+            comingData.type === "events" || comingData.type === "Event" ? (
+              <DatePickerInput
+                className="text-start text-white w-full"
+                classNames={{
+                  day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
+                }}
+                valueFormat="DD MMM YYYY"
+                leftSection={
+                  <IconCalendar className="cursor-pointer" stroke={1.5} />
+                }
+                leftSectionPointerEvents="none"
+                label="Expire Date"
+                placeholder="Pick date"
+                required={
+                  comingData !== null
+                    ? comingData.operation === "edit"
+                      ? false
+                      : true
+                    : true
+                }
+                withAsterisk={
+                  comingData !== null
+                    ? comingData.operation === "edit"
+                      ? false
+                      : true
+                    : true
+                }
+                // maxDate={new Date()}
+                {...businessForm.getInputProps("expirationDate")}
+              />
+            ) : null
+          ) : null}
+          <div className="flex gap-x-1.5">
             <TimeInput
-              required
+              required={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              withAsterisk={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
               label="Active From"
-              className="col-span-1 text-start text-white"
+              className="col-span-1 text-start text-white w-full"
               leftSection={
                 <IconClock
                   style={{ width: rem(16), height: rem(16) }}
@@ -239,9 +546,22 @@ function BusinessForm() {
               {...businessForm.getInputProps("activeFrom")}
             />
             <TimeInput
-              required
+              required={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
+              withAsterisk={
+                comingData !== null
+                  ? comingData.operation === "edit"
+                    ? false
+                    : true
+                  : true
+              }
               label="Active To"
-              className="col-span-1 text-start text-white"
+              className="col-span-1 text-start text-white w-full"
               leftSection={
                 <IconClock
                   style={{ width: rem(16), height: rem(16) }}
@@ -258,7 +578,6 @@ function BusinessForm() {
             placeholder="Your discription about your business"
             {...businessForm.getInputProps("description")}
           />
-
           <Button
             className="bg-primary w-full text-base mt-3 rounded py-1 text-white"
             type="submit"

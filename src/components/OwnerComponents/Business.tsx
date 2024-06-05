@@ -41,8 +41,8 @@ function Business({
     <div
       className={
         onClose
-          ? "bg-black w-full rounded-xl "
-          : "w-full hover:ease-in delay-150 duration-200 hover:p-1 rounded "
+          ? "bg-gray-500 w-full rounded-xl "
+          : "w-full hover:ease-in delay-150 duration-200 hover:p-1 rounded drop-shadow-lg"
       }
     >
       <Image
@@ -50,9 +50,9 @@ function Business({
           businesses.status == "pending"
             ? pending
             : businesses.status === "accepted"
-            ? businesses.logo
-              ? `${BASE_URL}/${businesses.logo}`
-              : approved
+            ? businesses.logo.length === 0
+              ? approved
+              : `${BASE_URL}/${businesses.logo}`
             : rejected
         }
         radius="md"
@@ -62,7 +62,7 @@ function Business({
       />
       {isContent == businesses._id &&
       onClose &&
-      businesses.status === "accepted" ? (
+      businesses.status !== "pending" ? (
         <Content
           content={businesses}
           onDelete={onDelete}
