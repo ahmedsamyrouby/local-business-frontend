@@ -8,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
-import signUpArt from "../../../assets/images/signup-art.jpg";
 import {
   Select,
   Button,
@@ -126,10 +125,10 @@ const SignUp = () => {
   };
 
   return (
-    <AuthenticationLayout img={signUpArt}>
+    <AuthenticationLayout>
       <div>
-        <Title className="text-white">Sign Up</Title>
-        <Text className="text-gray-200">
+        <Title className="text-black">Sign Up</Title>
+        <Text className="text-gray-700">
           Please fill in the form below to create your account.
         </Text>
       </div>
@@ -147,7 +146,7 @@ const SignUp = () => {
               label="First Name"
               className="text-start col-span-1 mt-3 md:mt-1"
               classNames={{
-                label: "text-white",
+                label: "text-black",
               }}
               {...form.getInputProps("firstName")}
             />
@@ -159,7 +158,7 @@ const SignUp = () => {
               label="Second Name"
               className="text-start col-span-1 mt-3 md:mt-1"
               classNames={{
-                label: "text-white",
+                label: "text-black",
               }}
               {...form.getInputProps("secondName")}
             />
@@ -172,7 +171,7 @@ const SignUp = () => {
               placeholder="your@email.com"
               className="text-start col-span-2 mt-3 md:mt-1"
               classNames={{
-                label: "text-white",
+                label: "text-black",
               }}
               {...form.getInputProps("email")}
             />
@@ -183,7 +182,7 @@ const SignUp = () => {
               label="Password"
               placeholder="••••••••"
               classNames={{
-                label: "text-white ",
+                label: "text-black ",
               }}
               {...form.getInputProps("password")}
             />
@@ -194,7 +193,7 @@ const SignUp = () => {
               label="Confirm Password"
               placeholder="••••••••"
               classNames={{
-                label: "text-white ",
+                label: "text-black ",
               }}
               {...form.getInputProps("confirmPassword")}
             />
@@ -202,7 +201,7 @@ const SignUp = () => {
             <InputBase
               withAsterisk
               label="Mobile Number"
-              className="text-start text-white col-span-1 mt-3 md:mt-1"
+              className="text-start text-black col-span-1 mt-3 md:mt-1"
               component={IMaskInput}
               mask="+20 000 000 0000"
               placeholder="+20 XXX XXX XXXX"
@@ -210,9 +209,9 @@ const SignUp = () => {
             />
 
             <DatePickerInput
-              className="text-start text-white col-span-1 mt-3 md:mt-1"
+              className="text-start text-black col-span-1 mt-3 md:mt-1"
               classNames={{
-                day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
+                day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-black [&:disabled]:hover:bg-transparent",
               }}
               valueFormat="DD MMM YYYY"
               leftSection={
@@ -229,17 +228,15 @@ const SignUp = () => {
               <Radio.Group
                 name="favoriteFramework"
                 label="Gender: "
-                className="text-start text-white  mt-3 md:mt-1"
+                className="text-start text-black  mt-3 md:mt-1"
               >
                 <Group
                   mt="xs"
-                  className="text-white flex-col md:flex-row items-start"
+                  className="text-black flex-col md:flex-row items-start"
                 >
                   <Radio
                     value="male"
                     label="Male"
-                    className=""
-                    color="#99896B"
                     classNames={{ label: "pl-1 " }}
                     onClick={(e) => {
                       form.setFieldValue("gender", e.currentTarget.value);
@@ -248,7 +245,6 @@ const SignUp = () => {
                   <Radio
                     value="female"
                     label="Female"
-                    color="#99896B"
                     classNames={{ label: "pl-1" }}
                     onClick={(e) => {
                       form.setFieldValue("gender", e.currentTarget.value);
@@ -262,7 +258,7 @@ const SignUp = () => {
               <Select
                 required
                 withAsterisk
-                className="text-start text-white"
+                className="text-start text-black"
                 label="User Type"
                 placeholder="Select User Type"
                 data={["customer", "businessOwner"]}
@@ -279,7 +275,7 @@ const SignUp = () => {
             {"SignUp".toUpperCase()}
           </Button>
 
-          <p className="text-white w-full text-start text-base mt-1">
+          <p className="text-black w-full text-start text-base mt-1">
             Already have an account?{" "}
             <Link className="text-primary" to="/login">
               Login

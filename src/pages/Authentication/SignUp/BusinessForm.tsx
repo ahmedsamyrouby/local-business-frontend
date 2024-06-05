@@ -230,178 +230,129 @@ function BusinessForm() {
   }
 
   return (
-    <AuthenticationLayout img={image}>
-      <form
-        onSubmit={businessForm.onSubmit((values) => handelBusinessForm(values))}
-        className="w-full"
-      >
-        <div className="text-center mb-4">
-          <Title className="text-xl text-white">Business Informations</Title>
+    <form
+      onSubmit={businessForm.onSubmit((values) => handelBusinessForm(values))}
+      className="p-6 bg-gray-100 flex-center flex-col h-screen md:overflow-hidden md:h-auto md:rounded-lg md:w-[800px] border shadow"
+    >
+      <Title order={2} className="text-black">
+        Business Informations
+      </Title>
+      <div className="flex flex-col gap-y-2.5 justify-center w-full">
+        {comingData === null ? (
+          <div>
+            <Radio.Group
+              name="favoriteFramework"
+              label="Type: "
+              className="text-start text-black  mt-3 md:mt-1"
+              withAsterisk
+            >
+              <Group
+                mt="xs"
+                className="text-black flex-col md:flex-row items-start"
+              >
+                <Radio
+                  value="Event"
+                  label="Event"
+                  classNames={{ label: "pl-1 " }}
+                  onClick={(e) => {
+                    businessForm.setFieldValue(
+                      "eventOrNot",
+                      e.currentTarget.value
+                    );
+                  }}
+                />
+                <Radio
+                  value="notEvent"
+                  label="Service"
+                  classNames={{ label: "pl-1" }}
+                  onClick={(e) => {
+                    businessForm.setFieldValue(
+                      "eventOrNot",
+                      e.currentTarget.value
+                    );
+                  }}
+                />
+              </Group>
+            </Radio.Group>
+          </div>
+        ) : comingData.type === "all" ? (
+          <div>
+            <Radio.Group
+              name="favoriteFramework"
+              label="Type: "
+              className="text-start text-black  mt-3 md:mt-1"
+              withAsterisk
+            >
+              <Group
+                mt="xs"
+                className="text-black flex-col md:flex-row items-start"
+              >
+                <Radio
+                  value="Event"
+                  label="Event"
+                  classNames={{ label: "pl-1 " }}
+                  onClick={(e) => {
+                    businessForm.setFieldValue(
+                      "eventOrNot",
+                      e.currentTarget.value
+                    );
+                  }}
+                />
+                <Radio
+                  value="notEvent"
+                  label="Service"
+                  classNames={{ label: "pl-1" }}
+                  onClick={(e) => {
+                    businessForm.setFieldValue(
+                      "eventOrNot",
+                      e.currentTarget.value
+                    );
+                  }}
+                />
+              </Group>
+            </Radio.Group>
+          </div>
+        ) : null}
+        <div className="flex gap-x-1">
+          <TextInput
+            required={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            withAsterisk={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            label="Business name"
+            placeholder="Your business name"
+            className="text-start text-black w-full"
+            {...businessForm.getInputProps("businessName")}
+          />
+          <TextInput
+            label="Address"
+            placeholder="Business's Address"
+            className="text-start text-black w-full"
+            {...businessForm.getInputProps("address")}
+          />
         </div>
-        <div className="flex flex-col gap-y-2.5 justify-center">
-          {comingData === null ? (
-            <div>
-              <Radio.Group
-                name="favoriteFramework"
-                label="Type: "
-                className="text-start text-white  mt-3 md:mt-1"
-                withAsterisk
-              >
-                <Group
-                  mt="xs"
-                  className="text-white flex-col md:flex-row items-start"
-                >
-                  <Radio
-                    value="Event"
-                    label="Event"
-                    className=""
-                    color="#99896B"
-                    classNames={{ label: "pl-1 " }}
-                    onClick={(e) => {
-                      businessForm.setFieldValue(
-                        "eventOrNot",
-                        e.currentTarget.value
-                      );
-                    }}
-                  />
-                  <Radio
-                    value="notEvent"
-                    label="Service"
-                    color="#99896B"
-                    classNames={{ label: "pl-1" }}
-                    onClick={(e) => {
-                      businessForm.setFieldValue(
-                        "eventOrNot",
-                        e.currentTarget.value
-                      );
-                    }}
-                  />
-                </Group>
-              </Radio.Group>
-            </div>
-          ) : comingData.type === "all" ? (
-            <div>
-              <Radio.Group
-                name="favoriteFramework"
-                label="Type: "
-                className="text-start text-white  mt-3 md:mt-1"
-                withAsterisk
-              >
-                <Group
-                  mt="xs"
-                  className="text-white flex-col md:flex-row items-start"
-                >
-                  <Radio
-                    value="Event"
-                    label="Event"
-                    className=""
-                    color="#99896B"
-                    classNames={{ label: "pl-1 " }}
-                    onClick={(e) => {
-                      businessForm.setFieldValue(
-                        "eventOrNot",
-                        e.currentTarget.value
-                      );
-                    }}
-                  />
-                  <Radio
-                    value="notEvent"
-                    label="Service"
-                    color="#99896B"
-                    classNames={{ label: "pl-1" }}
-                    onClick={(e) => {
-                      businessForm.setFieldValue(
-                        "eventOrNot",
-                        e.currentTarget.value
-                      );
-                    }}
-                  />
-                </Group>
-              </Radio.Group>
-            </div>
-          ) : null}
-          <div className="flex gap-x-1">
-            <TextInput
-              required={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              withAsterisk={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              label="Business name"
-              placeholder="Your business name"
-              className="text-start text-white w-full"
-              {...businessForm.getInputProps("businessName")}
-            />
-            <TextInput
-              label="Address"
-              placeholder="Business's Address"
-              className="text-start text-white w-full"
-              {...businessForm.getInputProps("address")}
-            />
-          </div>
-          <div className="flex gap-x-1">
-            {" "}
-            <Select
-              label="Category"
-              placeholder="Business Category"
-              data={Categories}
-              maxDropdownHeight={200}
-              className="text-start text-white"
-              {...businessForm.getInputProps("category")}
-              required={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              withAsterisk={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-            />
-            <Select
-              data={options}
-              label="Country"
-              placeholder="Your Country"
-              className="text-start text-white"
-              required={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              withAsterisk={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              {...businessForm.getInputProps("country")}
-            />
-          </div>
-          <FileInput
-            rightSection={
-              <FaFileImage
-                style={{ width: rem(18), height: rem(18), color: "#99896B" }}
-                stroke="1.5"
-              />
-            }
-            className="w-full text-start text-white"
+        <div className="flex gap-x-1 w-full">
+          {" "}
+          <Select
+            label="Category"
+            placeholder="Business Category"
+            data={Categories}
+            maxDropdownHeight={200}
+            className="text-start text-black w-full"
+            classNames={{
+              dropdown: "z-[1200]",
+            }}
+            {...businessForm.getInputProps("category")}
             required={
               comingData !== null
                 ? comingData.operation === "edit"
@@ -416,30 +367,15 @@ function BusinessForm() {
                   : true
                 : true
             }
-            description="only one license"
-            label="Business's license"
-            placeholder="Your business's license"
-            {...businessForm.getInputProps("businessLicense")}
           />
-          <div className="mt-3">
-            <InputLabel className="text-white font-bold">
-              Business Location
-            </InputLabel>
-            <Map setLocation={setLocation} location={location!} />
-          </div>{" "}
-          <MultiSelect
-            className="text-start text-white w-full"
-            label="Days"
-            placeholder="Pick Your days"
-            data={[
-              "Sunday",
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-            ]}
+          <Select
+            data={options}
+            label="Country"
+            placeholder="Your Country"
+            className="text-start text-black w-full"
+            classNames={{
+              dropdown: "z-[1200]",
+            }}
             required={
               comingData !== null
                 ? comingData.operation === "edit"
@@ -454,13 +390,107 @@ function BusinessForm() {
                   : true
                 : true
             }
-            {...businessForm.getInputProps("days")}
+            {...businessForm.getInputProps("country")}
           />
-          {businessForm.values.eventOrNot === "Event" ? (
+        </div>
+        <FileInput
+          rightSection={
+            <FaFileImage
+              style={{ width: rem(18), height: rem(18) }}
+              stroke="1.5"
+            />
+          }
+          className="w-full text-start text-black"
+          required={
+            comingData !== null
+              ? comingData.operation === "edit"
+                ? false
+                : true
+              : true
+          }
+          withAsterisk={
+            comingData !== null
+              ? comingData.operation === "edit"
+                ? false
+                : true
+              : true
+          }
+          description="only one license"
+          label="Business's license"
+          placeholder="Your business's license"
+          {...businessForm.getInputProps("businessLicense")}
+        />
+        <div className="mt-3">
+          <InputLabel className="text-black font-bold">
+            Business Location
+          </InputLabel>
+          <Map setLocation={setLocation} location={location!} />
+        </div>{" "}
+        <MultiSelect
+          className="text-start text-black w-full"
+          label="Days"
+          placeholder="Pick Your days"
+          data={[
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ]}
+          required={
+            comingData !== null
+              ? comingData.operation === "edit"
+                ? false
+                : true
+              : true
+          }
+          withAsterisk={
+            comingData !== null
+              ? comingData.operation === "edit"
+                ? false
+                : true
+              : true
+          }
+          {...businessForm.getInputProps("days")}
+        />
+        {businessForm.values.eventOrNot === "Event" ? (
+          <DatePickerInput
+            className="text-start text-black w-full"
+            classNames={{
+              day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-black [&:disabled]:hover:bg-transparent",
+            }}
+            valueFormat="DD MMM YYYY"
+            leftSection={
+              <IconCalendar className="cursor-pointer" stroke={1.5} />
+            }
+            leftSectionPointerEvents="none"
+            label="Expire Date"
+            placeholder="Pick date"
+            required={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            withAsterisk={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            // maxDate={new Date()}
+            {...businessForm.getInputProps("expirationDate")}
+          />
+        ) : comingData !== null ? (
+          comingData.type === "events" || comingData.type === "Event" ? (
             <DatePickerInput
-              className="text-start text-white w-full"
+              className="text-start text-black w-full"
               classNames={{
-                day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
+                day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-black [&:disabled]:hover:bg-transparent",
               }}
               valueFormat="DD MMM YYYY"
               leftSection={
@@ -486,117 +516,88 @@ function BusinessForm() {
               // maxDate={new Date()}
               {...businessForm.getInputProps("expirationDate")}
             />
-          ) : comingData !== null ? (
-            comingData.type === "events" || comingData.type === "Event" ? (
-              <DatePickerInput
-                className="text-start text-white w-full"
-                classNames={{
-                  day: "hover:bg-gray-200 [&[data-selected]]:bg-primary [&[data-selected]]:text-white [&:disabled]:hover:bg-transparent",
-                }}
-                valueFormat="DD MMM YYYY"
-                leftSection={
-                  <IconCalendar className="cursor-pointer" stroke={1.5} />
-                }
-                leftSectionPointerEvents="none"
-                label="Expire Date"
-                placeholder="Pick date"
-                required={
-                  comingData !== null
-                    ? comingData.operation === "edit"
-                      ? false
-                      : true
-                    : true
-                }
-                withAsterisk={
-                  comingData !== null
-                    ? comingData.operation === "edit"
-                      ? false
-                      : true
-                    : true
-                }
-                // maxDate={new Date()}
-                {...businessForm.getInputProps("expirationDate")}
+          ) : null
+        ) : null}
+        <div className="flex gap-x-1.5">
+          <TimeInput
+            required={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            withAsterisk={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            label="Active From"
+            className="col-span-1 text-start text-black w-full"
+            leftSection={
+              <IconClock
+                style={{ width: rem(16), height: rem(16) }}
+                stroke={1.5}
               />
-            ) : null
-          ) : null}
-          <div className="flex gap-x-1.5">
-            <TimeInput
-              required={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              withAsterisk={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              label="Active From"
-              className="col-span-1 text-start text-white w-full"
-              leftSection={
-                <IconClock
-                  style={{ width: rem(16), height: rem(16) }}
-                  stroke={1.5}
-                />
-              }
-              {...businessForm.getInputProps("activeFrom")}
-            />
-            <TimeInput
-              required={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              withAsterisk={
-                comingData !== null
-                  ? comingData.operation === "edit"
-                    ? false
-                    : true
-                  : true
-              }
-              label="Active To"
-              className="col-span-1 text-start text-white w-full"
-              leftSection={
-                <IconClock
-                  style={{ width: rem(16), height: rem(16) }}
-                  stroke={1.5}
-                />
-              }
-              {...businessForm.getInputProps("activeTo")}
-            />
-          </div>
-          <Textarea
-            className="text-start text-white"
-            size="vertical"
-            label="Discription"
-            placeholder="Your discription about your business"
-            {...businessForm.getInputProps("description")}
+            }
+            {...businessForm.getInputProps("activeFrom")}
           />
-          <Button
-            className="bg-primary w-full text-base mt-3 rounded py-1 text-white"
-            type="submit"
-            loading={isLoading}
-          >
-            {"submitt".toUpperCase()}
-          </Button>
-          {comingData === null ? null : (
-            <Button
-              className="bg-red-500 w-full text-base mt-1 rounded py-1 text-white"
-              type="submit"
-              onClick={() => navigate("/ownerprofile")}
-            >
-              {"cancel".toUpperCase()}
-            </Button>
-          )}
+          <TimeInput
+            required={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            withAsterisk={
+              comingData !== null
+                ? comingData.operation === "edit"
+                  ? false
+                  : true
+                : true
+            }
+            label="Active To"
+            className="col-span-1 text-start text-black w-full"
+            leftSection={
+              <IconClock
+                style={{ width: rem(16), height: rem(16) }}
+                stroke={1.5}
+              />
+            }
+            {...businessForm.getInputProps("activeTo")}
+          />
         </div>
-      </form>
-    </AuthenticationLayout>
+        <Textarea
+          className="text-black"
+          classNames={{
+            input: "p-2",
+          }}
+          rows={6}
+          label="Description"
+          placeholder="Your description about your business"
+          {...businessForm.getInputProps("description")}
+        />
+        <Button
+          className="bg-primary w-full text-base mt-3 rounded py-1"
+          type="submit"
+          loading={isLoading}
+        >
+          {"submit".toUpperCase()}
+        </Button>
+        {comingData === null ? null : (
+          <Button
+            className="bg-red-500 w-full text-base mt-1 rounded py-1"
+            type="submit"
+            onClick={() => navigate("/ownerprofile")}
+          >
+            {"cancel".toUpperCase()}
+          </Button>
+        )}
+      </div>
+    </form>
   );
 }
 

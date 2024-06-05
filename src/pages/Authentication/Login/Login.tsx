@@ -2,7 +2,6 @@ import { Button, PasswordInput, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
-import loginArt from "../../../assets/images/login-art.jpg";
 import axios from "axios";
 import { setLocalStorage } from "../../../services/LocalStorageService";
 import { notifications } from "@mantine/notifications";
@@ -72,10 +71,10 @@ const Login = () => {
   };
 
   return (
-    <AuthenticationLayout img={loginArt}>
+    <AuthenticationLayout>
       <div>
-        <Title className="text-white">Login</Title>
-        <Text className="text-gray-200">
+        <Title className="text-black">Login</Title>
+        <Text className="text-gray-700">
           Sign in to discover amazing local businesses near you.
         </Text>
       </div>
@@ -91,7 +90,7 @@ const Login = () => {
             placeholder="your@email.com"
             className="text-start"
             classNames={{
-              label: "text-white",
+              label: "text-black",
             }}
             {...form.getInputProps("email")}
           />
@@ -102,7 +101,7 @@ const Login = () => {
               placeholder="••••••••"
               className="text-start"
               classNames={{
-                label: "text-white",
+                label: "text-black",
               }}
               {...form.getInputProps("password")}
             />

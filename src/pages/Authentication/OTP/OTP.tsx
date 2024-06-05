@@ -1,7 +1,6 @@
 import { PinInput, Title, Text, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
-import forgotPasswordArt from "../../../assets/images/forgot-password-art.jpg";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
 import { useNavigate } from "react-router-dom";
@@ -51,10 +50,10 @@ const OTP = () => {
   };
 
   return (
-    <AuthenticationLayout img={forgotPasswordArt}>
+    <AuthenticationLayout>
       <div className="mb-8">
-        <Title className="text-white">Enter OTP</Title>
-        <Text className="text-gray-200">
+        <Title className="text-black">Enter OTP</Title>
+        <Text className="text-gray-700">
           Please enter the OTP sent to your email address.
         </Text>
       </div>
@@ -68,7 +67,7 @@ const OTP = () => {
             classNames={{
               root: "gap-2 md:gap-3 flex-wrap items-center justify-center sm:flex-nowrap",
               input:
-                "bg-transparent text-white hover:border-primary focus:border-primary text-lg flex flex-col",
+                "bg-transparent text-black hover:border-primary focus:border-primary text-lg flex flex-col",
             }}
             placeholder=""
             oneTimeCode

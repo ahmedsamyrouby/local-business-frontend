@@ -1,7 +1,6 @@
 import { Title, Text, TextInput, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
-import forgotPasswordArt from "../../../assets/images/forgot-password-art.jpg";
 import { BASE_URL } from "../../../constants";
 import axios from "axios";
 import { useState } from "react";
@@ -58,10 +57,10 @@ const ForgotPassword = () => {
   };
 
   return (
-    <AuthenticationLayout img={forgotPasswordArt}>
+    <AuthenticationLayout>
       <div className="mb-8">
-        <Title className="text-white">Forgot your password?</Title>
-        <Text className="text-gray-200">
+        <Title className="text-black">Forgot your password?</Title>
+        <Text className="text-gray-700">
           Enter you email address and we'll send you an OTP to reset your
           password.
         </Text>
@@ -77,7 +76,7 @@ const ForgotPassword = () => {
             placeholder="Enter Email"
             className="text-start"
             classNames={{
-              label: "text-white",
+              label: "text-black",
             }}
             {...form.getInputProps("email")}
           />

@@ -2,7 +2,6 @@ import { Button, PasswordInput, Title, Text } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import z from "zod";
 import AuthenticationLayout from "../AuthenticationLayout/AuthenticationLayout";
-import forgotPasswordArt from "../../../assets/images/forgot-password-art.jpg";
 import axios from "axios";
 import { BASE_URL } from "../../../constants";
 import { notifications } from "@mantine/notifications";
@@ -59,15 +58,15 @@ const ResetPassword = () => {
         console.log(err);
       })
       .finally(() => {
-        setIsLoading(false)
+        setIsLoading(false);
       });
   };
 
   return (
-    <AuthenticationLayout img={forgotPasswordArt}>
+    <AuthenticationLayout>
       <div className="mb-8">
-        <Title className="text-white">Reset password</Title>
-        <Text className="text-gray-200">
+        <Title className="text-black">Reset password</Title>
+        <Text className="text-gray-700">
           Enter your new password and confirm it to reset your password.
         </Text>
       </div>
@@ -82,7 +81,7 @@ const ResetPassword = () => {
             type="password"
             className="text-start"
             classNames={{
-              label: "text-white",
+              label: "text-black",
             }}
             {...form.getInputProps("password")}
           />
@@ -91,7 +90,7 @@ const ResetPassword = () => {
             type="password"
             className="text-start"
             classNames={{
-              label: "text-white",
+              label: "text-black",
             }}
             {...form.getInputProps("confirmPassword")}
           />
