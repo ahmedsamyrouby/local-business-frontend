@@ -7,16 +7,15 @@ import {
   Menu,
   Portal,
   Title,
+  Image,
   rem,
 } from "@mantine/core";
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import {
-  IconBriefcase,
   IconHome,
   IconLogout,
   IconMail,
   IconMenu2,
-  IconMessage,
   IconPhone,
   IconSearch,
   IconStar,
@@ -27,6 +26,7 @@ import {
   removeLocalStorage,
 } from "../../services/LocalStorageService";
 import { getInitials } from "../../utils";
+import localLinkerLogo from "../../assets/local-linker-logo.svg";
 
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
@@ -60,9 +60,11 @@ const NavBar = () => {
         }}
       >
         <div>
-          <Link to={"/"} className="text-xl font-bold flex items-center gap-2">
-            <IconBriefcase className="text-primary" size={26} />
-            <Title order={3}>Local Businesses</Title>
+          <Link to={"/"} className="text-xl font-bold flex-center gap-2">
+            <div className="w-10 h-10">
+              <Image className="w-full" src={localLinkerLogo} alt="Local Linker Logo" />
+            </div>
+            <Title order={3}>Local Linker</Title>
           </Link>
         </div>
         {/* DESKTOP NAV */}

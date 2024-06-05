@@ -29,7 +29,7 @@ const ReviewCard = ({ review }: { review: Review }) => {
         }}
         pl={54}
         pt="xs"
-        maxHeight={48}
+        maxHeight={50}
         showLabel={"show more"}
         hideLabel={"show less"}
         transitionDuration={0}
