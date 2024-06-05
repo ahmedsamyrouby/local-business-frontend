@@ -20,9 +20,8 @@ import {
   IconMoodSad,
   IconSearch,
 } from "@tabler/icons-react";
-import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants/index";
+import { BUSINESS_CATEGORIES } from "../../constants/index";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import axios from "axios";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
@@ -46,6 +45,7 @@ import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-ho
 import { useHeadroom } from "@mantine/hooks";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 import { getLocalStorage } from "../../services/LocalStorageService";
+import axiosInstance from "../../services/AxiosService";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
@@ -67,7 +67,6 @@ const Explore = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>(
     location.state?.category || ""
   );
-  const baseUrl = BASE_URL;
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
@@ -83,8 +82,8 @@ const Explore = () => {
     ) => {
       try {
         setILoading(true);
-        const res = await axios.get(
-          `${baseUrl}/customer/searchBusinesses/${search || ""}`,
+        const res = await axiosInstance.get(
+          `/customer/searchBusinesses/${search || ""}`,
           {
             params: {
               category: category || undefined,
@@ -106,11 +105,11 @@ const Explore = () => {
         setILoading(false);
       }
     },
-    [baseUrl]
+    []
   );
 
   const getFavoriteBusinesses = useCallback(async () => {
-    const res = await axios.get(`${BASE_URL}/customer/GetFavorites/${userId}`);
+    const res = await axiosInstance.get(`/customer/GetFavorites/${userId}`);
     setFavoriteBusinesses(transformBusinesses(res.data.favoriteBusinesses));
   }, []);
 

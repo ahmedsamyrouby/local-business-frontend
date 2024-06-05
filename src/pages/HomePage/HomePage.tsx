@@ -1,4 +1,3 @@
-import axios from "axios";
 import { LatLng, LatLngExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -10,7 +9,7 @@ import {
   useMap,
   Circle,
 } from "react-leaflet";
-import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants";
+import { BUSINESS_CATEGORIES } from "../../constants";
 import {
   ActionIcon,
   Button,
@@ -62,6 +61,7 @@ import heroImage from "../../assets/hero-image.svg";
 import { useForm } from "@mantine/form";
 import CategoriesGrid from "../../components/CategoriesGrid/CategoriesGrid";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
+import axiosInstance from "../../services/AxiosService";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -105,8 +105,8 @@ const HomePage = () => {
   });
 
   const getNearbyBusinesses = async () => {
-    const nearbyBusinesses = await axios.get(
-      `${BASE_URL}/Customer/getBusinessesNearby`,
+    const nearbyBusinesses = await axiosInstance.get(
+      `/Customer/getBusinessesNearby`,
       {
         params: {
           latitude: (userLocation as LatLng).lat,
@@ -123,8 +123,8 @@ const HomePage = () => {
   const getRecommendedBusinesses = async () => {
     try {
       setIsFetchingRecommended(true);
-      const recommendedBusinesses = await axios.get(
-        `${BASE_URL}/Customer/recommend/${userId}`
+      const recommendedBusinesses = await axiosInstance.get(
+        `/Customer/recommend/${userId}`
       );
       setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
     } catch (e) {

@@ -17,8 +17,8 @@ import { BASE_URL } from "../../constants";
 
 import marketPlaceholder from "../../assets/images/market.png";
 import { getLocalStorage } from "../../services/LocalStorageService";
-import axios from "axios";
 import { useState } from "react";
+import axiosInstance from "../../services/AxiosService";
 
 export type Business = {
   _id: string;
@@ -51,8 +51,8 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
 
   const addToFavorites = () => {
     try {
-      const res = axios.post(
-        `${BASE_URL}/customer/addtofavorites/${userId}/${business._id}`
+      const res = axiosInstance.post(
+        `/customer/addtofavorites/${userId}/${business._id}`
       );
       setIsFavorite(true);
     } catch (error) {
@@ -62,8 +62,8 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
 
   const deleteFromFavorites = () => {
     try {
-      const res = axios.delete(
-        `${BASE_URL}/customer/DeleteFavorites/${userId}/${business._id}`
+      const res = axiosInstance.delete(
+        `/customer/DeleteFavorites/${userId}/${business._id}`
       );
       setIsFavorite(false);
     } catch (error) {

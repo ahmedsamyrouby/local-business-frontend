@@ -4,10 +4,9 @@ import BusinessCard, {
 } from "../../components/BusinessCard/BusinessCard";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import { transformBusinesses } from "../../utils";
-import axios from "axios";
-import { BASE_URL } from "../../constants";
 import { Button, Loader, Title, rem } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../services/AxiosService";
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState<Array<Business>>([]);
@@ -17,7 +16,7 @@ const Favorites = () => {
 
   const getFavorites = async () => {
     setLoading(true);
-    const res = await axios.get(`${BASE_URL}/customer/GetFavorites/${userId}`);
+    const res = await axiosInstance.get(`/customer/GetFavorites/${userId}`);
     setFavorites(transformBusinesses(res.data.favoriteBusinesses));
     setLoading(false);
   };
