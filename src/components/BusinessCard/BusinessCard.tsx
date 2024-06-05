@@ -1,11 +1,24 @@
-import { Badge, Button, Image, Rating } from "@mantine/core";
-import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Group,
+  Image,
+  Rating,
+  Skeleton,
+  Text,
+} from "@mantine/core";
+import { IconHeart, IconHeartFilled, IconMapPin } from "@tabler/icons-react";
 
 import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../constants";
 
 import marketPlaceholder from "../../assets/images/market.png";
+import { getLocalStorage } from "../../services/LocalStorageService";
+import axios from "axios";
+import { useState } from "react";
 
 export type Business = {
   _id: string;
@@ -14,6 +27,8 @@ export type Business = {
   country: string;
   logo: string;
   rate?: number;
+  description?: string;
+  isFavorite?: boolean;
 };
 
 export interface BusinessCardProps {
@@ -31,76 +46,89 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
 
 const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
+  const userId = getLocalStorage("userId");
+  const [isFavorite, setIsFavorite] = useState(business.isFavorite);
+
+  const addToFavorites = () => {
+    try {
+      const res = axios.post(
+        `${BASE_URL}/customer/addtofavorites/${userId}/${business._id}`
+      );
+      setIsFavorite(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteFromFavorites = () => {
+    try {
+      const res = axios.delete(
+        `${BASE_URL}/customer/DeleteFavorites/${userId}/${business._id}`
+      );
+      setIsFavorite(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
-    <article
-      key={business._id}
-      className="bg-white rounded-md shadow-lg overflow-hidden"
-      onClick={(e) => {
-        e.preventDefault();
-        navigate(`/explore/${business._id}`);
-      }}
-    >
-      <div className="relative">
-        {business?.logo?.length! > 0 ? (
-          <Image
-            src={`${BASE_URL}/${business.logo}`}
-            alt={business.businessName}
-            className="w-full h-64 object-cover"
-          />
-        ) : (
-          <Image
-            src={marketPlaceholder}
-            alt={business.businessName}
-            className="w-full h-64 object-contain p-4"
-          />
-        )}
-      </div>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">{business.businessName}</h1>
-        <div className="flex items-center mb-2">
-          <IconMapPin size={"18px"} />
-          <p className="text-gray-600 ml-2">{business.country}</p>
-        </div>
-        <div className="flex items-center mb-2">
-          {business.rate ? (
-            <Rating value={business.rate} size={"md"} fractions={2} readOnly />
-          ) : (
-            <span className="h-5"></span>
-          )}
-        </div>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            {/* <ActionIcon size={32} className="bg-transparent text-primary mr-2">
-              <IconBookmark />
-            </ActionIcon>
-            <ActionIcon size={32} className="bg-transparent text-primary">
-              <IconShare />
-            </ActionIcon> */}
-            <Button
-              rightSection={<IconArrowRight />}
-              className="bg-transparent text-primary mr-2 p-0"
-            >
-              View Business
-            </Button>
-          </div>
-          <Badge
-            radius={"sm"}
-            className="z-2 text-md border border-primary max-w-40"
-            variant="light"
-            size="lg"
-          >
-            {business.category}
+    <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
+      <Card.Section>
+        <Image
+          className="h-80"
+          src={
+            business?.logo?.length! > 0
+              ? `${BASE_URL}/${business.logo}`
+              : marketPlaceholder
+          }
+        />
+      </Card.Section>
+
+      <Card.Section className="mt-4 border-b space-y-2 border-gray-200 px-4 pb-4">
+        <Group justify="apart">
+          <Text fz="lg" fw={500}>
+            {business.businessName}
+          </Text>
+          <Badge size="sm" variant="light" color="pink.7">
+            {business.country}
           </Badge>
-          {/* Show different badge for open/closed */}
-          {/* <Badge
-      radius={"sm"}
-      className="text-xs bg-red-700 ml-2 px-2 py-1"
-    >
-      Closed
-    </Badge> */}
-        </div>
-      </div>
-    </article>
+        </Group>
+        <Rating value={business.rate} size={"md"} fractions={2} readOnly />
+        <Text className="text-sm truncate">
+          {business.description || "No description available"}
+        </Text>
+      </Card.Section>
+
+      <Card.Section className={"mt-2 border-b border-gray-200 px-4 pb-4"}>
+        <Group gap={"sm"}>
+          <Text mt="md" className={"uppercase text-sm font-bold"} c="dimmed">
+            Category
+          </Text>
+        </Group>
+        <Badge variant="light">{business.category}</Badge>
+      </Card.Section>
+
+      <Group mt="xs">
+        <Button
+          radius="md"
+          style={{ flex: 1 }}
+          onClick={() => navigate(`/explore/${business._id}`)}
+        >
+          Show details
+        </Button>
+        <ActionIcon
+          variant="default"
+          radius="md"
+          size={36}
+          onClick={business.isFavorite ? deleteFromFavorites : addToFavorites}
+        >
+          {isFavorite ? (
+            <IconHeartFilled className={"text-pink-600"} stroke={1.5} />
+          ) : (
+            <IconHeart className={"text-pink-600"} stroke={1.5} />
+          )}
+        </ActionIcon>
+      </Group>
+    </Card>
   );
 };
 
@@ -171,5 +199,33 @@ const MobileBusinessCard = ({ business }: BusinessCardProps) => {
   );
 };
 
+const BusinessCardSkeleton = () => {
+  return (
+    <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
+      <Card.Section>
+        <Skeleton className="h-80 rounded-md" />
+      </Card.Section>
+
+      <Card.Section className="mt-4 border-b space-y-2 border-gray-200 px-4 pb-4">
+        <Skeleton className="h-4 rounded-md" />
+        <Skeleton className="h-4 rounded-md" />
+        <Skeleton className="h-4 rounded-md" />
+      </Card.Section>
+
+      <Card.Section
+        className={"mt-2 border-b space-y-2 border-gray-200 px-4 pb-4"}
+      >
+        <Skeleton className="h-4 w-1/2 rounded-md" />
+        <Skeleton className="h-4 rounded-md" />
+      </Card.Section>
+
+      <Group mt="xs">
+        <Skeleton className="h-10 w-3/4 rounded-md" />
+        <Skeleton className="h-10 w-1/5 rounded-md" />
+      </Group>
+    </Card>
+  );
+};
+
 export default BusinessCard;
-export { DesktopBusinessCard, MobileBusinessCard };
+export { DesktopBusinessCard, MobileBusinessCard, BusinessCardSkeleton };

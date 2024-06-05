@@ -6,7 +6,7 @@ import { getLocalStorage } from "../../services/LocalStorageService";
 import { transformBusinesses } from "../../utils";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
-import { Button, Loader } from "@mantine/core";
+import { Button, Loader, Title, rem } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 const Favorites = () => {
@@ -24,22 +24,23 @@ const Favorites = () => {
 
   useEffect(() => {
     getFavorites();
-    document.title = "Favorites"
+    document.title = "Favorites";
   }, []);
 
   if (loading) {
     return (
-      <div className="w-full h-screen flex-center bg-gray-900">
-        <Loader size="xl" color="#99896B" />
+      <div className="w-full h-screen flex-center bg-white">
+        <Loader size="xl" />
       </div>
     );
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-900 px-4 relative">
+    <div className="w-full min-h-screen bg-white px-4 relative">
+      <div style={{ height: rem(70), width: "100%" }} />
       {favorites.length === 0 ? (
         <div className="w-full h-screen flex-center flex-col gap-4">
-          <h1 className="text-2xl text-white">
+          <h1 className="text-2xl text-gray-900">
             You have no{" "}
             <span className="text-primary font-semibold">Favorites</span> yet...
           </h1>
@@ -49,10 +50,13 @@ const Favorites = () => {
         </div>
       ) : (
         <div className="w-full p-4 flex justify-around flex-col">
-          <h1 className="text-3xl text-white font-semibold">Favorites</h1>
+          <Title className="text-primary font-semibold">Favorites</Title>
           <div className="py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {favorites.map((business) => (
-              <BusinessCard key={business._id} business={business} />
+              <BusinessCard
+                key={business._id}
+                business={{ ...business, country: "Egypt", isFavorite: true }}
+              />
             ))}
           </div>
         </div>

@@ -8,19 +8,34 @@ import {
   Popup,
   TileLayer,
   useMap,
+  Circle,
 } from "react-leaflet";
 import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants";
 import {
   ActionIcon,
   Button,
-  Card,
+  // Card,
   Divider,
   Loader,
   Title,
   Image,
   Text,
+  Container,
+  Input,
+  Select,
+  List,
+  ThemeIcon,
+  Box,
+  Slider,
+  rem,
 } from "@mantine/core";
-import { IconTarget } from "@tabler/icons-react";
+import {
+  // IconArrowBigLeftFilled,
+  // IconArrowBigRightFilled,
+  IconCheck,
+  IconGripHorizontal,
+  IconTarget,
+} from "@tabler/icons-react";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
@@ -31,17 +46,22 @@ import { getLocalStorage } from "../../services/LocalStorageService";
 import { transformBusinesses } from "../../utils";
 
 // Business Category Illustrations
-import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
-import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
-import BookStoreIll from "../../assets/categories-art/book-store.svg";
-import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
-import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
-import HomeServicesIll from "../../assets/categories-art/home-services.svg";
-import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
-import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
-import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
-import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
-import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
+// import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
+// import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
+// import BookStoreIll from "../../assets/categories-art/book-store.svg";
+// import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
+// import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
+// import HomeServicesIll from "../../assets/categories-art/home-services.svg";
+// import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
+// import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
+// import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
+// import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
+// import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
+
+import heroImage from "../../assets/hero-image.svg";
+import { useForm } from "@mantine/form";
+import CategoriesGrid from "../../components/CategoriesGrid/CategoriesGrid";
+import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 
 const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
   const map = useMap();
@@ -60,8 +80,6 @@ const ResetButton = ({ userLocation }: { userLocation: LatLngExpression }) => {
     </ActionIcon>
   );
 };
-
-// TODO: Add types for businesses
 // TODO: Refine the Popup
 // TODO: Handle Loading and Error states
 
@@ -70,6 +88,7 @@ const HomePage = () => {
     LatLngExpression | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
+  const [isFetchingRecommended, setIsFetchingRecommended] = useState(false);
   const [nearbyBusinesses, setNearbyBusinesses] = useState([] as any[]);
   const mapRef = useRef<any>(null);
   const navigate = useNavigate();
@@ -77,6 +96,13 @@ const HomePage = () => {
   const [recommendedBusinesses, setRecommendedBusinesses] = useState<
     Array<Business>
   >([]);
+  const [mapRadius, setMapRadius] = useState(1);
+  const searchForm = useForm({
+    initialValues: {
+      searchQuery: "",
+      category: "",
+    },
+  });
 
   const getNearbyBusinesses = async () => {
     const nearbyBusinesses = await axios.get(
@@ -86,7 +112,7 @@ const HomePage = () => {
           latitude: (userLocation as LatLng).lat,
           longitude: (userLocation as LatLng).lng,
           minDistance: 0,
-          maxDistance: 100000,
+          maxDistance: mapRadius * 1000,
         },
       }
     );
@@ -95,20 +121,50 @@ const HomePage = () => {
   };
 
   const getRecommendedBusinesses = async () => {
-    const recommendedBusinesses = await axios.get(
-      `${BASE_URL}/Customer/recommend/${userId}`
-    );
-    setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
+    try {
+      setIsFetchingRecommended(true);
+      const recommendedBusinesses = await axios.get(
+        `${BASE_URL}/Customer/recommend/${userId}`
+      );
+      setRecommendedBusinesses(transformBusinesses(recommendedBusinesses.data));
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsFetchingRecommended(false);
+    }
+  };
+
+  const searchFormSubmit = (values: {
+    searchQuery: string;
+    category: string;
+  }) => {
+    navigate("/explore", {
+      state: {
+        search: values.searchQuery,
+        category: values.category,
+      },
+    });
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setUserLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-      setLoading(false);
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setLoading(false);
+      },
+      (err) => {
+        console.error(err);
+        setLoading(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
     document.title = "Homepage";
   }, []);
 
@@ -116,7 +172,7 @@ const HomePage = () => {
     if (userLocation) {
       getNearbyBusinesses();
     }
-  }, [userLocation]);
+  }, [userLocation, mapRadius]);
 
   useEffect(() => {
     if (userId) {
@@ -126,32 +182,110 @@ const HomePage = () => {
 
   if (loading)
     return (
-      <div className="w-full h-screen flex-center bg-gray-900">
+      <div className="w-full h-screen flex-center bg-white">
         <Loader size="xl" />
       </div>
     );
 
   return (
-    <div className="bg-gray-900 p-8">
-      <div className="m-2 space-y-4">
-        <Title order={2} className="text-white">
-          Categories
-        </Title>
+    <Container fluid className="bg-white p-8">
+      <div style={{ height: rem(70), width: "100%" }} />
+      {/* HERO SECTION */}
+      <Box className="flex justify-around items-center mb-10">
+        <div className="w-1/2 flex flex-col gap-8">
+          <div>
+            <Title className={"text-5xl mb-2"}>
+              Discover{" "}
+              <span className="bg-primary/25 py-1 px-3 rounded-md">
+                local businesses
+              </span>{" "}
+              <br />
+              near you
+            </Title>
+            <Text className="text-gray-400 pe-5">
+              From hidden gems to well-known favorites, our comprehensive
+              listings and user reviews make it easy to find the perfect local
+              business for your needs. Whether it's dining, shopping, or
+              professional services, we've got you covered with trustworthy
+              recommendations.
+            </Text>
+          </div>
+          <div>
+            <List
+              spacing="sm"
+              size="sm"
+              icon={
+                <ThemeIcon size={20} radius="xl">
+                  <IconCheck style={{ width: 12, height: 12 }} stroke={1.5} />
+                </ThemeIcon>
+              }
+            >
+              <List.Item>
+                <b>Wide Range of Listings</b> – Find restaurants, shops, and
+                services.
+              </List.Item>
+              <List.Item>
+                <b>Trusted Customer Reviews</b> – Read reviews from other
+                customers.
+              </List.Item>
+              <List.Item>
+                <b>Quick and Easy Search</b> – Find what you need in no time.
+              </List.Item>
+              <List.Item>
+                <b>Trusted Recommendations</b> – Discover local favorites and
+                hidden gems.
+              </List.Item>
+            </List>
+          </div>
+          <form
+            className="p-3 rounded-md bg-black/5 flex gap-1"
+            onSubmit={searchForm.onSubmit(searchFormSubmit)}
+          >
+            <Input
+              {...searchForm.getInputProps("searchQuery")}
+              placeholder="Enter business name..."
+              className="flex-grow"
+            />
+            <Select
+              {...searchForm.getInputProps("category")}
+              placeholder="Category"
+              data={[...BUSINESS_CATEGORIES]}
+            />
+            <Button type="submit">Search</Button>
+          </form>
+        </div>
+        <div className="w-[600px]">
+          <Image src={heroImage} />
+        </div>
+      </Box>
+      {/* <Box className="space-y-4 px-10 mb-10">
+        <Title order={2}>Categories</Title>
         <Carousel
           slideSize={"auto"}
           slideGap={{ base: "xl", sm: "md" }}
           align="start"
           draggable
           containScroll="trimSnaps"
-          className="px-12"
+          nextControlIcon={
+            <IconArrowBigRightFilled className="text-gray-900" />
+          }
+          previousControlIcon={
+            <IconArrowBigLeftFilled className="text-gray-900" />
+          }
+          classNames={{
+            control:
+              "h-full bg-black/10 flex rounded-none p-3 shadow-lg border-0",
+            controls: "h-full top-0 p-0 rounded-md overflow-hidden",
+          }}
         >
           {BUSINESS_CATEGORIES.slice(0, BUSINESS_CATEGORIES.length - 1).map(
             (category, idx) => (
               <Carousel.Slide key={idx} className="flex">
                 <Card
-                  className="flex-center gap-4 p-5 text-white text-center bg-white/5 h-[200px] w-[200px]"
+                  className="flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px]"
                   shadow="sm"
                   radius="md"
+                  onClick={() => navigate("/explore", { state: { category } })}
                 >
                   <Text>{category}</Text>
                   <div>
@@ -183,12 +317,14 @@ const HomePage = () => {
             )
           )}
         </Carousel>
-      </div>
+      </Box> */}
       <Divider className="border-t-white/80" />
+
+      {/* NEARBY BUSINESSES SECTION */}
       <div className="w-full p-4 flex justify-around">
         {nearbyBusinesses.length > 0 ? (
-          <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-white/5">
-            <h2 className={"text-3xl mb-2 font-bold text-white"}>
+          <div className="w-1/2 overflow-y-auto max-h-[700px] scroll-smooth styled-scrollbar p-12 bg-black/5">
+            <h2 className={"text-3xl mb-2 font-bold"}>
               <span className="text-primary">{nearbyBusinesses.length}</span>
               {nearbyBusinesses.length > 1 ? " Businesses" : " Business"} Found
               Near You. Explore Now!
@@ -200,8 +336,8 @@ const HomePage = () => {
             </div>
           </div>
         ) : (
-          <div className="w-1/2 max-h-[700px] p-12 bg-white/5 flex-center flex-col gap-4">
-            <h2 className="text-3xl font-bold text-white">
+          <div className="w-1/2 max-h-[700px] p-12 bg-black/5 flex-center flex-col gap-4">
+            <h2 className="text-3xl font-bold">
               No Businesses Found Near You. Explore Now!
             </h2>
             <Button
@@ -213,13 +349,38 @@ const HomePage = () => {
             </Button>
           </div>
         )}
-        <div className="p-28">
+        <div className="w-[540px] flex flex-col items-center gap-8 text-center">
+          <Title order={2}>
+            Discover Nearby Businesses Within{" "}
+            <span className="text-primary">{mapRadius}</span> km
+          </Title>
+          <Slider
+            className="min-w-full"
+            classNames={{
+              thumb:
+                "text-gray-200 bg-white rounded-sm border border-gray-300 w-[1.75rem] h-[1.375rem]",
+            }}
+            thumbChildren={
+              <IconGripHorizontal
+                style={{ width: 20, height: 20 }}
+                stroke={1.5}
+              />
+            }
+            showLabelOnHover
+            value={mapRadius}
+            onChange={(value) => {
+              setMapRadius(value);
+            }}
+            step={1}
+            min={1}
+            max={15}
+          />
           <div className="max-w-[500px] w-[500px] max-h-[500px] h-[500px]">
             <MapContainer
               center={userLocation}
               className="w-full h-full"
               zoom={17}
-              minZoom={12}
+              // minZoom={12}
               ref={mapRef}
             >
               <TileLayer
@@ -242,8 +403,8 @@ const HomePage = () => {
                   <Marker
                     key={index}
                     position={{
-                      lat: business.business.coordinates[0],
-                      lng: business.business.coordinates[1],
+                      lat: business.business.coordinates[1],
+                      lng: business.business.coordinates[0],
                     }}
                   >
                     <Popup>
@@ -257,31 +418,50 @@ const HomePage = () => {
                 );
               })}
               <ResetButton userLocation={userLocation as LatLngExpression} />
+              <Circle
+                center={userLocation!}
+                radius={mapRadius * 1000}
+                color="white"
+              />
             </MapContainer>
           </div>
         </div>
       </div>
       <Divider className="border-t-white/80" />
-      <div className="py-6 flex flex-col gap-6">
-        <h2 className="text-3xl font-bold text-white">
+
+      {/* RECOMMENDED BUSINESSES SECTION */}
+      <Box className="py-6 flex flex-col gap-6">
+        <h2 className="text-3xl font-bold">
           Recommended <span className="text-primary">For You</span>
         </h2>
-        <Carousel
-          slideSize={{ base: "100%", xs: "50%", md: "20%" }}
-          slideGap={{ base: 0, xs: "md" }}
-          align="start"
-          draggable
-          containScroll="trimSnaps"
-          withControls={recommendedBusinesses.length > 5}
-        >
-          {recommendedBusinesses.map((business, idx) => (
-            <Carousel.Slide key={idx}>
-              <BusinessCard key={business._id} business={business} />
-            </Carousel.Slide>
-          ))}
-        </Carousel>
-      </div>
-    </div>
+        {isFetchingRecommended ? (
+          <SkeletonGrid cardsCount={5} />
+        ) : (
+          <Carousel
+            slideSize={{ base: "100%", xs: "50%", md: "20%" }}
+            slideGap={{ base: 0, xs: "md" }}
+            align="start"
+            draggable
+            containScroll="trimSnaps"
+            withControls={recommendedBusinesses.length > 5}
+          >
+            {recommendedBusinesses.map((business, idx) => (
+              <Carousel.Slide key={idx}>
+                <BusinessCard key={business._id} business={business} />
+              </Carousel.Slide>
+            ))}
+          </Carousel>
+        )}
+      </Box>
+
+      {/* CATEGORIES SECTION */}
+      <Box className="my-12 flex-center flex-col gap-6">
+        <Title>Categories</Title>
+        <Box className="w-1/2">
+          <CategoriesGrid />
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

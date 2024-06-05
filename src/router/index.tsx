@@ -13,7 +13,6 @@ import ChangePassword from "../pages/ChangePassword/ChangePassword";
 import Explore from "../pages/Explore/Explore";
 import BusinessDetails from "../pages/BusinessDetails/BusinessDetails";
 import CustomerLayout from "../layout/CustomerLayout";
-import CustomerChat from "../pages/CustomerChat/CustomerChat";
 import OwnerLayout from "../layout/ownerLayout";
 import Requests from "../pages/OwnerProfile/Request";
 import Chat from "../pages/OwnerProfile/Chat";
@@ -41,7 +40,6 @@ export default function AppRouter() {
         <Route index element={<HomePage />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/explore/:id" element={<BusinessDetails />} />
-        <Route path="/customer-chat" element={<CustomerChat />} />
         <Route path="/favorites" element={<Favorites />} />
       </Route>
     </Routes>
