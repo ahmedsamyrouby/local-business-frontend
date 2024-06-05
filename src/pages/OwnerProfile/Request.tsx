@@ -3,25 +3,24 @@ import {
   Menu,
   UnstyledButton,
   Table,
-  Tabs,
-  Modal,
+  Image,
   Title,
 } from "@mantine/core";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import localLinkerLogo from "../../assets/local-linker-logo.svg";
 
 import { requestBody } from "../../services/ConvertStringToFile";
 
-import { SiGooglemybusiness } from "react-icons/si";
-import { AiFillMessage } from "react-icons/ai";
 import { IoSettings } from "react-icons/io5";
 import { CgArrowsExchangeAlt } from "react-icons/cg";
 import { MdEdit } from "react-icons/md";
 import { RxExit } from "react-icons/rx";
 
 import RequestBody from "../../components/OwnerComponents/RequestBody";
+import { removeLocalStorage } from "../../services/LocalStorageService";
 
 function Requests() {
   const [data, setData] = useState([]);
@@ -39,6 +38,10 @@ function Requests() {
         });
     }
   }
+  function logOut() {
+    removeLocalStorage("userId");
+    navigate("/login");
+  }
 
   useEffect(() => {
     getRequestsOfServices();
@@ -47,21 +50,23 @@ function Requests() {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col ">
-      <nav className="flex justify-between w-full p-2 md:px-10 bg-gradient-to-r from-primary to-bg-white">
-        <div className="flex md:gap-x-4 gap-x-1">
-          <SiGooglemybusiness className="text-white h-8 w-8" />
-          <Text className="text-white font-serif font-bold text-base pt-1 pl-1">
-            Local Business
-          </Text>
+      <nav className="flex justify-between w-full px-2 py-4 border-b">
+        <div>
+          <Link
+            to={"/ownerprofile"}
+            className="text-xl font-bold flex-center gap-2"
+          >
+            <div className="w-10 h-10">
+              <Image
+                className="w-full"
+                src={localLinkerLogo}
+                alt="Local Linker Logo"
+              />
+            </div>
+            <Title order={3}>Local Linker</Title>
+          </Link>
         </div>
         <div className="flex md:gap-x-8 gap-x-2">
-          <AiFillMessage
-            className="hover:opacity-80 h-8 w-8 text-gray-400"
-            onClick={() => {
-              navigate("/chat");
-            }}
-          />
-
           <Menu
             withArrow
             position="bottom-end"
@@ -74,7 +79,10 @@ function Requests() {
           >
             <Menu.Target>
               <UnstyledButton className="hover:opacity-80">
-                <IoSettings className=" h-8 w-8 text-gray-400" />
+                <IoSettings
+                  className=" h-8 w-8 text-gray-400"
+                  // style={{ color: "#584D3A" }}
+                />
               </UnstyledButton>
             </Menu.Target>
 
@@ -93,7 +101,7 @@ function Requests() {
                 Setup profile{" "}
               </Menu.Item>
               <Menu.Item
-                // onClick={() => logOut()}
+                onClick={() => logOut()}
                 leftSection={<RxExit />}
                 className="text-red-600"
               >
