@@ -82,7 +82,7 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
   }, [messages]);
 
   return (
-    <div className="flex mx-auto bg-gray-100">
+    <div className="flex mx-auto bg-gray-100 h-[650px]">
       <div className="flex-1 flex flex-col">
         <div className="bg-gray-100/20 p-4 h-80 overflow-y-auto hide-scrollbar flex-grow">
           {messages.map((message, index) => {
