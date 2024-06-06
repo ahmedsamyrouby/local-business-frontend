@@ -20,7 +20,7 @@ import {
   IconMoodSad,
   IconSearch,
 } from "@tabler/icons-react";
-import { BUSINESS_CATEGORIES } from "../../constants/index";
+import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants/index";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import BusinessCard, {
   Business,
@@ -46,6 +46,7 @@ import { useHeadroom } from "@mantine/hooks";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import axiosInstance from "../../services/AxiosService";
+import axios from "axios";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
@@ -67,12 +68,21 @@ const Explore = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>(
     location.state?.category || ""
   );
+  const [category, setCategory] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
   const pinned = useHeadroom({ fixedAt: 140 });
   const userId = getLocalStorage("userId");
 
+  async function getCategories() {
+    try {
+      const response = await axiosInstance.get(`/admin/listCategories`);
+      setCategory(response.data.categories);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   const searchBusinesses = useCallback(
     async (
       page: number,
@@ -139,6 +149,10 @@ const Explore = () => {
   useEffect(() => {
     getFavoriteBusinesses();
   }, [businesses]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -272,53 +286,35 @@ const Explore = () => {
             controls: "h-full top-0 p-0 rounded-md overflow-hidden",
           }}
         >
-          {BUSINESS_CATEGORIES.slice(0, BUSINESS_CATEGORIES.length - 1).map(
-            (category, idx) => (
-              <Carousel.Slide key={idx} className="flex">
-                <Card
-                  className={clsx({
-                    "flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px] hover:bg-primary/30 border hover:border-primary":
-                      true,
-                    "bg-primary/20 border-primary": selectedFilter === category,
-                  })}
-                  shadow="sm"
-                  radius="md"
-                  onClick={() =>
-                    selectedFilter === category
-                      ? clearFilter()
-                      : setSelectedFilter(category)
-                  }
-                  // onClick={() => navigate("/explore", { state: { category } })}
-                >
-                  <Text>{category}</Text>
-                  <div>
-                    <Image
-                      className="w-24 h-24 object-contain"
-                      src={
-                        {
-                          "Restaurants and Cafés": RestaurantsAndCafesIll,
-                          "Retail Stores": RetailStoresIll,
-                          "Health and Beauty Services": HealthAndBeautyIll,
-                          "Medical and Healthcare Services":
-                            MedicalAndHealthcareIll,
-                          "Tourism and Hospitality": TourismAndHospitalityIll,
-                          "Education and Training Centers":
-                            EducationAndTrainingIll,
-                          "Real Estate and Construction":
-                            RealEstateAndConstructionIll,
-                          "Arts and Entertainment": ArtsAndEntertainmentIll,
-                          "Home Services": HomeServicesIll,
-                          "Auto Services": AutoServicesIll,
-                          "Book Store": BookStoreIll,
-                        }[category]
-                      }
-                      alt={category}
-                    />
-                  </div>
-                </Card>
-              </Carousel.Slide>
-            )
-          )}
+          {category.slice(0, category.length - 1).map((category, idx) => (
+            <Carousel.Slide key={idx} className="flex">
+              <Card
+                className={clsx({
+                  "flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px] hover:bg-primary/30 border hover:border-primary":
+                    true,
+                  "bg-primary/20 border-primary":
+                    selectedFilter === category.name,
+                })}
+                shadow="sm"
+                radius="md"
+                onClick={() =>
+                  selectedFilter === category.name
+                    ? clearFilter()
+                    : setSelectedFilter(category.name)
+                }
+                // onClick={() => navigate("/explore", { state: { category } })}
+              >
+                <Text>{category.name}</Text>
+                <div>
+                  <Image
+                    className="w-24 h-24 object-contain"
+                    src={`${BASE_URL}/${category.image}`}
+                    alt={category}
+                  />
+                </div>
+              </Card>
+            </Carousel.Slide>
+          ))}
         </Carousel>
       </Box>
       {isLoading ? (
