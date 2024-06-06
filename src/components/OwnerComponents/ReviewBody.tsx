@@ -3,6 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { businessContent } from "../../services/ConvertStringToFile";
 import Swal from "sweetalert2";
+import { getLocalStorage } from "../../services/LocalStorageService";
 
 function ReviewBody({
   userName,
@@ -19,6 +20,7 @@ function ReviewBody({
   customerId: string;
   content: businessContent;
 }) {
+  const userToken = getLocalStorage("userToken");
   async function reportReview() {
     const { value: text } = await Swal.fire({
       input: "textarea",
@@ -41,6 +43,7 @@ function ReviewBody({
     await axios({
       method: "post",
       url: `${BASE_URL}/report/${reviewId}/${content._id}/${customerId}`,
+      headers: { Authorization: `Bearer ${userToken}` },
       data: { reason: text },
     })
       .then((res) => console.log(res))

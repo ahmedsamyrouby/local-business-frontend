@@ -21,6 +21,7 @@ import { notifications } from "@mantine/notifications";
 function ChangePassword() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const userToken = getLocalStorage("userToken");
   const userId = getLocalStorage("userId");
   const validationSchema = z
     .object({
@@ -65,6 +66,7 @@ function ChangePassword() {
     await axios({
       method: "patch",
       url: `${BASE_URL}/auth/changePassword/${userId}`,
+      headers: { Authorization: `Bearer ${userToken}` },
       data: {
         oldPassword: values.currentPassword,
         newPassword: values.newPassword,

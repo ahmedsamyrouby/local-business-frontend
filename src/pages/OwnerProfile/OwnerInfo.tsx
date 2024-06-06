@@ -35,11 +35,12 @@ function OwnerInfo({
     gender: "",
     userProfile: "",
   });
-
+  const userToken = getLocalStorage("userToken");
   const getOwnerInfo = async () => {
     try {
       const respone = await axios.get(
-        `${BASE_URL}/businessOwner/getUserByUserID/${userId}`
+        `${BASE_URL}/businessOwner/getUserByUserID/${userId}`,
+        { headers: { Authorization: `Bearer ${userToken}` } }
       );
       setData(respone.data.data);
       // setImg(`${BASE_URL}/${data.userProfile}`);

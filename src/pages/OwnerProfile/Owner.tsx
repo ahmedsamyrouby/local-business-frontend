@@ -1,14 +1,18 @@
 import { useMediaQuery } from "react-responsive";
 import { useDisclosure } from "@mantine/hooks";
-import { Drawer, Button, Menu, Title, UnstyledButton, Image } from "@mantine/core";
+import {
+  Drawer,
+  Button,
+  Menu,
+  Title,
+  UnstyledButton,
+  Image,
+} from "@mantine/core";
 import { MdMenu } from "react-icons/md";
-import { SiGooglemybusiness } from "react-icons/si";
-// import { IoNotifications } from "react-icons/io5";
 import { MdBusinessCenter } from "react-icons/md";
 import { MdEvent } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { IoSettings } from "react-icons/io5";
-import { AiFillMessage } from "react-icons/ai";
 import { CgArrowsExchangeAlt } from "react-icons/cg";
 import { MdEdit } from "react-icons/md";
 import { RxExit } from "react-icons/rx";
@@ -56,7 +60,10 @@ function OwnerProfile() {
       <div className="flex flex-col gap-y-7">
         <nav className="flex justify-between w-full px-2 py-4 border-b">
           <div>
-            <Link to={"/ownerprofile"} className="text-xl font-bold flex-center gap-2">
+            <Link
+              to={"/ownerprofile"}
+              className="text-xl font-bold flex-center gap-2"
+            >
               <div className="w-10 h-10">
                 <Image
                   className="w-full"
@@ -117,8 +124,8 @@ function OwnerProfile() {
             isIpadHeight
               ? "flex w-screen px-10 "
               : isIphoneHeight
-                ? "flex w-full h-screen px-3 "
-                : "flex justify-center lg:gap-24 w-screen px-2 "
+              ? "flex w-full h-screen px-3 "
+              : "flex justify-center lg:gap-24 w-screen px-2 "
           }
           style={{ height: "39.39rem" }}
         >
@@ -135,8 +142,8 @@ function OwnerProfile() {
               height: isIpadHeight
                 ? "55rem"
                 : isIphoneHeight
-                  ? "100%"
-                  : "39.39rem",
+                ? "100%"
+                : "39.39rem",
               width: "55rem",
             }}
           >
@@ -149,8 +156,8 @@ function OwnerProfile() {
                       isIpadHeight
                         ? "bg-gray-900 mt-5"
                         : isIphoneHeight
-                          ? "bg-gray-900 mt-3 pl-1"
-                          : "bg-gray-100"
+                        ? "bg-gray-900 mt-3 pl-1"
+                        : "bg-gray-100"
                     }
                     onClick={open}
                   >
@@ -159,8 +166,8 @@ function OwnerProfile() {
                         isIpadHeight
                           ? "w-14 h-14 hover:opacity-80"
                           : isIphoneHeight
-                            ? "w-12 h-12 hover:opacity-80"
-                            : "w-8 h-8 hover:opacity-80 text-primary"
+                          ? "w-12 h-12 hover:opacity-80"
+                          : "w-8 h-8 hover:opacity-80 text-primary"
                       }
                     />
                   </Button>

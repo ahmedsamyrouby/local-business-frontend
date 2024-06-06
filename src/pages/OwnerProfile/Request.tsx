@@ -1,11 +1,4 @@
-import {
-  Text,
-  Menu,
-  UnstyledButton,
-  Table,
-  Image,
-  Title,
-} from "@mantine/core";
+import { Menu, UnstyledButton, Table, Image, Title } from "@mantine/core";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useEffect, useState } from "react";
@@ -20,17 +13,22 @@ import { MdEdit } from "react-icons/md";
 import { RxExit } from "react-icons/rx";
 
 import RequestBody from "../../components/OwnerComponents/RequestBody";
-import { removeLocalStorage } from "../../services/LocalStorageService";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+} from "../../services/LocalStorageService";
 
 function Requests() {
   const [data, setData] = useState([]);
   const locationData = useLocation();
   const comingData = locationData.state;
+  const userToken = getLocalStorage("userToken");
   async function getRequestsOfServices() {
     if (comingData) {
       await axios
         .get(
-          `http://localhost:3011/businessOwner/getAllService/${comingData.id}`
+          `http://localhost:3011/businessOwner/getAllService/${comingData.id}`,
+          { headers: { Authorization: `Bearer ${userToken}` } }
         )
         .then((res) => {
           console.log(res.data);

@@ -13,6 +13,8 @@ import StaticMap from "../StaticMap/StaticMap";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import clsx from "clsx";
+import Swal from "sweetalert2";
+import { getLocalStorage } from "../../services/LocalStorageService";
 
 function RequestBody({
   data,
@@ -26,12 +28,14 @@ function RequestBody({
   // id: string;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
+  const userToken = getLocalStorage("userToken");
   const [openedMap, { open: openMap, close: closeMap }] = useDisclosure(false);
   async function responseOnRequest(status: string, approvalStatus: string) {
     console.log(status);
     await axios({
       method: "put",
       url: `${BASE_URL}/businessOwner/updateStatus/${data._id}`,
+      headers: { Authorization: `Bearer ${userToken}` },
       data: {
         newStatus: status,
         approvalStatus: approvalStatus,
@@ -44,6 +48,26 @@ function RequestBody({
       .catch((err) => {
         console.log(err);
       });
+  }
+  function confirmDelete() {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        responseOnRequest("Completed", "Declined");
+        Swal.fire({
+          title: "Deleted!",
+          text: "Request has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   }
   return (
     <>
@@ -149,7 +173,7 @@ function RequestBody({
                 : false
             }
             onClick={() => {
-              responseOnRequest("Completed", "Declined");
+              confirmDelete();
             }}
           >
             <RiDeleteBin6Line

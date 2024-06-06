@@ -20,6 +20,7 @@ function ChangeImage({
   img: string | null | undefined;
   getOwnerInfo?: () => Promise<void>;
 }) {
+  const userToken = getLocalStorage("userToken");
   const userId = getLocalStorage("userId");
   async function handelUpdateButton(file: File | null) {
     console.log(file);
@@ -34,6 +35,7 @@ function ChangeImage({
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userToken}`,
           },
         }
       )

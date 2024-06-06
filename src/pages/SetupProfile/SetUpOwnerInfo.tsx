@@ -19,6 +19,7 @@ function SetupOwnerInfo() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const userId = getLocalStorage("userId");
+  const userToken = getLocalStorage("userToken");
   const validationSchema = z.object({
     firstName: z.string(),
     secondName: z.string(),
@@ -35,6 +36,7 @@ function SetupOwnerInfo() {
     },
     validate: zodResolver(validationSchema),
   });
+
   type FormValues = typeof form.values;
   async function handelForm(values: FormValues) {
     console.log(values);
@@ -42,6 +44,7 @@ function SetupOwnerInfo() {
     await axios({
       method: "put",
       url: `${BASE_URL}/auth/updateUserData/${userId}`,
+      headers: { Authorization: `Bearer ${userToken}` },
       data: {
         name: name,
         email: values.email,

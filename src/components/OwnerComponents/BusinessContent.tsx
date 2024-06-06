@@ -27,6 +27,7 @@ import StarRating from "./StarRating";
 import { useNavigate } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
 import { RxUpdate } from "react-icons/rx";
+import { getLocalStorage } from "../../services/LocalStorageService";
 // import Business from "./Business";
 function Content({
   content,
@@ -52,11 +53,13 @@ function Content({
     fourStarCount: "",
     fiveStarCount: "",
   });
+  const userToken = getLocalStorage("userToken");
   const [notificationsNumber, setNotificationNumber] = useState(0);
   async function getRating() {
     try {
       const response = await axios.get(
-        `${BASE_URL}/businessOwner/rating/${content._id}`
+        `${BASE_URL}/businessOwner/rating/${content._id}`,
+        { headers: { Authorization: `Bearer ${userToken}` } }
       );
       console.log(response);
       setData(response.data);
@@ -67,7 +70,8 @@ function Content({
   async function getRatingCount() {
     try {
       const response = await axios.get(
-        `${BASE_URL}/customer/countRatings/${content._id}`
+        `${BASE_URL}/customer/countRatings/${content._id}`,
+        { headers: { Authorization: `Bearer ${userToken}` } }
       );
       console.log(response);
       setData2(response.data.ratingCounts);
@@ -77,7 +81,9 @@ function Content({
   }
   async function getRequestsOfServicesNumber() {
     await axios
-      .get(`http://localhost:3011/businessOwner/getAllService/${content._id}`)
+      .get(`http://localhost:3011/businessOwner/getAllService/${content._id}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      })
       .then((res) => {
         let number: number = 0;
         res.data.data.map((req: { approvalStatus: string }) => {

@@ -48,6 +48,7 @@ function OwnerBuisness({
   const [onClose, setOnClose] = useState(false);
   const userId = getLocalStorage("userId");
   const [data, setData] = useState([]);
+  const userToken = getLocalStorage("userToken");
   async function deleteBusiness(_id: string) {
     Swal.fire({
       title: "Are you sure?",
@@ -62,6 +63,7 @@ function OwnerBuisness({
         axios({
           method: "delete",
           url: `${BASE_URL}/businessOwner/deleteBusiness/${_id}`,
+          headers: { Authorization: `Bearer ${userToken}` },
         }).then((res) => {
           getBusinesses();
           notifications.show({
@@ -88,7 +90,12 @@ function OwnerBuisness({
       await axios.patch(
         `${BASE_URL}/businessOwner/addLogoToBusiness/${_id}`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
       );
       getBusinesses();
     } catch (err) {
@@ -103,7 +110,12 @@ function OwnerBuisness({
         await axios.patch(
           `${BASE_URL}/businessOwner/updateMyBusinessMedia/${_id}`,
           formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
         );
         getBusinesses();
       } catch (err) {
@@ -114,7 +126,8 @@ function OwnerBuisness({
   const getBusinesses = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
+        `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`,
+        { headers: { Authorization: `Bearer ${userToken}` } }
       );
       setData(response.data.data.businesses);
     } catch (error) {

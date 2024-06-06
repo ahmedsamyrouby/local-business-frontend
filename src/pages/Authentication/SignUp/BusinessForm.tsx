@@ -29,6 +29,7 @@ import { BASE_URL } from "../../../constants";
 import { getLocalStorage } from "../../../services/LocalStorageService";
 import { useLocation, useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
+import { set } from "zod";
 function BusinessForm() {
   const navigate = useNavigate();
   const options = useMemo(() => countryList().getData(), []);
@@ -37,6 +38,7 @@ function BusinessForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [location, setLocation] = useState<LatLngExpression>();
   const [data, setData] = useState([]);
+  const [category, setCategory] = useState([]);
   const userId: string | null = getLocalStorage("userId");
   const Categories: readonly string[] = [
     "Restaurants and Cafés",
@@ -126,10 +128,27 @@ function BusinessForm() {
           : "",
     },
   });
+  const userToken = getLocalStorage("userToken");
+  async function getCategories() {
+    try {
+      const response = await axios.get(`${BASE_URL}/admin/listCategories`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
+      setCategory(
+        response.data.categories.map(
+          (categoryName, i) => (category[i] = categoryName.name)
+        )
+      );
+      console.log(category);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   const getBusinesses = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`
+        `${BASE_URL}/businessOwner/getAllUserBusinesses/${userId}`,
+        { headers: { Authorization: `Bearer ${userToken}` } }
       );
       setData(response.data.data.businesses);
       // console.log(data);
@@ -140,6 +159,7 @@ function BusinessForm() {
   };
   useEffect(() => {
     getBusinesses();
+    getCategories();
   }, []);
 
   useEffect(() => {
@@ -163,6 +183,7 @@ function BusinessForm() {
         comingData != null
           ? comingData.api
           : `${BASE_URL}/businessOwner/updateMyBusinessInfo/${data[0]._id}`,
+      headers: { Authorization: `Bearer ${userToken}` },
       data: {
         business: {
           type: "Point",
@@ -224,7 +245,12 @@ function BusinessForm() {
       await axios.patch(
         `${BASE_URL}/businessOwner/updateMyBusinessAttachment/${_id}`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
       );
     } catch (err) {
       console.log(err);
