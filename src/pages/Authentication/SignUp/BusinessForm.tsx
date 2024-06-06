@@ -40,19 +40,19 @@ function BusinessForm() {
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
   const userId: string | null = getLocalStorage("userId");
-  const Categories: readonly string[] = [
-    "Restaurants and Cafés",
-    "Retail Stores",
-    "Health and Beauty Services",
-    "Medical and Healthcare Services",
-    "Tourism and Hospitality",
-    "Education and Training Centers:",
-    "Real Estate and Construction",
-    "Arts and Entertainment",
-    "Home Services",
-    "Auto Services",
-    "Other",
-  ];
+  // const Categories: readonly string[] = [
+  //   "Restaurants and Cafés",
+  //   "Retail Stores",
+  //   "Health and Beauty Services",
+  //   "Medical and Healthcare Services",
+  //   "Tourism and Hospitality",
+  //   "Education and Training Centers:",
+  //   "Real Estate and Construction",
+  //   "Arts and Entertainment",
+  //   "Home Services",
+  //   "Auto Services",
+  //   "Other",
+  // ];
 
   const businessForm = useForm({
     initialValues: {
@@ -374,7 +374,7 @@ function BusinessForm() {
           <Select
             label="Category"
             placeholder="Business Category"
-            data={Categories}
+            data={category}
             maxDropdownHeight={200}
             className="text-start text-black w-full"
             classNames={{

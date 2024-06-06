@@ -102,7 +102,7 @@ function ChangePassword() {
   return (
     <AuthenticationLayout img={signUpArt}>
       <div>
-        <Title className="text-white">Change Password</Title>
+        <Title className="text-black">Change Password</Title>
       </div>
       <form
         onSubmit={form.onSubmit((values) => handelForm(values))}
@@ -110,36 +110,36 @@ function ChangePassword() {
       >
         <div className="flex flex-col gap-y-4">
           <PasswordInput
-            className="text-start text-white"
+            className="text-start"
             label="Current Password"
             withAsterisk
             placeholder="Your Current Password"
             leftSection={
               <IconLock style={{ width: rem(18), height: rem(18) }} />
             }
-            classNames={{ label: "text-white font-bold" }}
+            classNames={{ label: "text-black" }}
             {...form.getInputProps("currentPassword")}
           />
           <PasswordInput
-            className="text-start text-white"
+            className="text-start"
             label="New Password"
             withAsterisk
             placeholder="Your New Password"
             leftSection={
               <IconLock style={{ width: rem(18), height: rem(18) }} />
             }
-            classNames={{ label: "text-white font-bold" }}
+            classNames={{ label: "text-black" }}
             {...form.getInputProps("newPassword")}
           />
           <PasswordInput
-            className="text-start text-white"
+            className="text-start"
             label="Confirm Password"
             withAsterisk
             placeholder="Your Confirm Password"
             leftSection={
               <IconLock style={{ width: rem(18), height: rem(18) }} />
             }
-            classNames={{ label: "text-white font-bold" }}
+            classNames={{ label: "text-black" }}
             {...form.getInputProps("confirmPassword")}
           />
           <Button

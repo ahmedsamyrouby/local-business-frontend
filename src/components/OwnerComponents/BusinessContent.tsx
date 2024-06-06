@@ -411,7 +411,7 @@ function Content({
                 <div className="flex flex-col gap-y-4 col-span-2 my-5 w-full">
                   <div className="flex w-full bg-white h-2">
                     <div
-                      className="bg-gray-500 h-2"
+                      className="bg-primary h-2"
                       style={{
                         width: Number.isNaN(rateFive) ? "0px" : `${rateFive}%`,
                       }}
@@ -419,7 +419,7 @@ function Content({
                   </div>
                   <div className="w-full bg-white h-2">
                     <div
-                      className="bg-gray-500 h-2"
+                      className="bg-primary h-2"
                       style={{
                         width: Number.isNaN(rateFour) ? "0px" : `${rateFour}%`,
                       }}
@@ -427,7 +427,7 @@ function Content({
                   </div>
                   <div className="w-full bg-white h-2">
                     <div
-                      className="bg-gray-500 h-2"
+                      className="bg-primary h-2"
                       style={{
                         width: Number.isNaN(rateThree)
                           ? "0px"
@@ -437,7 +437,7 @@ function Content({
                   </div>
                   <div className="w-full bg-white h-2">
                     <div
-                      className="bg-gray-500 h-2"
+                      className="bg-primary h-2"
                       style={{
                         width: Number.isNaN(rateTwo) ? "0px" : `${rateTwo}%`,
                       }}
@@ -445,7 +445,7 @@ function Content({
                   </div>
                   <div className="w-full bg-white h-2">
                     <div
-                      className="bg-gray-500 h-2"
+                      className="bg-primary h-2"
                       style={{
                         width: Number.isNaN(rateOne) ? "0px" : `${rateOne}%`,
                       }}

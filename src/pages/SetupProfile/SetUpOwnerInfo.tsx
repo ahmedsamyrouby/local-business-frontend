@@ -67,7 +67,7 @@ function SetupOwnerInfo() {
   return (
     <AuthenticationLayout img={signUpArt}>
       <div>
-        <Title className="text-white">Update Informations</Title>
+        <Title className="text-black">Update Informations</Title>
       </div>
       <form
         onSubmit={form.onSubmit((values) => handelForm(values))}
@@ -76,29 +76,29 @@ function SetupOwnerInfo() {
         <div className="flex flex-col gap-y-4">
           <div className="flex w-full gap-x-4">
             <TextInput
-              className="text-start text-white w-full"
+              className="text-start text-black w-full"
               label="Firts Name"
-              classNames={{ label: "text-white font-bold" }}
+              classNames={{ label: "text-black" }}
               {...form.getInputProps("firstName")}
             />
             <TextInput
-              className="text-start text-white w-full"
+              className="text-start w-full"
               label="Second Name"
-              classNames={{ label: "text-white font-bold" }}
+              classNames={{ label: "text-black " }}
               {...form.getInputProps("secondName")}
             />
           </div>
           <TextInput
-            className="text-start text-white"
+            className="text-start"
             leftSectionPointerEvents="none"
             leftSection={<IconAt style={{ width: rem(16), height: rem(16) }} />}
             label="E-mail"
             placeholder="email"
-            classNames={{ label: "text-white font-bold" }}
+            classNames={{ label: "text-black " }}
             {...form.getInputProps("email")}
           />
           <DatePickerInput
-            className="text-start text-white col-span-1"
+            className="text-start text-black col-span-1"
             valueFormat="YYYY MMM DD"
             leftSection={
               <IconCalendar className="cursor-pointer" stroke={1.5} />
@@ -117,6 +117,7 @@ function SetupOwnerInfo() {
             leftSection={
               <FaPhoneAlt style={{ width: rem(16), height: rem(16) }} />
             }
+            classNames={{ label: "text-black" }}
             {...form.getInputProps("number")}
           />
           <Button

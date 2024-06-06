@@ -32,6 +32,7 @@ function ReviewBody({
       showCancelButton: true,
     });
     if (text) {
+      report(text);
       Swal.fire({
         title: "Done!",
         text: "Your reason has been sent.",
@@ -40,9 +41,11 @@ function ReviewBody({
     }
     console.log(reviewId);
     console.log(text);
+  }
+  async function report(text: string) {
     await axios({
       method: "post",
-      url: `${BASE_URL}/report/${reviewId}/${content._id}/${customerId}`,
+      url: `${BASE_URL}/report/${reviewId}/${content.userId}/${customerId}`,
       headers: { Authorization: `Bearer ${userToken}` },
       data: { reason: text },
     })
