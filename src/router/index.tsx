@@ -20,6 +20,7 @@ import Favorites from "../pages/Favourites/Favorites";
 import PrivateRoute from "./PrivateRoute";
 import NotFound from "../pages/Error/NotFound";
 import UnAuthorized from "../pages/Error/UnAuthorized";
+import BusinessChat from "./../pages/BusinessChat/BusinessChat";
 
 export default function AppRouter() {
   return (
@@ -28,7 +29,7 @@ export default function AppRouter() {
         <Route path="/" element={<OwnerLayout />}>
           <Route path="/ownerprofile" element={<OwnerProfile />} />
           <Route path="/request" element={<Requests />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat" element={<BusinessChat />} />
         </Route>
       </Route>
       <Route element={<AuthLayout />}>

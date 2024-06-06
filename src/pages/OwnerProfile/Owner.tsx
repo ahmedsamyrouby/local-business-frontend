@@ -23,7 +23,7 @@ import { removeLocalStorage } from "../../services/LocalStorageService";
 import { useState } from "react";
 import localLinkerLogo from "../../assets/local-linker-logo.svg";
 
-function OwnerProfile() {
+function  OwnerProfile() {
   const navigate = useNavigate();
   const [businessType, setBusinessType] = useState("all");
   const [opened, { open, close }] = useDisclosure(false);
@@ -58,8 +58,8 @@ function OwnerProfile() {
       </Drawer>
 
       <div className="flex flex-col gap-y-7">
-        <nav className="flex justify-between w-full px-2 py-4 border-b">
-          <div>
+        <nav className="flex justify-between w-full px-2 py-4 border-b gap-5">
+          <div className="w-full flex-center justify-between">
             <Link
               to={"/ownerprofile"}
               className="text-xl font-bold flex-center gap-2"

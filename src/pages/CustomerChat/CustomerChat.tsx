@@ -1,13 +1,13 @@
 import { Button, Input } from "@mantine/core";
-import LeftMessage from "../../components/CustomerChat/LeftMessage";
-import RightMessage from "../../components/CustomerChat/RightMessage";
-import { useEffect, useRef, useState } from "react";
+import LeftMessage from "../../components/Chat/LeftMessage";
+import RightMessage from "../../components/Chat/RightMessage";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { notifications } from "@mantine/notifications";
 import { IconAlertSquare } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import axiosInstance from "../../services/AxiosService";
 
-interface ChatMessage {
+export interface ChatMessage {
   businessId: string;
   customerId: string;
   sender: "businessOwner" | "customer";
@@ -29,7 +29,7 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView();
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const sendMessage = async () => {
@@ -41,6 +41,7 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
           message: message,
         }
       );
+      scrollToBottom();
     } catch (error) {
       notifications.show({
         message: "Error sending message",
@@ -61,8 +62,9 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
     const res = await axiosInstance.get(
       `/customer/getAllMessages/${customerId}/${businessId}`
     );
-    setMessages(res.data.messages);
-    scrollToBottom();
+    if (JSON.stringify(res.data.messages) !== JSON.stringify(messages)) {
+      setMessages(res.data.messages);
+    }
   };
 
   const isFirstMessage = (index: number) => {
@@ -72,47 +74,54 @@ const CustomerChat = ({ customerId, businessId }: CustomerChatProps) => {
     return currTime.diff(prevTime, "minute") > 20;
   };
 
+  const memoizedMessages = useMemo(() => {
+    return messages.map((message, index) => {
+      const isFirst = isFirstMessage(index);
+      const formattedTimestamp = dayjs(message.timestamp).format(
+        "MMM D, YYYY h:mm A"
+      );
+
+      return (
+        <div key={message._id}>
+          {isFirst && (
+            <div className="text-xs text-gray-500 self-center mb-2 flex-center">
+              {formattedTimestamp}
+            </div>
+          )}
+          {message.sender === "businessOwner" ? (
+            <LeftMessage
+              key={message._id}
+              message={message.content}
+              time={formattedTimestamp}
+            />
+          ) : (
+            <RightMessage
+              key={message._id}
+              message={message.content}
+              time={formattedTimestamp}
+            />
+          )}
+        </div>
+      );
+    });
+  }, [messages]);
+
   useEffect(() => {
     getAllMessages();
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const interval = setInterval(() => {
+      getAllMessages();
+    }, 3000); // Changed to 3000 to reduce frequency and avoid too many requests
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex mx-auto bg-gray-100 h-[650px]">
       <div className="flex-1 flex flex-col">
         <div className="bg-gray-100/20 p-4 h-80 overflow-y-auto hide-scrollbar flex-grow">
-          {messages.map((message, index) => {
-            const isFirst = isFirstMessage(index);
-            const formattedTimestamp = dayjs(message.timestamp).format(
-              "MMM D, YYYY h:mm A"
-            );
-
-            return (
-              <div key={message._id}>
-                {isFirst && (
-                  <div className="text-xs text-gray-500 self-center mb-2 flex-center">
-                    {formattedTimestamp}
-                  </div>
-                )}
-                {message.sender === "businessOwner" ? (
-                  <LeftMessage
-                    key={message._id}
-                    message={message.content}
-                    time={formattedTimestamp}
-                  />
-                ) : (
-                  <RightMessage
-                    key={message._id}
-                    message={message.content}
-                    time={formattedTimestamp}
-                  />
-                )}
-              </div>
-            );
-          })}
+          {memoizedMessages}
           <div ref={chatEndRef} />
         </div>
         <div className="bg-gray-200/10 p-4">

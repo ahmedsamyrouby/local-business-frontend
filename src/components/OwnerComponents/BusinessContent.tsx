@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
 import { RxUpdate } from "react-icons/rx";
 import { getLocalStorage } from "../../services/LocalStorageService";
+import { IconMessage } from "@tabler/icons-react";
 // import Business from "./Business";
 function Content({
   content,
@@ -194,6 +195,30 @@ function Content({
                     onClick={() => {}}
                     style={{ color: "#584D3A" }}
                   />
+                  <div style={{ marginTop: "-50px" }}>
+                    {notificationsNumber ? (
+                      <Badge size="xs" circle className="bg-red-600">
+                        {notificationsNumber}
+                      </Badge>
+                    ) : null}
+                  </div>
+                </span>
+              </UnstyledButton>
+            </div>
+            <div className="col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center">
+              <UnstyledButton
+                className="text-white hover:text-primary flex justify-center pb-2 w-full h-full"
+                onClick={() => {
+                  navigate("/chat", {
+                    state: {
+                      id: content._id,
+                      businessName: content.businessName,
+                    },
+                  });
+                }}
+              >
+                <span className="text-end mb-10">
+                  <IconMessage className="hover:opacity-80 hover:text-primary h-8 w-8 text-white" />
                   <div style={{ marginTop: "-50px" }}>
                     {notificationsNumber ? (
                       <Badge size="xs" circle className="bg-red-600">
