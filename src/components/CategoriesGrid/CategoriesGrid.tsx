@@ -1,51 +1,12 @@
-import {
-  Card,
-  Text,
-  SimpleGrid,
-  UnstyledButton,
-  useMantineTheme,
-} from "@mantine/core";
-import {
-  IconBurger,
-  IconShoppingBag,
-  IconHeart,
-  IconFirstAidKit,
-  IconBeach,
-  IconBook,
-  IconHome,
-  IconBrush,
-  IconIroning,
-  IconCar,
-  IconSchool,
-  IconDots,
-} from "@tabler/icons-react";
+import { Card, Text, SimpleGrid, UnstyledButton, Image } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../services/AxiosService";
 import { BASE_URL } from "../../constants";
-
-const categories = [
-  { title: "Restaurants and Cafés", icon: IconBurger, color: "violet" },
-  { title: "Retail Stores", icon: IconShoppingBag, color: "grape" },
-  { title: "Health and Beauty Services", icon: IconHeart, color: "blue" },
-  {
-    title: "Medical and Healthcare Services",
-    icon: IconFirstAidKit,
-    color: "green",
-  },
-  { title: "Tourism and Hospitality", icon: IconBeach, color: "teal" },
-  { title: "Education and Training Centers", icon: IconSchool, color: "cyan" },
-  { title: "Real Estate and Construction", icon: IconHome, color: "pink" },
-  { title: "Arts and Entertainment", icon: IconBrush, color: "red" },
-  { title: "Home Services", icon: IconIroning, color: "orange" },
-  { title: "Auto Services", icon: IconCar, color: "indigo" },
-  { title: "Book Store", icon: IconBook, color: "lime" },
-  { title: "Other", icon: IconDots, color: "dark" },
-];
+import { Category } from "../../defines";
 
 const CategoriesGrid = () => {
-  const theme = useMantineTheme();
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState<Category[]>([]);
   const navigate = useNavigate();
   async function getCategories() {
     try {
@@ -58,7 +19,7 @@ const CategoriesGrid = () => {
   useEffect(() => {
     getCategories();
   }, []);
-  const items = category.map((item) => (
+  const items = category.slice(0, Math.min(category.length, 24)).map((item) => (
     <UnstyledButton
       key={item._id}
       className={
@@ -70,7 +31,7 @@ const CategoriesGrid = () => {
         })
       }
     >
-      <img src={`${BASE_URL}/${item.icon}`} width="3rem" height="3rem" />
+      <Image src={`${BASE_URL}/${item.icon}`} className="w-7" />
       <Text size="xs" mt={7}>
         {item.name}
       </Text>
