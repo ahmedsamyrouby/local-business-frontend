@@ -1,64 +1,39 @@
-import {
-  Card,
-  Text,
-  SimpleGrid,
-  UnstyledButton,
-  useMantineTheme,
-} from "@mantine/core";
-import {
-  IconBurger,
-  IconShoppingBag,
-  IconHeart,
-  IconFirstAidKit,
-  IconBeach,
-  IconBook,
-  IconHome,
-  IconBrush,
-  IconIroning,
-  IconCar,
-  IconSchool,
-  IconDots,
-} from "@tabler/icons-react";
+import { Card, Text, SimpleGrid, UnstyledButton, Image } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const categories = [
-  { title: "Restaurants and Cafés", icon: IconBurger, color: "violet" },
-  { title: "Retail Stores", icon: IconShoppingBag, color: "grape" },
-  { title: "Health and Beauty Services", icon: IconHeart, color: "blue" },
-  {
-    title: "Medical and Healthcare Services",
-    icon: IconFirstAidKit,
-    color: "green",
-  },
-  { title: "Tourism and Hospitality", icon: IconBeach, color: "teal" },
-  { title: "Education and Training Centers", icon: IconSchool, color: "cyan" },
-  { title: "Real Estate and Construction", icon: IconHome, color: "pink" },
-  { title: "Arts and Entertainment", icon: IconBrush, color: "red" },
-  { title: "Home Services", icon: IconIroning, color: "orange" },
-  { title: "Auto Services", icon: IconCar, color: "indigo" },
-  { title: "Book Store", icon: IconBook, color: "lime" },
-  { title: "Other", icon: IconDots, color: "dark" },
-];
+import axiosInstance from "../../services/AxiosService";
+import { BASE_URL } from "../../constants";
+import { Category } from "../../defines";
 
 const CategoriesGrid = () => {
-  const theme = useMantineTheme();
+  const [category, setCategory] = useState<Category[]>([]);
   const navigate = useNavigate();
-
-  const items = categories.map((item) => (
+  async function getCategories() {
+    try {
+      const response = await axiosInstance.get(`/admin/listCategories`);
+      setCategory(response.data.categories);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    getCategories();
+  }, []);
+  const items = category.slice(0, Math.min(category.length, 24)).map((item) => (
     <UnstyledButton
-      key={item.title}
+      key={item._id}
       className={
         "p-2 flex flex-col items-center justify-center text-center rounded-md h-[90px] bg-white dark:bg-dark-700 transition-all duration-150 ease-in-out hover:shadow-md hover:scale-105"
       }
       onClick={() =>
         navigate("/explore", {
-          state: { category: item.title === "Other" ? null : item.title },
+          state: { category: item.name === "Other" ? null : item.name },
         })
       }
     >
-      <item.icon color={theme.colors[item.color][6]} size="2rem" />
+      <Image src={`${BASE_URL}/${item.icon}`} className="w-7" />
       <Text size="xs" mt={7}>
-        {item.title}
+        {item.name}
       </Text>
     </UnstyledButton>
   ));

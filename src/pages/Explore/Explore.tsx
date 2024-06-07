@@ -1,12 +1,9 @@
 import {
   TextInput,
-  // ActionIcon,
-  // Drawer,
   Select,
   Pagination,
   Box,
   Text,
-  // Pill,
   Card,
   Image,
   Title,
@@ -16,43 +13,29 @@ import {
   IconArrowBigLeftFilled,
   IconArrowBigRightFilled,
   IconCircleXFilled,
-  // IconFilter,
   IconMoodSad,
   IconSearch,
 } from "@tabler/icons-react";
-import { BUSINESS_CATEGORIES } from "../../constants/index";
+import { BASE_URL, BUSINESS_CATEGORIES } from "../../constants/index";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import BusinessCard, {
   Business,
 } from "../../components/BusinessCard/BusinessCard";
-// import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { transformBusinesses } from "../../utils";
 import { useLocation } from "react-router-dom";
 import { Carousel } from "@mantine/carousel";
 import clsx from "clsx";
 
-import ArtsAndEntertainmentIll from "../../assets/categories-art/arts-and-entertainment.svg";
-import AutoServicesIll from "../../assets/categories-art/auto-services.svg";
-import BookStoreIll from "../../assets/categories-art/book-store.svg";
-import EducationAndTrainingIll from "../../assets/categories-art/education-and-training-centers.svg";
-import HealthAndBeautyIll from "../../assets/categories-art/health-and-beauty-services.svg";
-import HomeServicesIll from "../../assets/categories-art/home-services.svg";
-import MedicalAndHealthcareIll from "../../assets/categories-art/medical-and-healthcare-services.svg";
-import RealEstateAndConstructionIll from "../../assets/categories-art/real-estate-and-construction.svg";
-import RestaurantsAndCafesIll from "../../assets/categories-art/restaurants-and-cafes.svg";
-import RetailStoresIll from "../../assets/categories-art/retail-stores.svg";
-import TourismAndHospitalityIll from "../../assets/categories-art/tourism-and-hospitality.svg";
 import { useHeadroom } from "@mantine/hooks";
 import SkeletonGrid from "../../components/SkeletonGrid/SkeletonGrid";
 import { getLocalStorage } from "../../services/LocalStorageService";
 import axiosInstance from "../../services/AxiosService";
+import { Category } from "../../defines";
 
 const paginationLimits = ["10", "25", "50", "100"];
 
 const Explore = () => {
   const location = useLocation();
-  // const [opened, { open, close }] = useDisclosure(false);
-  // const isMobile = useMediaQuery("(max-width: 56.25em)");
   const [searchQuery, setSearchQuery] = useState(location.state?.search || "");
   const [isLoading, setILoading] = useState(true);
   const [isError, setIsError] = useState({
@@ -67,12 +50,21 @@ const Explore = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>(
     location.state?.category || ""
   );
+  const [category, setCategory] = useState<Category[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationLimitSelect, setPaginationLimitSelect] = useState("10");
   const pinned = useHeadroom({ fixedAt: 140 });
   const userId = getLocalStorage("userId");
 
+  async function getCategories() {
+    try {
+      const response = await axiosInstance.get(`/admin/listCategories`);
+      setCategory(response.data.categories);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   const searchBusinesses = useCallback(
     async (
       page: number,
@@ -139,6 +131,10 @@ const Explore = () => {
   useEffect(() => {
     getFavoriteBusinesses();
   }, [businesses]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -210,47 +206,6 @@ const Explore = () => {
           placeholder="Search for a business..."
           size="lg"
         />
-        {/* <div className="flex gap-4 py-2">
-          <ActionIcon className="bg-transparent" onClick={open}>
-            <IconFilter className="text-gray-900" />
-          </ActionIcon>
-          <Drawer
-            offset={8}
-            radius="md"
-            opened={opened}
-            onClose={close}
-            title="Filters"
-            position={isMobile ? "bottom" : "left"}
-          >
-            <div>
-              <Select
-                checkIconPosition="right"
-                value={selectedFilter}
-                onChange={(value) => setSelectedFilter(value as string)}
-                data={BUSINESS_CATEGORIES}
-                label="Category"
-                placeholder="Filter by category"
-                clearable
-              />
-            </div>
-          </Drawer>
-          {selectedFilter && (
-            <div className="flex-center gap-2">
-              <Text className={"uppercase font-bold"} c="dimmed">
-                Category:{" "}
-              </Text>
-              <Pill
-                className="min-w-18 w-fit"
-                radius={"sm"}
-                size="lg"
-                withRemoveButton
-                onRemove={clearFilter}
-              >
-                {selectedFilter}
-              </Pill>
-            </div>
-          )}
-        </div> */}
       </div>
       <Box className="space-y-4 mb-10">
         <Title order={2}>Categories</Title>
@@ -272,53 +227,34 @@ const Explore = () => {
             controls: "h-full top-0 p-0 rounded-md overflow-hidden",
           }}
         >
-          {BUSINESS_CATEGORIES.slice(0, BUSINESS_CATEGORIES.length - 1).map(
-            (category, idx) => (
-              <Carousel.Slide key={idx} className="flex">
-                <Card
-                  className={clsx({
-                    "flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px] hover:bg-primary/30 border hover:border-primary":
-                      true,
-                    "bg-primary/20 border-primary": selectedFilter === category,
-                  })}
-                  shadow="sm"
-                  radius="md"
-                  onClick={() =>
-                    selectedFilter === category
-                      ? clearFilter()
-                      : setSelectedFilter(category)
-                  }
-                  // onClick={() => navigate("/explore", { state: { category } })}
-                >
-                  <Text>{category}</Text>
-                  <div>
-                    <Image
-                      className="w-24 h-24 object-contain"
-                      src={
-                        {
-                          "Restaurants and Cafés": RestaurantsAndCafesIll,
-                          "Retail Stores": RetailStoresIll,
-                          "Health and Beauty Services": HealthAndBeautyIll,
-                          "Medical and Healthcare Services":
-                            MedicalAndHealthcareIll,
-                          "Tourism and Hospitality": TourismAndHospitalityIll,
-                          "Education and Training Centers":
-                            EducationAndTrainingIll,
-                          "Real Estate and Construction":
-                            RealEstateAndConstructionIll,
-                          "Arts and Entertainment": ArtsAndEntertainmentIll,
-                          "Home Services": HomeServicesIll,
-                          "Auto Services": AutoServicesIll,
-                          "Book Store": BookStoreIll,
-                        }[category]
-                      }
-                      alt={category}
-                    />
-                  </div>
-                </Card>
-              </Carousel.Slide>
-            )
-          )}
+          {category.map((category, idx) => (
+            <Carousel.Slide key={idx} className="flex">
+              <Card
+                className={clsx({
+                  "flex-center gap-4 p-5 text-black text-center bg-black/5 h-[200px] w-[200px] hover:bg-primary/30 border hover:border-primary":
+                    true,
+                  "bg-primary/20 border-primary":
+                    selectedFilter === category.name,
+                })}
+                shadow="sm"
+                radius="md"
+                onClick={() =>
+                  selectedFilter === category.name
+                    ? clearFilter()
+                    : setSelectedFilter(category.name)
+                }
+              >
+                <Text>{category.name}</Text>
+                <div>
+                  <Image
+                    className="w-24 h-24 object-contain"
+                    src={`${BASE_URL}/${category.image}`}
+                    alt={category.name}
+                  />
+                </div>
+              </Card>
+            </Carousel.Slide>
+          ))}
         </Carousel>
       </Box>
       {isLoading ? (

@@ -464,7 +464,7 @@ const BusinessDetails = () => {
                   className="w-full"
                   component="a"
                   onClick={openAddReview}
-                  href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[1]},${business.business.coordinates[0]}`}
+                  href={`http://maps.google.com/maps?z=15&t=m&q=${business.business.coordinates[0]},${business.business.coordinates[1]}`}
                   target="_blank"
                   rightSection={<IconArrowBearRight2 />}
                 >
