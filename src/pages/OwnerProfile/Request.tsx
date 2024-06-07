@@ -145,6 +145,7 @@ function Requests() {
                   <Table.Th className="text-white font-bold">Show Map</Table.Th>
                   <Table.Th className=""></Table.Th>
                   <Table.Th className=""></Table.Th>
+                  <Table.Th className=""></Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody className="bg-gray-100">

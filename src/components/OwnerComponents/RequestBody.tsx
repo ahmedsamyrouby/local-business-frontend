@@ -185,6 +185,19 @@ function RequestBody({
             />
           </Button>
         </Table.Td>
+        <Table.Td>
+          <Button
+            className={
+              data.status !== "In Progress" ? "bg-gray-200" : "hover:opacity-80"
+            }
+            disabled={data.status !== "In Progress" ? true : false}
+            onClick={() => {
+              responseOnRequest("Completed", "Accepted");
+            }}
+          >
+            Complete
+          </Button>
+        </Table.Td>
       </Table.Tr>
     </>
   );
