@@ -177,7 +177,7 @@ function Content({
         </div>
       ) : (
         <>
-          <div className="flex grid grid-cols-9 px-3 mx-3.5 mt-4">
+          <div className="flex grid grid-cols-10 px-3 mx-3.5 mt-4">
             <div className="col-span-1 border-b-2 hover:border-primary h-9 m-0 p-0 text-center">
               <UnstyledButton
                 className="text-white hover:text-primary flex justify-center pb-2 w-full h-full"
