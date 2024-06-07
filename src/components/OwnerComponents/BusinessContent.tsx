@@ -7,6 +7,7 @@ import {
   Modal,
   UnstyledButton,
   Badge,
+  Table,
 } from "@mantine/core";
 import { GoPlusCircle } from "react-icons/go";
 import { MdDelete } from "react-icons/md";
@@ -546,25 +547,16 @@ function Content({
                 {content.reviews.length === 0 ? (
                   "No reviews found yet"
                 ) : (
-                  <table
-                    className="table-fixed border-collapse w-full"
-                    style={{ marginBlock: "13px" }}
-                  >
-                    <thead className="border-b-2 border-white">
-                      <tr className="">
-                        <th className="text-primary text-left p-2 border-b-2 font-normal">
-                          Customer
-                        </th>
-                        <th className="text-primary text-center p-2 pr-0 w-80 border-b-2 font-normal">
-                          Review
-                        </th>
-                        <th className="text-primary text-right p-2 pl-0 w-26 border-b-2 font-normal">
-                          Time
-                        </th>
-                        <th className="text-primary p-2 border-b-2 font-normal"></th>
-                      </tr>
-                    </thead>
-                    <tbody className="border-b-2 border-white">
+                  <Table verticalSpacing="sm" horizontalSpacing="sm">
+                    <Table.Thead>
+                      <Table.Tr>
+                        <Table.Th className="text-primary">Customer</Table.Th>
+                        <Table.Th className="text-primary">Review</Table.Th>
+                        <Table.Th className="text-primary">Date</Table.Th>
+                        <Table.Th></Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
                       {content.reviews.map((review) =>
                         review.content ? (
                           <ReviewBody
@@ -577,8 +569,9 @@ function Content({
                           />
                         ) : null
                       )}
-                    </tbody>
-                  </table>
+                    </Table.Tbody>
+                    <Table.Caption className="font-bold">Reviews</Table.Caption>
+                  </Table>
                 )}
               </div>
             </>

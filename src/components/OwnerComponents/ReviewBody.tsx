@@ -1,9 +1,10 @@
-import { Button } from "@mantine/core";
+import { Button, Modal, Table, Title } from "@mantine/core";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { businessContent } from "../../services/ConvertStringToFile";
 import Swal from "sweetalert2";
 import { getLocalStorage } from "../../services/LocalStorageService";
+import { useDisclosure } from "@mantine/hooks";
 
 function ReviewBody({
   userName,
@@ -20,6 +21,7 @@ function ReviewBody({
   customerId: string;
   content: businessContent;
 }) {
+  const [opened, { open, close }] = useDisclosure(false);
   const userToken = getLocalStorage("userToken");
   async function reportReview() {
     const { value: text } = await Swal.fire({
@@ -54,18 +56,47 @@ function ReviewBody({
   }
 
   return (
-    <tr>
-      <td className="text-white text-left p-2 border-b-2">{userName}</td>
-      <td className="text-white text-center p-2 pr-0 border-b-2 ">{review}</td>
-      <td className="text-white text-right p-2 pl-0 pr-0 border-b-2">
-        {time.slice(0, -8)}
-      </td>
-      <td className="text-white text-right border-b-2">
-        <Button className="h-8 bg-red-700" onClick={reportReview}>
-          Report
-        </Button>
-      </td>
-    </tr>
+    <>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Review"
+        withCloseButton={false}
+        className="flex justify-center items-center"
+        classNames={{
+          header: "flext justify-center ",
+          title: "font-bold text-2xl",
+          body: "flex justify-center",
+        }}
+      >
+        <div className="w-96 bg-gray-200 rounded-lg p-4 drop-shadow-lg">
+          <Title order={5}>{userName}</Title>
+          <p className="mx-2 p-2">{review}</p>
+        </div>
+      </Modal>
+      <Table.Tr key={reviewId}>
+        <Table.Td>{userName}</Table.Td>
+        <Table.Td>
+          {" "}
+          <p className="truncate max-w-44">{review}</p>
+          {review.length >= 29 && (
+            <a
+              className="text-primary cursor-pointer hover:opacity-80"
+              onClick={open}
+            >
+              see more
+            </a>
+          )}
+        </Table.Td>
+        <Table.Td>{time}</Table.Td>
+        <Table.Td>
+          {" "}
+          <Button className="h-8 bg-red-700" onClick={reportReview}>
+            Report
+          </Button>
+        </Table.Td>
+      </Table.Tr>
+    </>
   );
 }
 export default ReviewBody;
