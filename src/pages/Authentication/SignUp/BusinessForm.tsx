@@ -53,7 +53,36 @@ function BusinessForm() {
   //   "Auto Services",
   //   "Other",
   // ];
-
+  const cities: [] = [
+    "Cairo",
+    "Alexandria",
+    "Luxor",
+    "Aswan",
+    "Sharm El Sheikh",
+    "Hurghada",
+    "Giza",
+    "Port Said",
+    "Suez",
+    "Mansoura",
+    "Tanta",
+    "Fayoum",
+    "Zagazig",
+    "Ismailia",
+    "Minya",
+    "Assiut",
+    "Beni Suef",
+    "Sohag",
+    "Qena",
+    "Banha",
+    "Kafr El Sheikh",
+    "Damanhur",
+    "Damietta",
+    "Shibin El Kom",
+    "Matruh",
+    "El Arish",
+    "Quesna",
+    "Mallawi",
+  ];
   const businessForm = useForm({
     initialValues: {
       businessName:
@@ -397,8 +426,8 @@ function BusinessForm() {
             }
           />
           <Select
-            data={options}
-            label="Country"
+            data={cities}
+            label="City"
             placeholder="Your Country"
             className="text-start text-black w-full"
             classNames={{
