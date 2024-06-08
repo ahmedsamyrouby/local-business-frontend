@@ -20,22 +20,8 @@ import PrivateRoute from "./PrivateRoute";
 import NotFound from "../pages/Error/NotFound";
 import UnAuthorized from "../pages/Error/UnAuthorized";
 import BusinessChat from "./../pages/BusinessChat/BusinessChat";
-import { getLocalStorage } from "../services/LocalStorageService";
-import { useEffect } from "react";
 
 export default function AppRouter() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (getLocalStorage("userToken")) {
-      if (getLocalStorage("role") === "customer") navigate("/");
-      else if (getLocalStorage("role") === "businessOwner")
-        navigate("/ownerprofile");
-    } else {
-      navigate(`/login`);
-    }
-  }, []);
-
   return (
     <Routes>
       <Route element={<PrivateRoute roles={["businessOwner"]} />}>
