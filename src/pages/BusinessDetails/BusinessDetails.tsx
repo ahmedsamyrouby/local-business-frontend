@@ -424,7 +424,8 @@ const BusinessDetails = () => {
                 <div className="py-2 px-5 overflow-hidden rounded-md bg-gray-100">
                   {business.reviews.map(
                     (review: Review, idx: number) =>
-                      review.content && (
+                      review.content &&
+                      !review.Reported && (
                         <div key={review._id}>
                           <ReviewCard review={review} />
                           {idx !== business.reviews.length - 1 && (

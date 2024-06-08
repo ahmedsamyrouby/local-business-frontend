@@ -7,6 +7,7 @@ export type Review = {
   userName: string;
   timestamp: string;
   content: string;
+  Reported?: "yes" | "no";
 };
 
 const ReviewCard = ({ review }: { review: Review }) => {

@@ -29,6 +29,7 @@ export interface businessContent {
       timestamp: string;
       customerId: string;
       _id: string;
+      Reported?: "yes" | "no";
     }
   ];
 }

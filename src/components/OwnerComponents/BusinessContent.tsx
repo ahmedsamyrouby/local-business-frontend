@@ -558,7 +558,7 @@ function Content({
                     </Table.Thead>
                     <Table.Tbody>
                       {content.reviews.map((review) =>
-                        review.content ? (
+                        review.content && !review.Reported ? (
                           <ReviewBody
                             userName={review.userName}
                             review={review.content}
