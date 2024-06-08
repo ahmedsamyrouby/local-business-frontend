@@ -96,8 +96,12 @@ const SignUp = () => {
       },
     })
       .then((res) => {
-        setLocalStorage("userId", res.data.data._id);
         setLocalStorage("userToken", res.data.token);
+        setLocalStorage("userId", res.data.data._id);
+        setLocalStorage("role", res.data.data.role);
+        setLocalStorage("name", res.data.data.name);
+        setLocalStorage("email", res.data.data.email);
+        setLocalStorage("phone", res.data.data.phone);
         values.userType == "businessOwner"
           ? navigate("/business-form")
           : navigate("/login");
