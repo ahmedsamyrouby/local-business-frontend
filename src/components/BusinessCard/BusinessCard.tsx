@@ -17,7 +17,7 @@ import { BASE_URL } from "../../constants";
 
 import marketPlaceholder from "../../assets/images/market.png";
 import { getLocalStorage } from "../../services/LocalStorageService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axiosInstance from "../../services/AxiosService";
 
 export type Business = {
@@ -48,6 +48,12 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const navigate = useNavigate();
   const userId = getLocalStorage("userId");
   const [isFavorite, setIsFavorite] = useState(business.isFavorite);
+  const [rating, setRating] = useState(0);
+
+  const getBusinessRating = async () => {
+    const res = await axiosInstance.get(`/businessOwner/rating/${business._id}`);
+    setRating(res.data.rating);
+  };
 
   const addToFavorites = () => {
     try {
@@ -70,6 +76,11 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    getBusinessRating();
+  }, []);
+
   return (
     <Card withBorder className="rounded-md p-3 bg-gray-100/50 shadow-sm">
       <Card.Section>
@@ -92,7 +103,7 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
             {business.country}
           </Badge>
         </Group>
-        <Rating value={business.rate} size={"md"} fractions={2} readOnly />
+        <Rating value={rating} size={"md"} fractions={2} readOnly />
         <Text className="text-sm truncate">
           {business.description || "No description available"}
         </Text>
