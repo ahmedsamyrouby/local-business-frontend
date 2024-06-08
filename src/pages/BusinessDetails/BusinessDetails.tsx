@@ -291,11 +291,11 @@ const BusinessDetails = () => {
       {business.media && business.media.length > 0 && (
         <Carousel withIndicators height={400} loop>
           {business.media.map((image: string, index: number) => (
-            <Carousel.Slide key={index}>
+            <Carousel.Slide key={index} className="bg-gray-200">
               <img
                 src={`${BASE_URL}/${image}`}
                 alt={`${business.businessName} image ${index}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </Carousel.Slide>
           ))}
@@ -533,6 +533,7 @@ const BusinessDetails = () => {
               }}
               label={"Write a review for the business"}
               placeholder={"Write your review here..."}
+              required
               {...reviewForm.getInputProps("review")}
             />
           </div>
