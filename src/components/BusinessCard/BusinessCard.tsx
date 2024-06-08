@@ -29,6 +29,7 @@ export type Business = {
   rate?: number;
   description?: string;
   isFavorite?: boolean;
+  eventOrNot?: "Event" | "notEvent";
 };
 
 export interface BusinessCardProps {
@@ -51,7 +52,9 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
   const [rating, setRating] = useState(0);
 
   const getBusinessRating = async () => {
-    const res = await axiosInstance.get(`/businessOwner/rating/${business._id}`);
+    const res = await axiosInstance.get(
+      `/businessOwner/rating/${business._id}`
+    );
     setRating(res.data.rating);
   };
 
@@ -115,7 +118,12 @@ const DesktopBusinessCard = ({ business }: BusinessCardProps) => {
             Category
           </Text>
         </Group>
-        <Badge variant="light">{business.category}</Badge>
+        <Group gap={7}>
+          <Badge variant="light">{business.category}</Badge>
+          <Badge variant="light" color="orange.6">
+            {business.eventOrNot === "Event" ? "Event" : "Business"}
+          </Badge>
+        </Group>
       </Card.Section>
 
       <Group mt="xs">

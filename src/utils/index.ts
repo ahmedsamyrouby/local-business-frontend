@@ -19,6 +19,7 @@ export const transformBusinesses = (businesses: any[]): Array<Business> => {
       rate: business.totalRate,
       description: business.description,
       isFavorite: business.isFavorite,
+      eventOrNot: business.eventOrNot,
     };
   });
 };
