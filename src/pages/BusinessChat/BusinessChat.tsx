@@ -43,9 +43,20 @@ const BusinessChat = () => {
   const location = useLocation();
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  function logOut() {
-    removeLocalStorage("userId");
-    navigate("/login");
+  async function logOut() {
+    const res = await axiosInstance.post("/auth/logout");
+    console.log(res);
+    if (res.status === 200) {
+      removeLocalStorage("userToken");
+      removeLocalStorage("userId");
+      removeLocalStorage("role");
+      removeLocalStorage("name");
+      removeLocalStorage("email");
+      removeLocalStorage("phone");
+      navigate("/login");
+    } else {
+      console.log("Error logging out");
+    }
   }
 
   const scrollToBottom = () => {

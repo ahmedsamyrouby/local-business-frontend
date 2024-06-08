@@ -22,8 +22,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { removeLocalStorage } from "../../services/LocalStorageService";
 import { useState } from "react";
 import localLinkerLogo from "../../assets/local-linker-logo.svg";
+import axiosInstance from "../../services/AxiosService";
 
-function  OwnerProfile() {
+function OwnerProfile() {
   const navigate = useNavigate();
   const [businessType, setBusinessType] = useState("all");
   const [opened, { open, close }] = useDisclosure(false);
@@ -31,9 +32,20 @@ function  OwnerProfile() {
   const isSmall = useMediaQuery({ query: "(min-width: 484px)" });
   const isIpadHeight = useMediaQuery({ query: "(min-height: 1180px)" });
   const isIphoneHeight = useMediaQuery({ query: "(min-height: 844px)" });
-  function logOut() {
-    removeLocalStorage("userId");
-    navigate("/login");
+  async function logOut() {
+    const res = await axiosInstance.post("/auth/logout");
+    console.log(res);
+    if (res.status === 200) {
+      removeLocalStorage("userToken");
+      removeLocalStorage("userId");
+      removeLocalStorage("role");
+      removeLocalStorage("name");
+      removeLocalStorage("email");
+      removeLocalStorage("phone");
+      navigate("/login");
+    } else {
+      console.log("Error logging out");
+    }
   }
 
   return (
@@ -106,14 +118,14 @@ function  OwnerProfile() {
                   onClick={() => navigate("/setupProfile")}
                   leftSection={<MdEdit />}
                 >
-                  Setup profile{" "}
+                  Setup profile
                 </Menu.Item>
                 <Menu.Item
                   onClick={() => logOut()}
                   leftSection={<RxExit />}
                   className="text-red-600"
                 >
-                  Log Out{" "}
+                  Log Out
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>

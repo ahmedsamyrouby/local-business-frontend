@@ -27,6 +27,7 @@ import {
 } from "../../services/LocalStorageService";
 import { getInitials } from "../../utils";
 import localLinkerLogo from "../../assets/local-linker-logo.svg";
+import axiosInstance from "../../services/AxiosService";
 
 const NavBar = () => {
   const [mobileNavOpened, { open, close }] = useDisclosure(false);
@@ -38,14 +39,20 @@ const NavBar = () => {
     email: getLocalStorage("email"),
     phone: getLocalStorage("phone"),
   };
-  function logOut() {
-    removeLocalStorage("userId");
-    removeLocalStorage("userToken");
-    removeLocalStorage("email");
-    removeLocalStorage("role");
-    removeLocalStorage("phone");
-    removeLocalStorage("name");
-    navigate("/login");
+  async function logOut() {
+    const res = await axiosInstance.post("/auth/logout");
+    console.log(res);
+    if (res.status === 200) {
+      removeLocalStorage("userToken");
+      removeLocalStorage("userId");
+      removeLocalStorage("role");
+      removeLocalStorage("name");
+      removeLocalStorage("email");
+      removeLocalStorage("phone");
+      navigate("/login");
+    } else {
+      console.log("Error logging out");
+    }
   }
 
   return (
@@ -66,7 +73,11 @@ const NavBar = () => {
         <div>
           <Link to={"/"} className="text-xl font-bold flex-center gap-2">
             <div className="w-10 h-10">
-              <Image className="w-full" src={localLinkerLogo} alt="Local Linker Logo" />
+              <Image
+                className="w-full"
+                src={localLinkerLogo}
+                alt="Local Linker Logo"
+              />
             </div>
             <Title order={3}>Local Linker</Title>
           </Link>

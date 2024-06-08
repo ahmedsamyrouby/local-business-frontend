@@ -5,7 +5,7 @@ import { MantineProvider, createTheme } from "@mantine/core";
 
 const theme = createTheme({
   primaryColor: "cyan",
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: "Inter, sans-serif",
 });
 
 function App() {
